@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Start of the project
+          Start of the project1
         </a>
       </header>
     </div>
