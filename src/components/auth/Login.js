@@ -7,7 +7,7 @@ const Login = () => {
 
   function onFinishForm(data) {
     console.log(data);
-    navigate('/settings')
+    navigate('/application/settings')
   }
 
   return (
