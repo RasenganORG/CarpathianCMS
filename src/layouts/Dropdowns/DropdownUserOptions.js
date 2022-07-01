@@ -7,7 +7,7 @@ const menu = (
       {
         key: '1',
         type: 'group',
-        label: 'Group title',
+        label: 'User Actions',
         children: [
           {
             key: 'delete',

@@ -3,13 +3,17 @@ import 'antd/dist/antd.css';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
 import { SettingTwoTone, UserOutlined,UnorderedListOutlined,IdcardOutlined,GlobalOutlined, SmileOutlined} from '@ant-design/icons';
-import React, { useState } from 'react';
-import {Outlet} from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 
 const navBarSettings = [
   {
-    key: 'goToSite',
+    key: 'settings',
+    label: 'Settings',
+  },
+  {
+    key: 'siteEdit',
     label: 'Site Edit',
   },
   {
@@ -23,6 +27,14 @@ const navBarSettings = [
 
 const ApplicationLayout = () => {
   const [selectedMenu,setSelectedMenu] = useState();
+  const navigate = useNavigate();
+
+  useEffect(()=> {
+    if(selectedMenu) {
+      navigate(`${selectedMenu.key}`);
+      console.log(selectedMenu);
+    }
+  },[selectedMenu])
 
   return (
     <Layout
@@ -36,12 +48,15 @@ const ApplicationLayout = () => {
           mode='horizontal'
           items={navBarSettings}
           onSelect={(e) => setSelectedMenu(e)}
+          style={{
+            width:'30%'
+          }}
         />
       </Header>
       <Content
         style={{
-          padding: '0 50px',
-          backgroundColor:'whitesmoke'
+          padding: '0 5%',
+          backgroundColor:'whitesmoke',
         }}
       >
         <Outlet/>

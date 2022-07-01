@@ -21,12 +21,12 @@ const menuSettingsConfig = [
       {
         key: 'social-media',
         label: 'Social Media',
-        icon:<SmileOutlined />
+        icon: <SmileOutlined />,
       },
       {
         key: 'site-settings',
         label: 'Site Settings',
-        icon:<GlobalOutlined />
+        icon: <GlobalOutlined />,
       },
     ],
   },
@@ -38,12 +38,12 @@ const menuSettingsConfig = [
       {
         key: 'edit-roles',
         label: 'Edit roles',
-        icon: <IdcardOutlined />
+        icon: <IdcardOutlined />,
       },
       {
         key: 'user-list',
         label: 'User list',
-        icon:<UnorderedListOutlined />
+        icon: <UnorderedListOutlined />,
       },
     ],
   },
@@ -54,13 +54,17 @@ const SettingsLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(selectedSetting) {
+    if (selectedSetting) {
       navigate(selectedSetting.key);
     }
-  },[selectedSetting])
+  }, [selectedSetting]);
 
   return (
-    <>
+    <div
+      style={{
+        width: '100%',
+      }}
+    >
       <Breadcrumb
         style={{
           margin: '16px 0',
@@ -89,17 +93,15 @@ const SettingsLayout = () => {
         </Sider>
         <Content
           style={{
-            padding: '0 24px', minHeight: 600,
+            padding: '0 24px',
+            minHeight: 600,
+            width: '100%',
           }}
         >
-          <div style={{
-            width: '300px',
-          }}>
-            <Outlet/>
-          </div>
+          <Outlet />
         </Content>
       </Layout>
-    </>
+    </div>
   );
 
 };

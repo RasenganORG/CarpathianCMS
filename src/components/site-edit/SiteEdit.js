@@ -2,13 +2,13 @@ import { Button } from 'antd';
 import 'antd/dist/antd.css';
 
 
-const Overview = () => {
+const SiteEdit = () => {
 
   return(
     <Button>
-      Overview
+      SiteEdit
     </Button>
   )
 }
 
-export default Overview;
+export default SiteEdit;

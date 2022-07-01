@@ -2,12 +2,13 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
 import ApplicationLayout from '../layouts/application/ApplicationLayout';
-import Overview from '../components/site-overview/Overview';
+import SiteEdit from '../components/site-edit/SiteEdit';
 import SettingsLayout from '../layouts/settings/SettingsLayout';
-import SocialMedia from '../layouts/settings/SocialMedia';
-import SiteSettings from '../layouts/settings/SiteSettings';
-import EditRoles from '../layouts/settings/EditRoles';
-import UserList from '../layouts/settings/UserList';
+import SocialMedia from '../components/settings/SocialMedia';
+import SiteSettings from '../components/settings/SiteSettings';
+import EditRoles from '../components/settings/EditRoles';
+import UserList from '../components/settings/UserList';
+import Account from '../components/account/Account';
 
 
 const Router = () => {
@@ -15,7 +16,7 @@ const Router = () => {
   return useRoutes([
     {
       path: '',
-      element: <Overview />,
+      element: <SiteEdit />,
     },
     {
       path: 'auth',
@@ -57,6 +58,14 @@ const Router = () => {
 
           ],
         },
+        {
+          path:'siteEdit',
+          element: <SiteEdit/>
+        },
+        {
+          path:'account',
+          element: <Account/>
+        }
       ],
     },
 
