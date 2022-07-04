@@ -2,7 +2,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
 import ApplicationLayout from '../layouts/application/ApplicationLayout';
-import SiteEdit from '../components/site-edit/SiteEdit';
+import SiteWorkspace from '../components/site-workspace/SiteWorkspace';
 import SettingsLayout from '../layouts/settings/SettingsLayout';
 import SocialMedia from '../components/settings/SocialMedia';
 import SiteSettings from '../components/settings/SiteSettings';
@@ -14,10 +14,6 @@ import Account from '../components/account/Account';
 const Router = () => {
 
   return useRoutes([
-    {
-      path: '',
-      element: <SiteEdit />,
-    },
     {
       path: 'auth',
       children: [
@@ -59,8 +55,8 @@ const Router = () => {
           ],
         },
         {
-          path:'siteEdit',
-          element: <SiteEdit/>
+          path:'siteWorkspace',
+          element: <SiteWorkspace/>
         },
         {
           path:'account',

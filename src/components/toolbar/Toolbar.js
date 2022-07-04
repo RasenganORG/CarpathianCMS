@@ -6,16 +6,20 @@ const Toolbar = () => {
   return (
     <Card
       style={{
-        width: '100%',
-        minWidth: '170px',
+        top:200,
+        left:10,
+        width: '180px',
+        position:'fixed'
       }}
     >
       <Space
         size={'large'}
+        direction={'vertical'}
         style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
+          width:'100%'
         }}>
         <Button
           type={'text'}
@@ -32,9 +36,9 @@ const Toolbar = () => {
                 />
               </Col>
               <Col span={12}>
-                <Typography>
+                <Typography.Title level={4}>
                   Edit Page
-                </Typography>
+                </Typography.Title>
               </Col>
             </Row>
           </Tooltip>
@@ -60,9 +64,40 @@ const Toolbar = () => {
                 />
               </Col>
               <Col span={12}>
-                <Typography>
+                <Typography.Title level={4}>
                   Add Page
-                </Typography>
+                </Typography.Title>
+              </Col>
+            </Row>
+          </Tooltip>
+        </Button>
+        <br/>
+        <br/>
+        <Button
+          type={'text'}
+        >
+          <Tooltip
+            title={'Preview your website'}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+          >
+            <Row>
+              <Col span={12}>
+                <img
+                  src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
+                  style={{
+                    display: 'inline',
+                    fontSize: '200%',
+                    marginRight:20
+                  }}
+                />
+              </Col>
+              <Col span={12}>
+                <Typography.Title level={4}>
+                  Preview
+                </Typography.Title>
               </Col>
             </Row>
           </Tooltip>

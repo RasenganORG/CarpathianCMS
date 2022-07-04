@@ -1,8 +1,6 @@
 import { Breadcrumb, Button, Layout, Menu } from 'antd';
 import 'antd/dist/antd.css';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
-import Sider from 'antd/es/layout/Sider';
-import { SettingTwoTone, UserOutlined,UnorderedListOutlined,IdcardOutlined,GlobalOutlined, SmileOutlined} from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
@@ -13,8 +11,8 @@ const navBarSettings = [
     label: 'Settings',
   },
   {
-    key: 'siteEdit',
-    label: 'Site Edit',
+    key: 'siteWorkspace',
+    label: 'My Site',
   },
   {
     key: 'account',
