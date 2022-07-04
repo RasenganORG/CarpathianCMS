@@ -61,7 +61,8 @@ const Toolbar = ({isEdit}) => {
       style={{
         top:200,
         left:10,
-        width: '180px',
+        paddingRight:20,
+        width: '220px',
         position:'fixed'
       }}
     >

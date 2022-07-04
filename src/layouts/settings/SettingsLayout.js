@@ -83,7 +83,7 @@ const SettingsLayout = () => {
           <Menu
             mode='inline'
             defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            defaultOpenKeys={['siteSettings', 'userSettings']}
             style={{
               height: '100%',
             }}
