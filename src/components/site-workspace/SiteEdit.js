@@ -1,6 +1,6 @@
 import Navbar from './Navbar';
-import Content from './Content';
 import { Space } from 'antd';
+import {Outlet} from 'react-router-dom'
 
 const SiteEdit = () => {
 
@@ -14,7 +14,7 @@ const SiteEdit = () => {
         }}
       >
         <Navbar />
-        <Content />
+        <Outlet/>
       </Space>
     </div>
   );

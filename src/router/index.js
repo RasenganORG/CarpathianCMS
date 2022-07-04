@@ -9,6 +9,9 @@ import SiteSettings from '../components/settings/SiteSettings';
 import EditRoles from '../components/settings/EditRoles';
 import UserList from '../components/settings/UserList';
 import Account from '../components/account/Account';
+import ContentDemo from '../components/site-workspace/ContentDemo';
+import WidgetDemo from '../components/site-workspace/WidgetDemo';
+
 
 
 const Router = () => {
@@ -56,7 +59,21 @@ const Router = () => {
         },
         {
           path:'siteWorkspace',
-          element: <SiteWorkspace/>
+          element: <SiteWorkspace/>,
+          children:[
+            {
+              path: '',
+              element: <Navigate to={'techNews'}/>
+            },
+            {
+              path:'techNews',
+              element:<ContentDemo/>
+            },
+            {
+              path:'software',
+              element:<WidgetDemo/>
+            }
+          ]
         },
         {
           path:'account',

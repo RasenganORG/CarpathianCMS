@@ -1,9 +1,11 @@
 import { Button, Col, Image, Input, Radio, Row, Space, Typography } from 'antd';
+import Toolbar from '../toolbar/Toolbar';
 
-const Content = () => {
+const ContentDemo = () => {
 
   return (
     <div>
+      <Toolbar isEdit={false}/>
       <Space direction={'vertical'} size={30}>
         <Row>
           <Col
@@ -185,5 +187,4 @@ const Content = () => {
     </div>);
 };
 
-export default Content;
-//todo tabs, accordion,table, fileUpload, input textarea, list, calendar, comments
+export default ContentDemo;

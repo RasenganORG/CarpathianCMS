@@ -1,7 +1,60 @@
 import { Button, Card, Col, Row, Space, Tooltip, Typography } from 'antd';
 import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
-const Toolbar = () => {
+const Toolbar = ({isEdit}) => {
+
+  const preview= <Button
+    type={'text'}
+  >
+    <Tooltip
+      title={'Preview your website'}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+      }}
+    >
+      <Row>
+        <Col span={12}>
+          <img
+            src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
+            style={{
+              display: 'inline',
+              fontSize: '200%',
+              marginRight:20
+            }}
+          />
+        </Col>
+        <Col span={12}>
+          <Typography.Title level={4}>
+            Preview
+          </Typography.Title>
+        </Col>
+      </Row>
+    </Tooltip>
+  </Button>
+
+  const editPage = <Button
+    type={'text'}
+  >
+    <Tooltip title={'Edit your current page'}>
+      <Row>
+        <Col span={12}>
+          <EditOutlined
+            style={{
+              display: 'inline',
+              fontSize: '200%',
+              marginRight:20
+            }}
+          />
+        </Col>
+        <Col span={12}>
+          <Typography.Title level={4}>
+            Edit Page
+          </Typography.Title>
+        </Col>
+      </Row>
+    </Tooltip>
+  </Button>
 
   return (
     <Card
@@ -21,28 +74,9 @@ const Toolbar = () => {
           justifyContent: 'center',
           width:'100%'
         }}>
-        <Button
-          type={'text'}
-        >
-          <Tooltip title={'Edit your current page'}>
-            <Row>
-              <Col span={12}>
-                <EditOutlined
-                  style={{
-                    display: 'inline',
-                    fontSize: '200%',
-                    marginRight:20
-                  }}
-                />
-              </Col>
-              <Col span={12}>
-                <Typography.Title level={4}>
-                  Edit Page
-                </Typography.Title>
-              </Col>
-            </Row>
-          </Tooltip>
-        </Button>
+        {isEdit && preview}
+        {!isEdit && editPage}
+
         <Button
           type={'text'}
         >
@@ -71,37 +105,7 @@ const Toolbar = () => {
             </Row>
           </Tooltip>
         </Button>
-        <br/>
-        <br/>
-        <Button
-          type={'text'}
-        >
-          <Tooltip
-            title={'Preview your website'}
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
-            <Row>
-              <Col span={12}>
-                <img
-                  src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
-                  style={{
-                    display: 'inline',
-                    fontSize: '200%',
-                    marginRight:20
-                  }}
-                />
-              </Col>
-              <Col span={12}>
-                <Typography.Title level={4}>
-                  Preview
-                </Typography.Title>
-              </Col>
-            </Row>
-          </Tooltip>
-        </Button>
+
       </Space>
 
     </Card>
