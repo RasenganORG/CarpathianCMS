@@ -1,6 +1,6 @@
 import Toolbar from '../toolbar/Toolbar';
 import TableDemo from './Demo/TableDemo';
-import { Card, Col, Row, Space } from 'antd';
+import { Button, Card, Col, Modal, Row, Space } from 'antd';
 import UploadImage from '../upload/UploadImage';
 import UploadImages from '../upload/UploadImages';
 import { CloseOutlined } from '@ant-design/icons';
@@ -9,6 +9,8 @@ import ListDemo from './Demo/ListDemo';
 import CommentsDemo from './Demo/CommentsDemo';
 import AccordionDemo from './Demo/AccordionDemo';
 import TabDemo from './Demo/TabDemo';
+import AddWidgets from './AddWidgets';
+import classes from '../../styles.css'
 
 const WidgetDemo = () => {
 
@@ -24,6 +26,7 @@ const WidgetDemo = () => {
         <Row>
           <Col span={16}>
             <Card
+              hoverable={true}
               title={'Table'}
               extra={<CloseOutlined />}>
               <TableDemo />
@@ -33,6 +36,7 @@ const WidgetDemo = () => {
         <Row>
           <Col span={16}>
             <Card
+              hoverable={true}
               title={'Upload an image'}
               extra={<CloseOutlined />}>
               <UploadImage />
@@ -42,6 +46,7 @@ const WidgetDemo = () => {
         <Row>
           <Col span={16}>
             <Card
+              hoverable={true}
               title={'Upload multiple images'}
               extra={<CloseOutlined />}>
               <UploadImages />
@@ -51,6 +56,7 @@ const WidgetDemo = () => {
         <Row>
           <Col span={16}>
             <Card
+              hoverable={true}
               title={'Write a paragraph'}
               extra={<CloseOutlined />}>
               <TextArea rows={5} />
@@ -60,27 +66,30 @@ const WidgetDemo = () => {
         <Row>
           <Col span={16}>
             <Card
+              hoverable={true}
               title={'Add a List of Objects'}
               extra={<CloseOutlined />}>
-              <ListDemo/>
+              <ListDemo />
             </Card>
           </Col>
         </Row>
         <Row>
           <Col span={16}>
             <Card
+              hoverable={true}
               title={'Comment Widget'}
               extra={<CloseOutlined />}>
-              <CommentsDemo/>
+              <CommentsDemo />
             </Card>
           </Col>
         </Row>
         <Row>
           <Col span={16}>
             <Card
-              title={'Comment Widget'}
+              hoverable={true}
+              title={'Accordion Widget'}
               extra={<CloseOutlined />}>
-              <AccordionDemo/>
+              <AccordionDemo />
             </Card>
           </Col>
         </Row>
@@ -88,9 +97,20 @@ const WidgetDemo = () => {
         <Row>
           <Col span={16}>
             <Card
+              hoverable={true}
               title={'Tab Widget'}
               extra={<CloseOutlined />}>
-              <TabDemo/>
+              <TabDemo />
+            </Card>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col span={16}>
+            <Card
+              hoverable
+            >
+              <AddWidgets />
             </Card>
           </Col>
         </Row>
@@ -100,4 +120,5 @@ const WidgetDemo = () => {
 };
 
 export default WidgetDemo;
+
 //todo tabs, accordion,table, fileUpload, input textarea, list, calendar, comments
