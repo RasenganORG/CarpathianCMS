@@ -1,6 +1,6 @@
 import Toolbar from '../toolbar/Toolbar';
-import TableDemo from './Demo/TableDemo';
-import { Button, Card, Col, Modal, Row, Space } from 'antd';
+import TabelDemo from './Demo/tabel/TabelDemo';
+import {  Card, Col, Modal, Row, Space } from 'antd';
 import UploadImage from '../upload/UploadImage';
 import UploadImages from '../upload/UploadImages';
 import { CloseOutlined } from '@ant-design/icons';
@@ -10,13 +10,14 @@ import CommentsDemo from './Demo/CommentsDemo';
 import AccordionDemo from './Demo/AccordionDemo';
 import TabDemo from './Demo/TabDemo';
 import AddWidgets from './AddWidgets';
-import classes from '../../styles.css'
 import FormsDemo from './Demo/FormsDemo';
+import React from 'react';
 
 const WidgetDemo = () => {
 
   return (
     <div>
+
       <Toolbar isEdit={true} />
       <Space
         direction={'vertical'}
@@ -30,7 +31,7 @@ const WidgetDemo = () => {
               hoverable={true}
               title={'Table'}
               extra={<CloseOutlined />}>
-              <TableDemo />
+              <TabelDemo />
             </Card>
           </Col>
         </Row>

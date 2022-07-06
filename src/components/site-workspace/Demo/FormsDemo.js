@@ -1,5 +1,5 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { Alert, Button, Col, Form, Input, Radio, Row } from 'antd';
+import { Alert, Button, Col, Form, Input, Modal, Radio, Row } from 'antd';
 import React, { useState } from 'react';
 
 // let formIngo = [{
