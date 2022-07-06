@@ -11,6 +11,7 @@ import AccordionDemo from './Demo/AccordionDemo';
 import TabDemo from './Demo/TabDemo';
 import AddWidgets from './AddWidgets';
 import classes from '../../styles.css'
+import FormsDemo from './Demo/FormsDemo';
 
 const WidgetDemo = () => {
 
@@ -101,6 +102,18 @@ const WidgetDemo = () => {
               title={'Tab Widget'}
               extra={<CloseOutlined />}>
               <TabDemo />
+            </Card>
+          </Col>
+        </Row>
+
+
+        <Row>
+          <Col span={16}>
+            <Card
+              hoverable={true}
+              title={'Create form Widget'}
+              extra={<CloseOutlined />}>
+              <FormsDemo />
             </Card>
           </Col>
         </Row>

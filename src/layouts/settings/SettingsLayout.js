@@ -82,7 +82,7 @@ const SettingsLayout = () => {
         <Sider className='site-layout-background' width={200}>
           <Menu
             mode='inline'
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={['siteSettings']}
             defaultOpenKeys={['siteSettings', 'userSettings']}
             style={{
               height: '100%',

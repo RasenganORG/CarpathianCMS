@@ -18,8 +18,16 @@ const Router = () => {
 
   return useRoutes([
     {
+      path:'/',
+      element: <Navigate to='/auth/login'/>,
+    },
+    {
       path: 'auth',
       children: [
+        {
+          path:'',
+          element:  <Navigate to='login'/>,
+        },
         {
           path: 'login',
           element: <Login />,
