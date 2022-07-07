@@ -5,6 +5,7 @@ import ModifyDataColumnsForm from './ModifyDataColumnsForm';
 import { useEffect } from 'react';
 import AddNewLineForm from './AddNewLineForm';
 import Modals from './Modals';
+import TableButtons from './TableButtons';
 
 const originData = [
   {
@@ -80,7 +81,7 @@ const rowSelection = {
 };
 
 const TabelDemo = () => {
-  const columns = [
+  let columns = [
     {
       title: 'name',
       dataIndex: 'col1',
@@ -123,16 +124,13 @@ const TabelDemo = () => {
       },
     },
   ];
+
   const [showAddANewLineModal, setShowAddANewLineModal] = useState(false);
   const [showModifyDataColumnsModal, setShowModifyDataColumnsModal] = useState(false);
   const [selectionType, setSelectionType] = useState('checkbox');
   const [tabelColumns, setTabelColumns] = useState(columns);
-  const [tempColumns, setTempColumns] = useState(columns);
   const [tabelData, setTabelData] = useState(originData);
 
-  useEffect(() => {
-    setTabelColumns(tempColumns);
-  }, [tempColumns]);
 
   const handleAddANewLine = () => {
     setShowAddANewLineModal(true);
@@ -141,6 +139,7 @@ const TabelDemo = () => {
   const handleModifyDataColumns = () => {
     setShowModifyDataColumnsModal(true);
   };
+
 
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
@@ -185,6 +184,7 @@ const TabelDemo = () => {
   };
 
 
+
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -201,39 +201,16 @@ const TabelDemo = () => {
       }),
     };
   });
+
+
   return (
     <div>
-      <Radio.Group
-        onChange={({ target: { value } }) => {
-          setSelectionType(value);
-        }}
-        value={selectionType}
-      >
-        <Radio value='checkbox'>Checkbox</Radio>
-        <Radio value='radio'>Radio</Radio>
-      </Radio.Group>
-
-      <Button
-        onClick={handleAddANewLine}
-        type={'primary'}
-        style={{
-          marginRight: 30,
-        }}>
-        Add a new line
-      </Button>
-
-      <Button
-        onClick={handleModifyDataColumns}
-        style={{
-          '&:hover': {
-            color: 'red !important',
-            backgroundColor: 'red !important',
-          },
-        }}
-
-      >
-        Modify data columns
-      </Button>
+      <TableButtons
+        setSelectionType={setSelectionType}
+        selectionType={selectionType}
+        handleAddANewLine={handleAddANewLine}
+        handleModifyDataColumns={handleModifyDataColumns}
+      />
 
       <Divider />
       <Form form={form} component={false}>
@@ -259,10 +236,10 @@ const TabelDemo = () => {
       <Modals
         setShowModifyDataColumnsModal={setShowModifyDataColumnsModal}
         setShowAddANewLineModal={setShowAddANewLineModal}
-        setTempColumns={setTempColumns}
         showAddANewLineModal={showAddANewLineModal}
         showModifyDataColumnsModal={showModifyDataColumnsModal}
-        tempColumns={tempColumns}
+        setTabelColumns={setTabelColumns}
+        tabelColumns={tabelColumns}
       />
 
     </div>

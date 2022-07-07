@@ -1,6 +1,5 @@
 import { Button, Form, Input } from 'antd';
 import React, { useState } from 'react';
-import { useEffect } from 'react';
 
 
 const composeColumnDict = (columns) => {
@@ -11,12 +10,12 @@ const composeColumnDict = (columns) => {
   return dict;
 };
 
-const ModifyDataColumnsForm = ({tempColumns, setTabelColumns}) => {
-  const [formInitialValues, setFormInitialValues] = useState(composeColumnDict(tempColumns))
+const ModifyDataColumnsForm = ({setTabelColumns, tabelColumns,tempColumns,setTempColumns}) => {
+  const [formInitialValues, setFormInitialValues] = useState(composeColumnDict(tabelColumns))
+  console.log(formInitialValues,tabelColumns)
 
 
   const onFinishModifyDataColumnsForm = (data) => {
-    console.log(data, tempColumns)
     let newColumns = tempColumns
     for(let col of newColumns){
       if(col.title === ''){
@@ -32,12 +31,10 @@ const ModifyDataColumnsForm = ({tempColumns, setTabelColumns}) => {
       title: '',
       dataIndex: `col${columns1.length+1}`
     })
+    setTempColumns(columns1)
     setFormInitialValues(composeColumnDict(columns1))
   };
 
-  useEffect(() => {
-    console.log('here')
-  }, [])
 
   return(
     <Form
@@ -48,24 +45,26 @@ const ModifyDataColumnsForm = ({tempColumns, setTabelColumns}) => {
       initialValues={formInitialValues}
     >
       {tempColumns.map((item) => {
-        return (
-          <Form.Item
-            name={item.dataIndex}
-            key={item.dataIndex}
-          >
-            <Input
-              required
-              allowClear
-              style={{
-                width: '100%',
-                height: '50px',
-              }}
-            />
-          </Form.Item>);
+        if(item.dataIndex !== 'operation') {
+          return (
+            <Form.Item
+              name={item.dataIndex}
+              key={item.dataIndex}
+            >
+              <Input
+                required
+                allowClear
+                style={{
+                  width: '100%',
+                  height: '50px',
+                }}
+              />
+            </Form.Item>);
+        }
       })}
 
       <Button
-        onClick={() => handeAddNewColumn()}
+        onClick={handeAddNewColumn}
         style={{
           marginBottom: 10,
         }}>

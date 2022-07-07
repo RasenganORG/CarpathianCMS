@@ -4,15 +4,19 @@ import ModifyDataColumnsForm from './ModifyDataColumnsForm';
 import React, { useState } from 'react';
 
 const Modals = (props) => {
+  const [tempColumns, setTempColumns] = useState(props.tabelColumns);
+
 
   const handleOkModifyDataColumns = () => {
     props.setShowModifyDataColumnsModal(false);
+    setTempColumns(props.tabelColumns)
     console.log('here');
   };
 
   const handleCancelModifyDataColumns = () => {
     props.setShowModifyDataColumnsModal(false);
-    props.setTempColumns(props.tempColumns);
+    setTempColumns(props.tabelColumns)
+
   };
 
   const handleOkAddANewLine = () => {
@@ -32,9 +36,11 @@ const Modals = (props) => {
       <Modal visible={props.showModifyDataColumnsModal} onOK={handleOkModifyDataColumns}
              onCancel={handleCancelModifyDataColumns}>
         <ModifyDataColumnsForm
-          tempColumns={props.tempColumns}
           setTabelColumns={props.setTabelColumns}
-          visible={props.showModifyDataColumnsModal} />
+          tabelColumns={props.tabelColumns}
+          tempColumns={tempColumns}
+          setTempColumns={setTempColumns}
+        />
       </Modal>
     </div>
   );
