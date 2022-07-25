@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/carpathian-cms.iml" filepath="$PROJECT_DIR$/.idea/carpathian-cms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/CMS-Carpathian-multifrontend.iml" filepath="$PROJECT_DIR$/.idea/CMS-Carpathian-multifrontend.iml" />
     </modules>
   </component>
 </project>
