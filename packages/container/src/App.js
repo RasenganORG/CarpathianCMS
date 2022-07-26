@@ -1,9 +1,13 @@
-import React from 'react'
+import React from 'react';
+import Calendar01App from './components/Calendar01App';
 
 const App = () => {
-    return(
-        <h1>HALO from carpathian</h1>
-    )
-}
+  return (
+    <div>
+      <h3>Hello from Container</h3>
+      <Calendar01App/>
+    </div>
+  );
+};
 
 export default App;
