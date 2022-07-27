@@ -1,11 +1,11 @@
 import React from 'react';
-import Calendar01App from './components/Calendar01App';
+import CalendarGeneratedApp from './components/CalendarGeneratedApp';
 
 const App = () => {
   return (
     <div>
       <h3>Hello from Container</h3>
-      <Calendar01App/>
+      <CalendarGeneratedApp/>
     </div>
   );
 };
