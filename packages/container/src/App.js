@@ -1,12 +1,9 @@
 import React from 'react';
-import CalendarGeneratedApp from './components/CalendarGeneratedApp';
+import Router from './routes';
 
 const App = () => {
   return (
-    <div>
-      <h3>Hello from Container</h3>
-      <CalendarGeneratedApp/>
-    </div>
+    <Router/>
   );
 };
 
