@@ -7,6 +7,7 @@ import PageEdit from '../components/PageEdit';
 import SettingsLayout from '../components/layouts/SettingsLayout';
 import Login from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
+import RoleBasedGuard from '../components/guards/RoleBasedGuard';
 
 const Router = () => {
 
@@ -21,7 +22,10 @@ const Router = () => {
         },
         {
           path: 'settings',
-          element: <SettingsLayout />,
+          element:
+            <RoleBasedGuard accessibleRoles={['admin']} >
+              <SettingsLayout />
+            </RoleBasedGuard>,
         },
         {
           path: '/:pageid',
