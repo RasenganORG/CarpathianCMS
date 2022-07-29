@@ -3,8 +3,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import userSlice, { userActions } from '../../redux/userSlice';
+import { login } from '../../services/auth/AuthService';
 
 const Login = () => {
+  const dispatch = useDispatch();
+
   const schema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
     password: Yup.string()
@@ -14,9 +19,10 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  function onFinishForm(data) {
-    console.log(data);
-    navigate('/application/settings');
+  async function onFinishForm(data) {
+    const response = await login(data)
+    dispatch(userActions.login(response))
+    navigate("/")
   }
 
   const yupSync = {
@@ -74,7 +80,7 @@ const Login = () => {
               Email
             </Typography.Title>
             <Form.Item
-              ame={'email'}
+              name={'email'}
               rules={[yupSync]}
             >
               <Input

@@ -3,8 +3,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import * as Yup from 'yup';
+import { login, register } from '../../services/auth/AuthService';
+import { useDispatch } from 'react-redux';
+import { userActions } from '../../redux/userSlice';
 
 const Signup = () => {
+  const dispatch = useDispatch()
   const schema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
     firstName: Yup.string().required("Your first name is required"),
@@ -16,9 +20,11 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  function onFinishForm(data) {
-    console.log(data);
-    navigate('/application/settings');
+  async function onFinishForm(data) {
+    const apiResponse = await register(data)
+    console.log(apiResponse)
+    dispatch(userActions.login(apiResponse))
+    navigate('/')
   }
 
   const yupSync = {
