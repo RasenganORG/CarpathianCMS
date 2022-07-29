@@ -1,10 +1,12 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 import ApplicationLayout from '../components/layouts/ApplicationLayout';
 import Home from '../components/home/Home';
-import ContentTypes from '../components/content-types/ContentTypes';
-import React from 'react'
+import React from 'react';
 import PageView from '../components/PageView';
 import PageEdit from '../components/PageEdit';
+import SettingsLayout from '../components/layouts/SettingsLayout';
+import Login from '../components/auth/Login';
+import Signup from '../components/auth/Signup';
 
 const Router = () => {
 
@@ -18,20 +20,37 @@ const Router = () => {
           element: <Home />,
         },
         {
-          path: 'content-types',
-          element: <ContentTypes/>
+          path: 'settings',
+          element: <SettingsLayout />,
         },
         {
-          path:'/:pageid',
-          element:<PageView/>
+          path: '/:pageid',
+          element: <PageView />,
         },
         {
-          path:'/:pageid/edit',
-          element:<PageEdit/>
-        }
+          path: '/:pageid/edit',
+          element: <PageEdit />,
+        },
+      ],
+    },
+    {
+      path: 'auth',
+      children: [
+        {
+          path: '',
+          element: <Navigate to='login' />,
+        },
+        {
+          path: 'login',
+          element: <Login />,
+        },
+        {
+          path: 'register',
+          element: <Signup />,
+        },
       ],
     },
   ]);
 };
 
-export default Router
+export default Router;

@@ -7,17 +7,21 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 const navBarSettings = [
   {
-    key: 'content-types',
-    label: <Link to={'content-types'}>Settings</Link>
+    key: 'settings',
+    label: <Link to={'settings'}>Settings</Link>
   },
   {
     key: 'siteWorkspace',
-    label: <Link to={'siteWorkspace'}>siteWorkspace</Link>,
+    label: <Link to={'siteWorkspace'}>Site</Link>,
   },
   {
     key: 'account',
-    label: <Link to={'account'}>account</Link>,
+    label: <Link to={'account'}>My account</Link>,
   },
+  {
+    key: 'auth',
+    label: <Link to={'/auth/login'}>Log In</Link>
+  }
 ];
 
 
