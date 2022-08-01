@@ -48,6 +48,13 @@ const userSlice = createSlice({
       localStorage.removeItem('lastName');
       localStorage.removeItem('role');
       localStorage.removeItem('localId');
+    },
+    refreshToken(state, action){
+      state.idToken = action.payload.id_token
+      state.refreshToken = action.payload.refresh_token
+      localStorage.setItem("idToken", action.payload.id_token)
+      localStorage.setItem("refreshToken", action.payload.refresh_token)
+      console.log("Access token has been refreshed")
     }
 
   }

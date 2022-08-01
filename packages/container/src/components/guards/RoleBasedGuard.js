@@ -24,11 +24,12 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   if (!accessibleRoles.includes(currentRole)) {
     return (
       <div>
-        <Modal visible={true}
-               onCancel={() => navigate(-2)}
-               onOk={() => navigate('/auth/login')}
-               cancelText={'Go back'}
-               okText={'Go to Login'}
+        <Modal
+          visible={true}
+          onCancel={() => navigate(-1)}
+          onOk={() => navigate('/auth/login')}
+          cancelText={'Go back'}
+          okText={'Go to Login'}
         >
           <div>
             You do not have permission to access this page

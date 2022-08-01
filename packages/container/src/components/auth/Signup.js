@@ -78,7 +78,6 @@ const Signup = () => {
             <Form.Item name={'email'} rules={[yupSync]}>
               <Input
                 placeholder={'Enter email'}
-                required
                 allowClear
                 style={{
                   width: '100%',
@@ -93,7 +92,6 @@ const Signup = () => {
             <Form.Item name={'firstName'} rules={[yupSync]}>
               <Input
                 placeholder={'First Name'}
-                required
                 allowClear
                 style={{
                   width: '100%',
@@ -108,7 +106,6 @@ const Signup = () => {
             <Form.Item name={'lastName'} rules={[yupSync]}>
               <Input
                 placeholder={'Last Name'}
-                required
                 allowClear
                 style={{
                   width: '100%',
@@ -123,7 +120,6 @@ const Signup = () => {
             <Form.Item name={'password'} rules={[yupSync]}>
               <Input.Password
                 placeholder={'Enter Password'}
-                required
                 style={{
                   width: '100%',
                   height: '50px',

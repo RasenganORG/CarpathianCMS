@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Router from './routes';
-import { Provider } from 'react-redux';
-import store from './redux';
+import { Provider, useDispatch } from 'react-redux';
+import { refreshToken } from './services/auth/AuthService';
+import useAuth from './components/hooks/use-auth';
+import AppServices from './AppServices';
 
 
 const App = () => {
+
   return (
-    <Provider store={store}>
+    <AppServices>
       <Router />
-    </Provider>
+    </AppServices>
   );
 };
 
