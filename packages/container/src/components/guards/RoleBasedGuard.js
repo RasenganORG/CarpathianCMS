@@ -3,6 +3,7 @@ import { Alert, Modal } from 'antd';
 import { useSelector } from 'react-redux';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { PATHS } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
         <Modal
           visible={true}
           onCancel={() => navigate(-1)}
-          onOk={() => navigate('/auth/login')}
+          onOk={() => navigate(PATHS.auth.login)}
           cancelText={'Go back'}
           okText={'Go to Login'}
         >

@@ -6,7 +6,6 @@ import { refreshToken } from './services/auth/AuthService';
 const AppServices = ({children}) => {
   const dispatch = useDispatch()
   const { user } = useAuth()
-  const [refreshTokenTimeout, setRefreshTokenTimeout] = useState(0)
   const timer = useRef(null);
 
   useEffect( () => {

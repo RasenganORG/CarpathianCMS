@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { login, register } from '../../services/auth/AuthService';
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../redux/userSlice';
+import { PATHS } from '../../routes/paths';
 
 const Signup = () => {
   const dispatch = useDispatch()
@@ -24,7 +25,7 @@ const Signup = () => {
     const apiResponse = await register(data)
     console.log(apiResponse)
     dispatch(userActions.login(apiResponse))
-    navigate('/')
+    navigate(PATHS.home)
   }
 
   const yupSync = {
@@ -49,7 +50,7 @@ const Signup = () => {
           <Button
             type={'primary'}
             onClick={() => {
-              navigate('/auth/login');
+              navigate(PATHS.auth.login);
             }}
           >
             <Typography>

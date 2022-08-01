@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import LogoutButton from '../auth/LogoutButton';
 import useAuth from '../hooks/use-auth';
+import { PATHS } from '../../routes/paths';
 
 
 const navBarAllSettings = [
@@ -22,7 +23,7 @@ const navBarAllSettings = [
   },
   {
     key: 'auth',
-    label: <Link to={'/auth/login'}>Log In</Link>
+    label: <Link to={PATHS.auth.login}>Log In</Link>
   },
   {
     key:'logout',
