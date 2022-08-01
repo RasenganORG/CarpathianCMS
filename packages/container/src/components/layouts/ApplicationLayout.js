@@ -3,9 +3,11 @@ import 'antd/dist/antd.css';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import LogoutButton from '../auth/LogoutButton';
+import useAuth from '../hooks/use-auth';
 
 
-const navBarSettings = [
+const navBarAllSettings = [
   {
     key: 'settings',
     label: <Link to={{pathname:'settings', state:{prevPath: location.pathname}}}>Settings</Link>
@@ -22,21 +24,31 @@ const navBarSettings = [
     key: 'auth',
     label: <Link to={'/auth/login'}>Log In</Link>
   },
+  {
+    key:'logout',
+    label: <LogoutButton/>
+  }
 ];
-
 
 
 
 const ApplicationLayout = () => {
   const [selectedMenu,setSelectedMenu] = useState();
-  const navigate = useNavigate();
+  const [navBarSettings, setNavBarSettings] = useState([])
+  const { isAuthenticated } = useAuth()
 
-  useEffect(()=> {
-    if(selectedMenu) {
-      navigate(`${selectedMenu.key}`);
-      console.log(selectedMenu);
-    }
-  },[selectedMenu])
+
+  useEffect(() => {
+    let settingsArray = []
+    if(!isAuthenticated)
+      settingsArray.push(navBarAllSettings.find( navSetting => navSetting.key === "auth"))
+    else
+      settingsArray.push(...navBarAllSettings.filter(navSetting => navSetting.key !== "auth"))
+
+    setNavBarSettings(settingsArray)
+
+  },[isAuthenticated])
+
 
   return (
     <Layout
