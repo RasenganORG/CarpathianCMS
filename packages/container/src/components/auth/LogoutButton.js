@@ -18,12 +18,19 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button
-      type={'primary'}
-      icon={<PoweroffOutlined />}
-      onClick={onLogOutButtonClicked}>
-      Log Out
-    </Button>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+      }}>
+      <Button
+        type={'primary'}
+        icon={<PoweroffOutlined />}
+        onClick={onLogOutButtonClicked}>
+        Log Out
+      </Button>
+    </div>
 
   );
 };

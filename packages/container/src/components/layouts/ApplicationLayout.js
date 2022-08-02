@@ -6,12 +6,14 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import LogoutButton from '../auth/LogoutButton';
 import useAuth from '../hooks/use-auth';
 import { PATHS } from '../../routes/paths';
+import useBreakpoint from '../hooks/use-breakpoint';
+import useIsMobile from '../hooks/use-is-mobile';
 
 
 const navBarAllSettings = [
   {
     key: 'settings',
-    label: <Link to={{pathname:'settings', state:{prevPath: location.pathname}}}>Settings</Link>
+    label: <Link to={{ pathname: 'settings', state: { prevPath: location.pathname } }}>Settings</Link>,
   },
   {
     key: 'siteWorkspace',
@@ -21,65 +23,94 @@ const navBarAllSettings = [
     key: 'account',
     label: <Link to={'account'}>My account</Link>,
   },
+];
+
+const accountSettings = [
   {
     key: 'auth',
-    label: <Link to={PATHS.auth.login}>Log In</Link>
+    label: <Link to={PATHS.auth.login}>Log In</Link>,
   },
   {
-    key:'logout',
-    label: <LogoutButton/>
-  }
+    key: 'logout',
+    label: <LogoutButton />,
+  },
 ];
 
 
-
 const ApplicationLayout = () => {
-  const [selectedMenu,setSelectedMenu] = useState();
-  const [navBarSettings, setNavBarSettings] = useState([])
-  const { isAuthenticated } = useAuth()
+  const [selectedMenu, setSelectedMenu] = useState();
+  const [navBarSettings, setNavBarSettings] = useState([]);
+  const [navBarAccountSettings, setNavBarAccountSettings] = useState([]);
+  const [displayLogoutMenu, setDisplayLogoutMenu] = useState(true);
+  const { isAuthenticated } = useAuth();
+  const br = useBreakpoint();
+  const isMobile = useIsMobile();
 
 
   useEffect(() => {
-    let settingsArray = []
-    if(!isAuthenticated)
-      settingsArray.push(navBarAllSettings.find( navSetting => navSetting.key === "auth"))
-    else
-      settingsArray.push(...navBarAllSettings.filter(navSetting => navSetting.key !== "auth"))
+    let settingsArray = [];
+    let accountArray = [];
+    if (isAuthenticated) {
+      settingsArray.push(...navBarAllSettings);
+      accountArray.push(accountSettings.find(navSetting => navSetting.key === 'logout'));
+    } else {
+      accountArray.push(accountSettings.find(navSetting => navSetting.key === 'auth'));
+    }
 
-    setNavBarSettings(settingsArray)
+    setNavBarSettings(settingsArray);
+    setNavBarAccountSettings(accountArray);
 
-  },[isAuthenticated])
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (br === 'sm' || br === 'xs' || isMobile === true) {
+      setDisplayLogoutMenu(false);
+    } else {
+      setDisplayLogoutMenu(true);
+    }
+  }, [br, isMobile]);
+
 
 
   return (
-    <Layout
-    >
-      <Header style={{
-        display:'flex',
-        flexDirection:'row-reverse',
-      }}>
+    <Layout>
+      <Header
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
         <Menu
           theme='dark'
           mode='horizontal'
           items={navBarSettings}
           onSelect={(e) => setSelectedMenu(e)}
+          selectedKeys={[`${window.location.pathname.slice(1)}`]}
           style={{
-            width:'30%'
+            marginLeft: '10%',
+            width: '30%',
           }}
         />
+        {displayLogoutMenu &&
+          <Menu
+            theme='dark'
+            mode={'inline'}
+            items={navBarAccountSettings}
+            onSelect={(e) => setSelectedMenu(e)}
+          />}
       </Header>
       <Content
         style={{
           padding: '0 5%',
-          backgroundColor:'whitesmoke',
+          backgroundColor: 'whitesmoke',
         }}
       >
-        <Outlet/>
+        <Outlet />
       </Content>
       <Footer
         style={{
           textAlign: 'center',
-          backgroundColor:'whitesmoke'
+          backgroundColor: 'whitesmoke',
         }}
       >
         My footer
