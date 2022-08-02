@@ -23,7 +23,6 @@ const Signup = () => {
 
   async function onFinishForm(data) {
     const apiResponse = await register(data)
-    console.log(apiResponse)
     dispatch(userActions.login(apiResponse))
     navigate(PATHS.home)
   }
