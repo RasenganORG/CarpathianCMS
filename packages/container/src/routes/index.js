@@ -1,12 +1,20 @@
-import { Navigate, useRoutes } from 'react-router-dom';
-import ApplicationLayout from '../components/layouts/ApplicationLayout';
-import Home from '../components/home/Home';
-import React from 'react';
+import { Navigate, useLocation, useRoutes } from 'react-router-dom';
+import React, {Suspense, lazy } from 'react';
 import PageView from '../components/PageView';
 import PageEdit from '../components/PageEdit';
-import SettingsLayout from '../components/layouts/SettingsLayout';
-import Login from '../components/auth/Login';
-import Signup from '../components/auth/Signup';
+import RoleBasedGuard from '../components/guards/RoleBasedGuard';
+import AuthGuard from '../components/guards/AuthGuard';
+import LoadingScreen from '../components/loading/LoadingScreen';
+
+const Loadable = (Component) => (props) => {
+  const { pathname } = useLocation();
+
+  return (
+    <Suspense fallback={<LoadingScreen/>}>
+      <Component {...props} />
+    </Suspense>
+  );
+};
 
 const Router = () => {
 
@@ -21,7 +29,12 @@ const Router = () => {
         },
         {
           path: 'settings',
-          element: <SettingsLayout />,
+          element:
+          <AuthGuard>
+            <RoleBasedGuard accessibleRoles={['admin']} >
+              <SettingsLayout />
+            </RoleBasedGuard>
+          </AuthGuard>,
         },
         {
           path: '/:pageid',
@@ -52,5 +65,11 @@ const Router = () => {
     },
   ]);
 };
+
+const Login = Loadable(lazy(() => import('../components/auth/Login')))
+const Signup = Loadable(lazy(() => import('../components/auth/Signup')))
+const Home = Loadable(lazy(() => import('../components/home/Home')))
+const SettingsLayout = Loadable(lazy(() => import('../components/layouts/SettingsLayout')))
+const ApplicationLayout = Loadable(lazy(() => import('../components/layouts/ApplicationLayout')))
 
 export default Router;

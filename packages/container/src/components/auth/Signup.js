@@ -3,8 +3,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import * as Yup from 'yup';
+import { login, register } from '../../services/auth/AuthService';
+import { useDispatch } from 'react-redux';
+import { userActions } from '../../redux/userSlice';
+import { PATHS } from '../../routes/paths';
 
 const Signup = () => {
+  const dispatch = useDispatch()
   const schema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
     firstName: Yup.string().required("Your first name is required"),
@@ -16,9 +21,10 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  function onFinishForm(data) {
-    console.log(data);
-    navigate('/application/settings');
+  async function onFinishForm(data) {
+    const apiResponse = await register(data)
+    dispatch(userActions.login(apiResponse))
+    navigate(PATHS.home)
   }
 
   const yupSync = {
@@ -43,7 +49,7 @@ const Signup = () => {
           <Button
             type={'primary'}
             onClick={() => {
-              navigate('/auth/login');
+              navigate(PATHS.auth.login);
             }}
           >
             <Typography>
@@ -72,7 +78,6 @@ const Signup = () => {
             <Form.Item name={'email'} rules={[yupSync]}>
               <Input
                 placeholder={'Enter email'}
-                required
                 allowClear
                 style={{
                   width: '100%',
@@ -87,7 +92,6 @@ const Signup = () => {
             <Form.Item name={'firstName'} rules={[yupSync]}>
               <Input
                 placeholder={'First Name'}
-                required
                 allowClear
                 style={{
                   width: '100%',
@@ -102,7 +106,6 @@ const Signup = () => {
             <Form.Item name={'lastName'} rules={[yupSync]}>
               <Input
                 placeholder={'Last Name'}
-                required
                 allowClear
                 style={{
                   width: '100%',
@@ -117,7 +120,6 @@ const Signup = () => {
             <Form.Item name={'password'} rules={[yupSync]}>
               <Input.Password
                 placeholder={'Enter Password'}
-                required
                 style={{
                   width: '100%',
                   height: '50px',

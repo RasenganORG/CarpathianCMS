@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Router from './routes';
+import AppServices from './AppServices';
+
 
 const App = () => {
+
   return (
-    <Router/>
+    <AppServices>
+      <Router />
+    </AppServices>
   );
 };
 
