@@ -15,7 +15,6 @@ const userSlice = createSlice({
   reducers:{
     login(state, action) {
       const authResponse = action.payload
-      console.log(authResponse)
       state.isAuthenticated = !!authResponse
       state.idToken = authResponse.idToken
       state.refreshToken = authResponse.refreshToken
@@ -54,7 +53,6 @@ const userSlice = createSlice({
       state.refreshToken = action.payload.refresh_token
       localStorage.setItem("idToken", action.payload.id_token)
       localStorage.setItem("refreshToken", action.payload.refresh_token)
-      console.log("Access token has been refreshed")
     }
 
   }
