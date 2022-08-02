@@ -27,7 +27,6 @@ export const login = async (data) => {
 export const register = async (data) => {
   try {
     data = JSON.stringify(data)
-    console.log(data)
     let config = {
       method: 'post',
       url: 'http://localhost:5000/users/create-user',
