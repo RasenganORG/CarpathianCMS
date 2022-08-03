@@ -74,7 +74,6 @@ const Login = () => {
             onFinish={onFinishForm}
             style={{
               marginTop: 50,
-              width: '400px',
             }}
           >
             <Typography.Title level={5}>
