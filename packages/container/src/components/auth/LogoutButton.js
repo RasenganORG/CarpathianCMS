@@ -7,7 +7,6 @@ import { PoweroffOutlined } from '@ant-design/icons';
 
 const LogoutButton = () => {
   const { isAuthenticated } = useAuth();
-  const user = useAuth();
   const dispatch = useDispatch();
 
 
@@ -23,6 +22,7 @@ const LogoutButton = () => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end',
+        alignItems:'center',
       }}>
       <Button
         type={'primary'}

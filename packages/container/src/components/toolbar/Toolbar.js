@@ -2,19 +2,26 @@ import { Alert, Button, Card, Col, Modal, Row, Space, Tooltip, Typography } from
 import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import AddNewPageForm from '../pages/AddNewPageForm';
 
 const Toolbar = () => {
   const [leaveModalIsOpened, setLeaveModalIsOpened] = useState(false);
+  const [newPageModalIsOpened, setNewPageModalIsOpened] = useState(false)
+
   const navigate = useNavigate();
   const isEdit = window.location.pathname.split('/').findIndex((word) => word === 'edit') !== -1;
   const { pageid = '' } = useParams();
 
-  console.log(pageid);
 
   const onExitEdit = () => {
     navigate(`${pageid}`);
     setLeaveModalIsOpened(false);
   };
+
+  const onAddNewPage = () => {
+    setNewPageModalIsOpened(true);
+  };
+
 
   const preview = <Button
     type={'text'}
@@ -72,6 +79,7 @@ const Toolbar = () => {
     </Tooltip>
   </Button>;
 
+
   return (
     <div>
       <Modal
@@ -88,6 +96,9 @@ const Toolbar = () => {
           Your work will be automatically saved upon leaving this page.
         </Typography.Title>
       </Modal>
+      <AddNewPageForm
+        setNewPageModalIsOpened={setNewPageModalIsOpened}
+        newPageModalIsOpened={newPageModalIsOpened} />
       <Card
         style={{
           top: 200,
@@ -111,6 +122,7 @@ const Toolbar = () => {
 
           <Button
             type={'text'}
+            onClick={onAddNewPage}
           >
             <Tooltip
               title={'Add a new page'}

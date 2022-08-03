@@ -8,22 +8,9 @@ import useAuth from '../hooks/use-auth';
 import { PATHS } from '../../routes/paths';
 import useBreakpoint from '../hooks/use-breakpoint';
 import useIsMobile from '../hooks/use-is-mobile';
+import { useSelector } from 'react-redux';
 
 
-const navBarAllSettings = [
-  {
-    key: 'settings',
-    label: <Link to={{ pathname: 'settings', state: { prevPath: location.pathname } }}>Settings</Link>,
-  },
-  {
-    key: 'siteWorkspace',
-    label: <Link to={'siteWorkspace'}>Site</Link>,
-  },
-  {
-    key: 'account',
-    label: <Link to={'account'}>My account</Link>,
-  },
-];
 
 const accountSettings = [
   {
@@ -38,12 +25,14 @@ const accountSettings = [
 
 
 const ApplicationLayout = () => {
+  const navBarAllSettings = useSelector(state => state.pages.navBar)
   const [selectedMenu, setSelectedMenu] = useState();
-  const [navBarSettings, setNavBarSettings] = useState([]);
-  const [navBarAccountSettings, setNavBarAccountSettings] = useState([]);
+  const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
+  const [navBarRightSettings, setNavBarRightSettings] = useState([]);
   const [displayLogoutMenu, setDisplayLogoutMenu] = useState(true);
+  const [layoutOrientation, setLayoutOrientation] = useState('horizontal');
   const { isAuthenticated } = useAuth();
-  const location = useLocation()
+  const location = useLocation();
   const br = useBreakpoint();
   const isMobile = useIsMobile();
 
@@ -58,18 +47,21 @@ const ApplicationLayout = () => {
       accountArray.push(accountSettings.find(navSetting => navSetting.key === 'auth'));
     }
 
-    setNavBarSettings(settingsArray);
-    setNavBarAccountSettings(accountArray);
+    setNavBarLeftSettings(settingsArray);
+    setNavBarRightSettings(accountArray);
 
-  }, [isAuthenticated]);
+  }, [isAuthenticated,navBarAllSettings]);
 
   useEffect(() => {
     if (br === 'sm' || br === 'xs' || isMobile === true) {
+      setLayoutOrientation('vertical');
       setDisplayLogoutMenu(false);
     } else {
+      setLayoutOrientation('horizontal');
       setDisplayLogoutMenu(true);
     }
   }, [br, isMobile]);
+
 
 
 
@@ -84,7 +76,7 @@ const ApplicationLayout = () => {
         <Menu
           theme='dark'
           mode='horizontal'
-          items={navBarSettings}
+          items={navBarLeftSettings}
           onSelect={(e) => setSelectedMenu(e)}
           selectedKeys={[`${location.pathname.split('/')[1]}`]}
           style={{
@@ -96,7 +88,7 @@ const ApplicationLayout = () => {
           <Menu
             theme='dark'
             mode={'inline'}
-            items={navBarAccountSettings}
+            items={navBarRightSettings}
             onSelect={(e) => setSelectedMenu(e)}
           />}
       </Header>

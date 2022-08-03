@@ -1,7 +1,7 @@
 import { Navigate, useLocation, useRoutes } from 'react-router-dom';
 import React, { Suspense, lazy } from 'react';
-import PageView from '../components/PageView';
-import PageEdit from '../components/PageEdit';
+import PageView from '../components/pages/PageView';
+import PageEdit from '../components/pages/PageEdit';
 import RoleBasedGuard from '../components/guards/RoleBasedGuard';
 import AuthGuard from '../components/guards/AuthGuard';
 import LoadingScreen from '../components/loading/LoadingScreen';
