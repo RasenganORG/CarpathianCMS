@@ -1,16 +1,17 @@
 import { Navigate, useLocation, useRoutes } from 'react-router-dom';
-import React, {Suspense, lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
 import PageView from '../components/PageView';
 import PageEdit from '../components/PageEdit';
 import RoleBasedGuard from '../components/guards/RoleBasedGuard';
 import AuthGuard from '../components/guards/AuthGuard';
 import LoadingScreen from '../components/loading/LoadingScreen';
+import PageLayout from '../components/layouts/PageLayout';
 
 const Loadable = (Component) => (props) => {
   const { pathname } = useLocation();
 
   return (
-    <Suspense fallback={<LoadingScreen/>}>
+    <Suspense fallback={<LoadingScreen />}>
       <Component {...props} />
     </Suspense>
   );
@@ -24,26 +25,37 @@ const Router = () => {
       element: <ApplicationLayout />,
       children: [
         {
-          path: '',
-          element: <Home />,
-        },
-        {
           path: 'settings',
           element:
-          <AuthGuard>
-            <RoleBasedGuard accessibleRoles={['admin']} >
-              <SettingsLayout />
-            </RoleBasedGuard>
-          </AuthGuard>,
+            <AuthGuard>
+              <RoleBasedGuard accessibleRoles={['admin']}>
+                <SettingsLayout />
+              </RoleBasedGuard>
+            </AuthGuard>,
         },
         {
-          path: '/:pageid',
-          element: <PageView />,
+          path: 'home',
+          element: <Home/>
         },
         {
-          path: '/:pageid/edit',
-          element: <PageEdit />,
+          path: '',
+          element:<PageLayout/>,
+          children: [
+            {
+              path:'',
+              element:<Navigate to={'home'}/>
+            },
+            {
+              path: '/:pageid',
+              element: <PageView />,
+            },
+            {
+              path: '/:pageid/edit',
+              element: <PageEdit />,
+            },
+          ],
         },
+
       ],
     },
     {
@@ -66,10 +78,10 @@ const Router = () => {
   ]);
 };
 
-const Login = Loadable(lazy(() => import('../components/auth/Login')))
-const Signup = Loadable(lazy(() => import('../components/auth/Signup')))
-const Home = Loadable(lazy(() => import('../components/home/Home')))
-const SettingsLayout = Loadable(lazy(() => import('../components/layouts/SettingsLayout')))
-const ApplicationLayout = Loadable(lazy(() => import('../components/layouts/ApplicationLayout')))
+const Login = Loadable(lazy(() => import('../components/auth/Login')));
+const Signup = Loadable(lazy(() => import('../components/auth/Signup')));
+const Home = Loadable(lazy(() => import('../components/home/Home')));
+const SettingsLayout = Loadable(lazy(() => import('../components/layouts/SettingsLayout')));
+const ApplicationLayout = Loadable(lazy(() => import('../components/layouts/ApplicationLayout')));
 
 export default Router;

@@ -43,6 +43,7 @@ const ApplicationLayout = () => {
   const [navBarAccountSettings, setNavBarAccountSettings] = useState([]);
   const [displayLogoutMenu, setDisplayLogoutMenu] = useState(true);
   const { isAuthenticated } = useAuth();
+  const location = useLocation()
   const br = useBreakpoint();
   const isMobile = useIsMobile();
 
@@ -85,7 +86,7 @@ const ApplicationLayout = () => {
           mode='horizontal'
           items={navBarSettings}
           onSelect={(e) => setSelectedMenu(e)}
-          selectedKeys={[`${window.location.pathname.slice(1)}`]}
+          selectedKeys={[`${location.pathname.split('/')[1]}`]}
           style={{
             marginLeft: '10%',
             width: '30%',
@@ -102,7 +103,6 @@ const ApplicationLayout = () => {
       <Content
         style={{
           padding: '0 5%',
-          backgroundColor: 'whitesmoke',
         }}
       >
         <Outlet />
@@ -110,7 +110,6 @@ const ApplicationLayout = () => {
       <Footer
         style={{
           textAlign: 'center',
-          backgroundColor: 'whitesmoke',
         }}
       >
         My footer

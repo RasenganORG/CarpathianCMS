@@ -76,7 +76,6 @@ const SettingsLayout = () => {
       <Layout
         style={{
           padding: '24px 0',
-          backgroundColor: 'whitesmoke',
         }}
       >
         <Sider className='site-layout-background' width={200}>

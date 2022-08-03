@@ -52,7 +52,7 @@ const Login = () => {
           <Button
             type={'primary'}
             onClick={() => {
-              navigate(PATHS.auth.signup);
+              navigate('../register');
             }}
           >
             <Typography>
