@@ -6,6 +6,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import { Option } from 'antd/es/mentions';
 import FormItem from 'antd/es/form/FormItem';
 import { pagesActions } from '../../redux/pagesSlice';
+import { addNewPage } from '../../services/pages/PagesService';
 
 const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   const [parentOfValue, setParentOfValue] = useState('none')
@@ -25,12 +26,16 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
     },
   };
 
-  const onFinishForm = (data) => {
+  const onFinishForm = async (data) => {
     setCreatePageButtonLoading(true)
     data.parent = parentOfValue
     dispatch(pagesActions.createNewPage(data))
-    setCreatePageButtonLoading(false)
-    setNewPageModalIsOpened(false)
+    const res = await addNewPage(data)
+    console.log(res)
+    
+    setCreatePageButtonLoading(false);
+    setNewPageModalIsOpened(false);
+
   };
 
 
