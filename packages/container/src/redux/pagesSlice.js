@@ -22,14 +22,14 @@ const pagesSlice = createSlice({
     pagesList: [
       {
         metadata: {
-          name: 'page One',
+          title: 'page One',
           hrf: 'page-one',
           parent: 'none',
         },
       },
       {
         metadata: {
-          name: 'page Two',
+          title: 'page Two',
           hrf: 'page-two',
           parent: 'none',
         },
@@ -38,6 +38,10 @@ const pagesSlice = createSlice({
   },
   reducers:{
 
+    createNewPage(state, action){
+      const data = action.payload
+      state.pagesList.push({metadata: data})
+    }
   }
 })
 

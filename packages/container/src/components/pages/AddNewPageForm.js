@@ -4,16 +4,19 @@ import * as Yup from 'yup';
 import { Button, Col, Form, Input, Modal, Row, Select, Tooltip, Typography } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Option } from 'antd/es/mentions';
+import FormItem from 'antd/es/form/FormItem';
+import { pagesActions } from '../../redux/pagesSlice';
 
 const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
-
+  const [parentOfValue, setParentOfValue] = useState('none')
+  const [createPageButtonLoading, setCreatePageButtonLoading] = useState(false)
   const dispatch = useDispatch();
   const pages = useSelector(state => state.pages.pagesList);
 
   const schema = Yup.object().shape({
-    pageTitle: Yup.string().required('The title of the page is required'),
-    pageHref: Yup.string().required('The href of the page is required'),
-    parentOf: Yup.string(),
+    title: Yup.string().required('The title of the page is required'),
+    href: Yup.string().required('The href of the page is required'),
+    parent: Yup.string(),
   });
 
   const yupSync = {
@@ -23,12 +26,11 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   };
 
   const onFinishForm = (data) => {
-    console.log(data);
-  };
-
-  const onOkAddNewPage = () => {
-
-    setNewPageModalIsOpened(false);
+    setCreatePageButtonLoading(true)
+    data.parent = parentOfValue
+    dispatch(pagesActions.createNewPage(data))
+    setCreatePageButtonLoading(false)
+    setNewPageModalIsOpened(false)
   };
 
 
@@ -51,7 +53,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
         }}
       >
         <Form.Item
-          name={'pageTitle'}
+          name={'title'}
           rules={[yupSync]}
         >
           <Row>
@@ -84,7 +86,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
         </Form.Item>
 
         <Form.Item
-          name={'pageHref'}
+          name={'href'}
           rules={[yupSync]}
         >
           <Row>
@@ -116,7 +118,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           </Row>
         </Form.Item>
         <Form.Item
-          name={'parentOf'}
+          name={'parent'}
           rules={[yupSync]}
         >
           <Row>
@@ -130,12 +132,13 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
                   height: '50px',
                 }}
                 defaultValue={'none'}
+                onChange={(value) => setParentOfValue(value) }
               >
                   <Select.Option value={'none'} key={'none'}>None</Select.Option>
                   {
                     pages.map((page) => {
-                      return <Select.Option value={page.metadata.name}
-                                            key={page.metadata.name}>{page.metadata.name}</Select.Option>;
+                      return <Select.Option value={page.metadata.title}
+                                            key={page.metadata.title}>{page.metadata.title}</Select.Option>;
                     })
                   }
               </Select>
@@ -165,6 +168,8 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
               color: 'black',
             }}
             size={'large'}
+            loading={createPageButtonLoading}
+            disabled={createPageButtonLoading}
           >
             Create page
           </Button>
