@@ -1,5 +1,5 @@
 import { Button, Card, Col, Form, Image, Input, Row, Space, Typography } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ import { PATHS } from '../../routes/paths';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false)
 
   const schema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
@@ -21,8 +22,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   async function onFinishForm(data) {
+    setIsLoading(true)
     const response = await login(data)
     dispatch(userActions.login(response))
+    setIsLoading(false)
     navigate(PATHS.home)
   }
 
@@ -119,6 +122,8 @@ const Login = () => {
                   color: 'black',
                 }}
                 size={'large'}
+                loading={isLoading}
+                disabled={isLoading}
               >
                 Log in
               </Button>

@@ -9,7 +9,7 @@ export const login = async (data) => {
     data = JSON.stringify(data)
     const config = {
       method: 'post',
-      url: 'http://localhost:5000/users/login-user',
+      url: 'http://localhost:5000/users/loginUser',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -29,7 +29,7 @@ export const register = async (data) => {
     data = JSON.stringify(data)
     let config = {
       method: 'post',
-      url: 'http://localhost:5000/users/create-user',
+      url: 'http://localhost:5000/users/createUser',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -52,7 +52,7 @@ export const refreshToken = async (refreshToken,dispatch) => {
 
     let config = {
       method: 'post',
-      url: 'http://localhost:5000/users/refresh-token',
+      url: 'http://localhost:5000/users/refreshToken',
       headers: {
         'Content-Type': 'application/json'
       },

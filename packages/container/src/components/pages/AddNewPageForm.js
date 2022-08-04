@@ -29,6 +29,9 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   const onFinishForm = async (data) => {
     setCreatePageButtonLoading(true)
     data.parent = parentOfValue
+    data = {
+      metadata : data
+    }
     dispatch(pagesActions.createNewPage(data))
     const res = await addNewPage(data)
     console.log(res)
@@ -142,8 +145,8 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
                   <Select.Option value={'none'} key={'none'}>None</Select.Option>
                   {
                     pages.map((page) => {
-                      return <Select.Option value={page.metadata.title}
-                                            key={page.metadata.title}>{page.metadata.title}</Select.Option>;
+                      return <Select.Option value={page.data.metadata.title}
+                                            key={page.data.metadata.title}>{page.data.metadata.title}</Select.Option>;
                     })
                   }
               </Select>

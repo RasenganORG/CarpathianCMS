@@ -11,7 +11,6 @@ import useIsMobile from '../hooks/use-is-mobile';
 import { useSelector } from 'react-redux';
 
 
-
 const accountSettings = [
   {
     key: 'auth',
@@ -23,9 +22,20 @@ const accountSettings = [
   },
 ];
 
+const navBarBasicSettings = [
+  {
+    key: 'settings',
+    label: <Link to={{ pathname: 'settings' }}>Settings</Link>,
+  },
+  {
+    key: 'account',
+    label: <Link to={'account'}>My account</Link>,
+  },
+];
+
 
 const ApplicationLayout = () => {
-  const navBarAllSettings = useSelector(state => state.pages.navBar)
+  const pages = useSelector(state => state.pages.pagesList);
   const [selectedMenu, setSelectedMenu] = useState();
   const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
   const [navBarRightSettings, setNavBarRightSettings] = useState([]);
@@ -41,7 +51,7 @@ const ApplicationLayout = () => {
     let settingsArray = [];
     let accountArray = [];
     if (isAuthenticated) {
-      settingsArray.push(...navBarAllSettings);
+      settingsArray.push(...navBarBasicSettings);
       accountArray.push(accountSettings.find(navSetting => navSetting.key === 'logout'));
     } else {
       accountArray.push(accountSettings.find(navSetting => navSetting.key === 'auth'));
@@ -50,7 +60,7 @@ const ApplicationLayout = () => {
     setNavBarLeftSettings(settingsArray);
     setNavBarRightSettings(accountArray);
 
-  }, [isAuthenticated,navBarAllSettings]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (br === 'sm' || br === 'xs' || isMobile === true) {
@@ -62,7 +72,21 @@ const ApplicationLayout = () => {
     }
   }, [br, isMobile]);
 
+  useEffect(() => {
+    let navBar = [];
+    pages.map((page) => {
+      console.log(page)
+      let pageNavBar = {
+        key:page.data.metadata.href,
+        label: <Link to={page.data.metadata.href}>{page.data.metadata.title}</Link>
+      };
+      navBar.push(pageNavBar);
+    });
+    navBar.push(...navBarBasicSettings);
+    setNavBarLeftSettings(navBar);
 
+  }, [pages]);
+  console.log(pages)
 
 
   return (
@@ -81,7 +105,7 @@ const ApplicationLayout = () => {
           selectedKeys={[`${location.pathname.split('/')[1]}`]}
           style={{
             marginLeft: '10%',
-            width: '30%',
+            width: '100%',
           }}
         />
         {displayLogoutMenu &&

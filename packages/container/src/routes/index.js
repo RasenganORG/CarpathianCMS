@@ -35,15 +35,19 @@ const Router = () => {
         },
         {
           path: 'home',
-          element: <Home/>
+          element: <Home />,
+        },
+        {
+          path: 'account',
+          element: <Home />,
         },
         {
           path: '',
-          element:<PageLayout/>,
+          element: <PageLayout />,
           children: [
             {
-              path:'',
-              element:<Navigate to={'home'}/>
+              path: '',
+              element: <Navigate to={'home'} />,
             },
             {
               path: '/:pageid',

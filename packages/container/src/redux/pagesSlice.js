@@ -5,42 +5,18 @@ import React from 'react';
 const pagesSlice = createSlice({
   name:'pages',
   initialState:{
-    navBar : [
-      {
-        key: 'settings',
-        label: <Link to={{ pathname: 'settings', state: { prevPath: location.pathname } }}>Settings</Link>,
-      },
-      {
-        key: 'siteWorkspace',
-        label: <Link to={'siteWorkspace'}>Site</Link>,
-      },
-      {
-        key: 'account',
-        label: <Link to={'account'}>My account</Link>,
-      },
-    ],
-    pagesList: [
-      {
-        metadata: {
-          title: 'page One',
-          hrf: 'page-one',
-          parent: 'none',
-        },
-      },
-      {
-        metadata: {
-          title: 'page Two',
-          hrf: 'page-two',
-          parent: 'none',
-        },
-      },
-    ]
+    pagesList: []
   },
   reducers:{
 
     createNewPage(state, action){
       const data = action.payload
-      state.pagesList.push({metadata: data})
+      state.pagesList.push({data: data})
+    },
+
+    setPages(state,action){
+      const pages = action.payload
+      state.pagesList = pages
     }
   }
 })
