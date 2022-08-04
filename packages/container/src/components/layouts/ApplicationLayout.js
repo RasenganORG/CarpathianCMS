@@ -82,10 +82,12 @@ const ApplicationLayout = () => {
       };
       navBar.push(pageNavBar);
     });
-    navBar.push(...navBarBasicSettings);
+
+    if (isAuthenticated)
+      navBar.push(...navBarBasicSettings);
     setNavBarLeftSettings(navBar);
 
-  }, [pages]);
+  }, [pages, isAuthenticated]);
   console.log(pages)
 
 

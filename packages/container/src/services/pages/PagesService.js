@@ -4,10 +4,11 @@ import axios from 'axios';
 export const addNewPage = async (data) => {
   try {
 
+    const siteId = 123
     data = JSON.stringify(data)
     const config = {
       method: 'post',
-      url: 'http://localhost:5000/pages/addNewPage',
+      url: `http://localhost:5000/pages/addNewPage/${siteId}`,
       headers: {
         'Content-Type': 'application/json',
       },
