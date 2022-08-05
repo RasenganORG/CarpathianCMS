@@ -1,7 +1,7 @@
 import { Breadcrumb, Button, Layout, Menu } from 'antd';
 import 'antd/dist/antd.css';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import LogoutButton from '../auth/LogoutButton';
 import useAuth from '../hooks/use-auth';
@@ -9,6 +9,7 @@ import { PATHS } from '../../routes/paths';
 import useBreakpoint from '../hooks/use-breakpoint';
 import useIsMobile from '../hooks/use-is-mobile';
 import { useSelector } from 'react-redux';
+import useCheckPermission from '../hooks/use-check-permission';
 
 
 const accountSettings = [
@@ -33,14 +34,37 @@ const navBarBasicSettings = [
   },
 ];
 
+const initialState = {
+  selectedMenu: null,
+  navBarLeftSettings:[],
+  navBarRightSettings:[],
+  displayLogoutMenu:true,
+  layoutOrientation:'horizontal'
+}
+
+function reducer (state, action){
+  switch (action.type){
+    case 'setNavBarLeftSettings':
+      return { navBarLeftSettings : action.payload};
+    case 'setNavBarRightSettings':
+      return { navBarRightSettings : action.payload};
+    case 'setDisplayLogoutMenu':
+      return { displayLogoutMenu : action.payload};
+    case 'setLayoutOrientation':
+      return { layoutOrientation : action.payload};
+  }
+}
 
 const ApplicationLayout = () => {
   const pages = useSelector(state => state.pages.pagesList);
-  const [selectedMenu, setSelectedMenu] = useState();
   const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
   const [navBarRightSettings, setNavBarRightSettings] = useState([]);
   const [displayLogoutMenu, setDisplayLogoutMenu] = useState(true);
   const [layoutOrientation, setLayoutOrientation] = useState('horizontal');
+  const accessToSettings = useCheckPermission(['admin'])
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+
   const { isAuthenticated } = useAuth();
   const location = useLocation();
   const br = useBreakpoint();
@@ -72,23 +96,30 @@ const ApplicationLayout = () => {
     }
   }, [br, isMobile]);
 
-  useEffect(() => {
+  function generateNavbar() {
     let navBar = [];
     pages.map((page) => {
-      console.log(page)
+      //console.log(page);
+
       let pageNavBar = {
-        key:page.data.metadata.href,
-        label: <Link to={page.data.metadata.href}>{page.data.metadata.title}</Link>
+        key: page.data.metadata.href,
+        label: <Link to={page.data.metadata.href}>{page.data.metadata.title}</Link>,
       };
+
       navBar.push(pageNavBar);
     });
 
-    if (isAuthenticated)
+    if (isAuthenticated && accessToSettings) {
       navBar.push(...navBarBasicSettings);
+    }
     setNavBarLeftSettings(navBar);
+  }
+
+  useEffect(() => {
+    generateNavbar();
 
   }, [pages, isAuthenticated]);
-  console.log(pages)
+  //console.log(pages)
 
 
   return (

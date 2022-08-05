@@ -35,7 +35,7 @@ export const getPages = async () => {
     };
 
     const res = await axios(config)
-    return res.data
+    return res.data.object
 
   }catch (error){
     console.log(error)
