@@ -50,6 +50,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   const [generateCustomHref, setGenerateCustomHref] = useState(false);
 
   const [form] = Form.useForm();
+  let title = Form.useWatch('title',form)
 
   const dispatch = useDispatch();
   const pages = useSelector(state => state.pages.pagesList);
@@ -71,8 +72,8 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       }
       console.log(data);
 
-      //const res = await addNewPage(data);
-      //dispatch(pagesActions.createNewPage(res));
+      const res = await addNewPage(data);
+      dispatch(pagesActions.createNewPage(res));
       setCreatePageButtonLoading(false);
       setNewPageModalIsOpened(false);
     } catch (error) {
@@ -84,6 +85,11 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   useEffect(() => {
     form.validateFields(['href']);
   }, [generateCustomHref, form]);
+
+  useEffect(() => {
+    if(title && !generateCustomHref)
+      form.setFieldValue('href', slugify(title))
+  }, [title, generateCustomHref])
 
 
   return (
