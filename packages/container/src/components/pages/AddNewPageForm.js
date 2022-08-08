@@ -1,7 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { Button, Col, ConfigProvider, Form, Input, Modal, Row, Select, Switch, Tooltip, Typography } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  ConfigProvider,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Switch,
+  Tooltip,
+  Typography,
+} from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Option } from 'antd/es/mentions';
 import FormItem from 'antd/es/form/FormItem';
@@ -9,43 +22,66 @@ import { pagesActions } from '../../redux/pagesSlice';
 import { addNewPage } from '../../services/pages/PagesService';
 import slugify from '../../utils/slugify';
 
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    md: { span: 24, offset: 6 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    md: { span: 12, offset: 6},
+  },
+};
+const formSwitchLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    md: { span: 6, offset: 6 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    md: { span: 12},
+  },
+};
+
+
 const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   const [parentOfValue, setParentOfValue] = useState('none');
   const [createPageButtonLoading, setCreatePageButtonLoading] = useState(false);
   const [generateCustomHref, setGenerateCustomHref] = useState(false);
+
+  const [form] = Form.useForm();
+
   const dispatch = useDispatch();
   const pages = useSelector(state => state.pages.pagesList);
 
-  const schema = Yup.object().shape({
-    title: Yup.string().required('The title of the page is required'),
-    generateCustomHref: Yup.boolean(),
-    href: Yup.string(),
-    parent: Yup.string(),
-  });
 
-  //console.log(schema)
+  const onFinishForm = async () => {
+    try {
+      let data = await form.validateFields();
 
-  const yupSync = {
-    async validator({ field }, value) {
-      await schema.validateSyncAt(field, { [field]: value });
-    },
-  };
+      setCreatePageButtonLoading(true);
+      data.parent = parentOfValue;
+      data = {
+        metadata: data,
+      };
+      if (generateCustomHref === false || data.metadata.href === '') {
+        data.metadata.href = slugify(data.metadata.title);
+      }
+      console.log(data);
 
-  const onFinishForm = async (data) => {
-    setCreatePageButtonLoading(true);
-    data.parent = parentOfValue;
-    data = {
-      metadata: data,
-    };
-    if(generateCustomHref === false || data.metadata.href === ''){
-      data.metadata.href = slugify(data.metadata.title)
+      //const res = await addNewPage(data);
+      //dispatch(pagesActions.createNewPage(res));
+      setCreatePageButtonLoading(false);
+      setNewPageModalIsOpened(false);
+    } catch (error) {
+      console.log(error);
     }
-    const res = await addNewPage(data);
-    dispatch(pagesActions.createNewPage(res));
-    setCreatePageButtonLoading(false);
-    setNewPageModalIsOpened(false);
 
   };
+
+  useEffect(() => {
+    form.validateFields(['href']);
+  }, [generateCustomHref, form]);
 
 
   return (
@@ -60,140 +96,95 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
         </Button>,
       ]}
     >
-      <Form
-        onFinish={onFinishForm}
-        initialValues={{
-          generateCustomHref: false,
-          href:''
-        }}
-        style={{
-          marginTop: 50,
-        }}
+      <Form form={form} {...formItemLayout}
       >
         <Form.Item
-          name={'title'}
-          rules={[yupSync]}
+          name='title'
+          label={'Title'}
+          labelAlign={'left'}
+          rules={[
+            {
+              required: true,
+              message: 'Please input the title of your page',
+            },
+          ]}
         >
-          <Row>
-            <Col offset={6} span={12}>
-
-              <Typography.Title level={5}>
-                Page title
-              </Typography.Title>
-              <Input
-                placeholder={'Enter the title of the page'}
-                allowClear
-                style={{
-                  width: '100%',
-                  height: '50px',
-                }}
-              ></Input>
-            </Col>
-            <Col span={4}>
-              <Tooltip placement={'right'} title={'Ceva'}>
-                <InfoCircleOutlined
-                  style={{
-                    fontSize: '20px',
-                    marginTop: '2.8rem',
-                    marginLeft: '20px',
-                    color: '#0DABF4',
-                  }} />
-              </Tooltip>
-            </Col>
-          </Row>
+          <Input
+            placeholder={'Enter the title of the page'}
+            allowClear
+            style={{
+              width: '100%',
+              height: '50px',
+            }}
+          ></Input>
         </Form.Item>
-
-
         <Form.Item
-          name={'href'}
-          rules={[yupSync]}
+          name={'generateCustomHref'}
+          label={'Create a custom href'}
+          labelAlign={'left'}
+          {...formSwitchLayout}
         >
-          <Row>
-            <Col offset={6} span={12}>
-
-              <Row>
-                <Col span={6}>
-                  <Typography.Title level={5}>
-                    Page href
-                  </Typography.Title>
-                </Col>
-
-                <Col span={3}>
-                  <Form.Item
-                    name={'generateCustomHref'}
-                    rules={[yupSync]}>
-                    <Switch
-                      checkedChildren='custom'
-                      unCheckedChildren='auto'
-                      onChange={(val) => {
-                        setGenerateCustomHref(val);
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Input
-                placeholder={'Enter the href of the page'}
-                allowClear
-                disabled={!generateCustomHref}
-                style={{
-                  width: '100%',
-                  height: '50px',
-                }}
-              ></Input>
-            </Col>
-            <Col span={4}>
-              <Tooltip placement={'right'} title={'Ceva'}>
-                <InfoCircleOutlined
-                  style={{
-                    fontSize: '20px',
-                    marginTop: '2.8rem',
-                    marginLeft: '20px',
-                    color: '#0DABF4',
-                  }} />
-              </Tooltip>
-            </Col>
-          </Row>
+          <Switch
+            checkedChildren='custom'
+            unCheckedChildren='auto'
+            onChange={(val) => {
+              setGenerateCustomHref(val);
+            }}
+          />
         </Form.Item>
+        <Form.Item
+          name='href'
+          labelAlign={'left'}
+          label={'Href'}
+          rules={[
+            {
+              required: generateCustomHref,
+              message: 'Please input your custom href',
+            },
+          ]}
+        >
+          <Input
+            placeholder={'Enter the href of the page'}
+            allowClear
+            disabled={!generateCustomHref}
+            style={{
+              width: '100%',
+              height: '50px',
+            }}
+          ></Input>
+        </Form.Item>
+
         <Form.Item
           name={'parent'}
-          rules={[yupSync]}
+          labelAlign={'left'}
+          label={'Parent'}
         >
-          <Row>
-            <Col offset={6} span={12}>
-              <Typography.Title level={5}>
-                Choose the parent page
-              </Typography.Title>
-              <Select
-                style={{
-                  width: '100%',
-                  height: '50px',
-                }}
-                defaultValue={'none'}
-                onChange={(value) => setParentOfValue(value)}
-              >
-                <Select.Option value={'none'} key={'none'}>None</Select.Option>
-                {
-                  pages.map((page) => {
-                    return <Select.Option value={page.data.metadata.title}
-                                          key={page.data.metadata.title}>{page.data.metadata.title}</Select.Option>;
-                  })
-                }
-              </Select>
-            </Col>
-            <Col span={4}>
-              <Tooltip placement={'right'} title={'If you want to make this page a sub page of another'}>
-                <InfoCircleOutlined
-                  style={{
-                    fontSize: '20px',
-                    marginTop: '2.8rem',
-                    marginLeft: '20px',
-                    color: '#0DABF4',
-                  }} />
-              </Tooltip>
+          <Select
+            style={{
+              width: '100%',
+              height: '50px',
+            }}
+            defaultValue={'none'}
+            onChange={(value) => setParentOfValue(value)}
+          >
+            <Select.Option value={'none'} key={'none'}>None</Select.Option>
+            {
+              pages.map((page) => {
+                return <Select.Option value={page.data.metadata.title}
+                                      key={page.data.metadata.title}>{page.data.metadata.title}</Select.Option>;
+              })
+            }
+          </Select>
+          <Tooltip placement={'right'} title={'If you want to make this page a sub page of another'}>
+            <InfoCircleOutlined
+              style={{
+                fontSize: '20px',
+                marginTop: '2.8rem',
+                marginLeft: '20px',
+                color: '#0DABF4',
+              }} />
+          </Tooltip>
 
-            </Col>
-          </Row>
         </Form.Item>
 
         <Form.Item>
@@ -205,6 +196,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
               backgroundColor: 'aliceblue',
               color: 'black',
             }}
+            onClick={onFinishForm}
             size={'large'}
             loading={createPageButtonLoading}
             disabled={createPageButtonLoading}
@@ -213,6 +205,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           </Button>
         </Form.Item>
       </Form>
+
     </Modal>
 
   )

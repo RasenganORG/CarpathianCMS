@@ -56,6 +56,7 @@ function reducer (state, action){
 }
 
 const ApplicationLayout = () => {
+  const [selectedMenu, setSelectedMenu] = useState()
   const pages = useSelector(state => state.pages.pagesList);
   const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
   const [navBarRightSettings, setNavBarRightSettings] = useState([]);
