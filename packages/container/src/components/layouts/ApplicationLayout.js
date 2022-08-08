@@ -10,6 +10,9 @@ import useBreakpoint from '../hooks/use-breakpoint';
 import useIsMobile from '../hooks/use-is-mobile';
 import { useSelector } from 'react-redux';
 import useCheckPermission from '../hooks/use-check-permission';
+import Sider from 'antd/es/layout/Sider';
+import { DesktopOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import classes from './ApplicationLayout.module.css'
 
 
 const accountSettings = [
@@ -27,42 +30,46 @@ const navBarBasicSettings = [
   {
     key: 'settings',
     label: <Link to={{ pathname: 'settings' }}>Settings</Link>,
+    icon: <DesktopOutlined />,
+
   },
   {
     key: 'account',
     label: <Link to={'account'}>My account</Link>,
+    icon: <DesktopOutlined />,
   },
 ];
 
 const initialState = {
   selectedMenu: null,
-  navBarLeftSettings:[],
-  navBarRightSettings:[],
-  displayLogoutMenu:true,
-  layoutOrientation:'horizontal'
-}
+  navBarLeftSettings: [],
+  navBarRightSettings: [],
+  displayLogoutMenu: true,
+  layoutOrientation: 'horizontal',
+};
 
-function reducer (state, action){
-  switch (action.type){
+function reducer(state, action) {
+  switch (action.type) {
     case 'setNavBarLeftSettings':
-      return { navBarLeftSettings : action.payload};
+      return { navBarLeftSettings: action.payload };
     case 'setNavBarRightSettings':
-      return { navBarRightSettings : action.payload};
+      return { navBarRightSettings: action.payload };
     case 'setDisplayLogoutMenu':
-      return { displayLogoutMenu : action.payload};
+      return { displayLogoutMenu: action.payload };
     case 'setLayoutOrientation':
-      return { layoutOrientation : action.payload};
+      return { layoutOrientation: action.payload };
   }
 }
 
 const ApplicationLayout = () => {
-  const [selectedMenu, setSelectedMenu] = useState()
+  const [selectedMenu, setSelectedMenu] = useState();
   const pages = useSelector(state => state.pages.pagesList);
   const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
   const [navBarRightSettings, setNavBarRightSettings] = useState([]);
   const [displayLogoutMenu, setDisplayLogoutMenu] = useState(true);
   const [layoutOrientation, setLayoutOrientation] = useState('horizontal');
-  const accessToSettings = useCheckPermission(['admin'])
+  const accessToSettings = useCheckPermission(['admin']);
+  const [collapsed, setCollapsed] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
 
@@ -97,6 +104,8 @@ const ApplicationLayout = () => {
     }
   }, [br, isMobile]);
 
+  console.log(layoutOrientation);
+
   function generateNavbar() {
     let navBar = [];
     pages.map((page) => {
@@ -105,6 +114,7 @@ const ApplicationLayout = () => {
       let pageNavBar = {
         key: page.data.metadata.href,
         label: <Link to={page.data.metadata.href}>{page.data.metadata.title}</Link>,
+        icon: <DesktopOutlined />,
       };
 
       navBar.push(pageNavBar);
@@ -122,49 +132,100 @@ const ApplicationLayout = () => {
   }, [pages, isAuthenticated]);
   //console.log(pages)
 
-
-  return (
-    <Layout>
-      <Header
+  const navBarHorizontal = (
+    <Header
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}>
+      <Menu
+        theme='dark'
+        mode='horizontal'
+        items={navBarLeftSettings}
+        onSelect={(e) => setSelectedMenu(e)}
+        selectedKeys={[`${location.pathname.split('/')[1]}`]}
         style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
+          marginLeft: '10%',
+          width: '100%',
+        }}
+      />
+      {displayLogoutMenu &&
         <Menu
           theme='dark'
-          mode='horizontal'
-          items={navBarLeftSettings}
+          mode={'inline'}
+          items={navBarRightSettings}
           onSelect={(e) => setSelectedMenu(e)}
-          selectedKeys={[`${location.pathname.split('/')[1]}`]}
+        />}
+    </Header>
+  );
+
+  const navBarVertical = (
+    <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)} trigger={null}>
+      <div style={{
+        height: '32px',
+        margin: '16px',
+        background: 'rgba(237,249,253,0.3)',
+      }}>LOGO
+      </div>
+      <Menu
+        theme='dark'
+        items={navBarLeftSettings}
+        onSelect={(e) => setSelectedMenu(e)}
+        selectedKeys={[`${location.pathname.split('/')[1]}`]}
+      />
+      {displayLogoutMenu &&
+        <Menu
+          theme='dark'
+          mode={'inline'}
+          items={navBarRightSettings}
+          onSelect={(e) => setSelectedMenu(e)}
+        />}
+    </Sider>
+
+  );
+
+  return (
+    <Layout
+      style={{
+        minHeight: '100vh',
+      }}
+    >
+      {layoutOrientation === 'vertical' ? navBarVertical : navBarHorizontal}
+
+      <Layout
+        style={{ background: '#fff' }}>
+        <Header
           style={{
-            marginLeft: '10%',
-            width: '100%',
+            padding: 0,
+            background: '#fff'
           }}
-        />
-        {displayLogoutMenu &&
-          <Menu
-            theme='dark'
-            mode={'inline'}
-            items={navBarRightSettings}
-            onSelect={(e) => setSelectedMenu(e)}
-          />}
-      </Header>
-      <Content
-        style={{
-          padding: '0 5%',
-        }}
-      >
-        <Outlet />
-      </Content>
-      <Footer
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        My footer
-      </Footer>
-    </Layout>);
+        >
+          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: classes.trigger,
+            onClick: () => setCollapsed(!collapsed),
+          })}
+        </Header>
+        <Content
+          style={{
+            padding: '0 5%',
+          }}
+        >
+
+          <Outlet />
+        </Content>
+        <Footer
+          style={{
+            textAlign: 'center',
+          }}
+        >
+          My footer
+        </Footer>
+      </Layout>
+    </Layout>
+
+  )
+    ;
 };
 
 export default ApplicationLayout;

@@ -21,6 +21,7 @@ import FormItem from 'antd/es/form/FormItem';
 import { pagesActions } from '../../redux/pagesSlice';
 import { addNewPage } from '../../services/pages/PagesService';
 import slugify from '../../utils/slugify';
+import { useHref, useLocation, useParams } from 'react-router-dom';
 
 const formItemLayout = {
   labelCol: {
@@ -49,9 +50,10 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   const [createPageButtonLoading, setCreatePageButtonLoading] = useState(false);
   const [generateCustomHref, setGenerateCustomHref] = useState(false);
 
+  const pathname = useLocation().pathname.split('/')[1] ?? 'none'
+  const [defaultSelectedParent, setDefaultSelectedParent] = useState(pathname)
   const [form] = Form.useForm();
   let title = Form.useWatch('title',form)
-
   const dispatch = useDispatch();
   const pages = useSelector(state => state.pages.pagesList);
 
@@ -91,11 +93,16 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       form.setFieldValue('href', slugify(title))
   }, [title, generateCustomHref])
 
+  useEffect(() => {
+    setDefaultSelectedParent(pathname)
+  }, [pathname])
+
 
   return (
     <Modal
       visible={newPageModalIsOpened}
       onCancel={() => setNewPageModalIsOpened(false)}
+      destroyOnClose
       width={700}
       maskClosable={false}
       footer={[
@@ -200,14 +207,14 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
               width: '100%',
               height: '50px',
             }}
-            defaultValue={'none'}
+            defaultValue={defaultSelectedParent}
             onChange={(value) => setParentOfValue(value)}
           >
             <Select.Option value={'none'} key={'none'}>None</Select.Option>
             {
               pages.map((page) => {
-                return <Select.Option value={page.data.metadata.title}
-                                      key={page.data.metadata.title}>{page.data.metadata.title}</Select.Option>;
+                return <Select.Option value={page.data.metadata.href}
+                                      key={page.data.metadata.href}>{page.data.metadata.title}</Select.Option>;
               })
             }
           </Select>
