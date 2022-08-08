@@ -15,7 +15,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, InfoCircleTwoTone } from '@ant-design/icons';
 import { Option } from 'antd/es/mentions';
 import FormItem from 'antd/es/form/FormItem';
 import { pagesActions } from '../../redux/pagesSlice';
@@ -53,6 +53,8 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
 
   const dispatch = useDispatch();
   const pages = useSelector(state => state.pages.pagesList);
+
+  const hrefHelp = generateCustomHref ? <a href={'https://ahrefs.com/seo/glossary/url-slug'} target="_blank">How to create a href?</a> : null
 
 
   const onFinishForm = async () => {
@@ -102,12 +104,18 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           name='title'
           label={'Title'}
           labelAlign={'left'}
+          tooltip={{
+            icon:<InfoCircleOutlined />,
+            title:'This is the title that is going to be publicly visible',
+            placement:'right'
+          }}
           rules={[
             {
               required: true,
               message: 'Please input the title of your page',
             },
           ]}
+          hasFeedback
         >
           <Input
             placeholder={'Enter the title of the page'}
@@ -118,11 +126,17 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
             }}
           ></Input>
         </Form.Item>
+
         <Form.Item
           name={'generateCustomHref'}
           label={'Create a custom href'}
           labelAlign={'left'}
           {...formSwitchLayout}
+          tooltip={{
+            icon:<InfoCircleOutlined />,
+            title:'Choose whether you want us to generate a href based on your title or if you want to customize it',
+            placement:'right'
+          }}
         >
           <Switch
             checkedChildren='custom'
@@ -132,14 +146,25 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
             }}
           />
         </Form.Item>
+
         <Form.Item
           name='href'
           labelAlign={'left'}
           label={'Href'}
+          hasFeedback
+
+          tooltip={{
+            icon:<InfoCircleOutlined />,
+            title:'This is the route associated with this page that will pe ' +
+              'displayed in the browser searchbar and in links. It has to respect a certain format ',
+            placement:'right'
+          }}
+          extra={hrefHelp}
           rules={[
             {
               required: generateCustomHref,
-              message: 'Please input your custom href',
+              message: 'Please input a valid custom href',
+              pattern:'^[a-z0-9]+(?:-[a-z0-9]+)*$',
             },
           ]}
         >
@@ -158,6 +183,11 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           name={'parent'}
           labelAlign={'left'}
           label={'Parent'}
+          tooltip={{
+            icon:<InfoCircleOutlined />,
+            title:'Choose if you want this page to be a subpage of a certain page. If not, choose none',
+            placement:'right'
+          }}
         >
           <Select
             style={{
@@ -175,16 +205,6 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
               })
             }
           </Select>
-          <Tooltip placement={'right'} title={'If you want to make this page a sub page of another'}>
-            <InfoCircleOutlined
-              style={{
-                fontSize: '20px',
-                marginTop: '2.8rem',
-                marginLeft: '20px',
-                color: '#0DABF4',
-              }} />
-          </Tooltip>
-
         </Form.Item>
 
         <Form.Item>
