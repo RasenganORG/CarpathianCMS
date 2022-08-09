@@ -3,15 +3,15 @@ import 'antd/dist/antd.css';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import React, { useEffect, useReducer, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import LogoutButton from '../auth/LogoutButton';
-import useAuth from '../hooks/use-auth';
-import { PATHS } from '../../routes/paths';
-import useBreakpoint from '../hooks/use-breakpoint';
-import useIsMobile from '../hooks/use-is-mobile';
+import LogoutButton from '../../auth/LogoutButton';
+import useAuth from '../../hooks/use-auth';
+import { PATHS } from '../../../routes/paths';
+import useBreakpoint from '../../hooks/use-breakpoint';
+import useIsMobile from '../../hooks/use-is-mobile';
 import { useSelector } from 'react-redux';
-import useCheckPermission from '../hooks/use-check-permission';
+import useCheckPermission from '../../hooks/use-check-permission';
 import Sider from 'antd/es/layout/Sider';
-import { DesktopOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { DesktopOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PoweroffOutlined } from '@ant-design/icons';
 import classes from './ApplicationLayout.module.css'
 
 
@@ -64,6 +64,7 @@ function reducer(state, action) {
 const ApplicationLayout = () => {
   const [selectedMenu, setSelectedMenu] = useState();
   const pages = useSelector(state => state.pages.pagesList);
+  const navBar = useSelector(state => state.pages.navBar);
   const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
   const [navBarRightSettings, setNavBarRightSettings] = useState([]);
   const [displayLogoutMenu, setDisplayLogoutMenu] = useState(true);
@@ -128,7 +129,6 @@ const ApplicationLayout = () => {
 
   useEffect(() => {
     generateNavbar();
-
   }, [pages, isAuthenticated]);
   //console.log(pages)
 
@@ -137,17 +137,16 @@ const ApplicationLayout = () => {
       style={{
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
       }}>
       <Menu
         theme='dark'
         mode='horizontal'
-        items={navBarLeftSettings}
+        items={navBar}
         onSelect={(e) => setSelectedMenu(e)}
         selectedKeys={[`${location.pathname.split('/')[1]}`]}
         style={{
           marginLeft: '10%',
-          width: '100%',
+          width: '80%',
         }}
       />
       {displayLogoutMenu &&
@@ -156,6 +155,10 @@ const ApplicationLayout = () => {
           mode={'inline'}
           items={navBarRightSettings}
           onSelect={(e) => setSelectedMenu(e)}
+          style={{
+            marginLeft: '10%',
+            width: '20%',
+          }}
         />}
     </Header>
   );

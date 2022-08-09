@@ -41,3 +41,22 @@ export const getPages = async () => {
     console.log(error)
   }
 }
+
+export const getNavBar = async () => {
+
+  try{
+    const siteId = 123
+    let config = {
+      method: 'get',
+      url: `http://localhost:5000/pages/getNavbar/${siteId}`,
+      headers: {},
+
+    };
+
+    const res = await axios(config)
+    return res.data.object
+
+  }catch (error){
+    console.log(error)
+  }
+}

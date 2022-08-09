@@ -17,13 +17,7 @@ const LogoutButton = () => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems:'center',
-      }}>
+    <div>
       <Button
         type={'primary'}
         icon={<PoweroffOutlined />}

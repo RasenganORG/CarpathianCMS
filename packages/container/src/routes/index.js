@@ -86,6 +86,6 @@ const Login = Loadable(lazy(() => import('../components/auth/Login')));
 const Signup = Loadable(lazy(() => import('../components/auth/Signup')));
 const Home = Loadable(lazy(() => import('../components/home/Home')));
 const SettingsLayout = Loadable(lazy(() => import('../components/layouts/SettingsLayout')));
-const ApplicationLayout = Loadable(lazy(() => import('../components/layouts/ApplicationLayout')));
+const ApplicationLayout = Loadable(lazy(() => import('../components/layouts/ApplicationLayout/ApplicationLayout')));
 
 export default Router;

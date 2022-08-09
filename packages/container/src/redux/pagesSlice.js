@@ -21,6 +21,11 @@ const pagesSlice = createSlice({
       const pages = action.payload;
       state.pagesList = pages;
     },
+
+    setNavBar(state, action) {
+      state.navBar = action.payload
+      console.log(action.payload)
+    }
   },
 });
 

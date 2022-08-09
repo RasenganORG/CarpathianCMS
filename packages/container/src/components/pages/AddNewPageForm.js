@@ -46,7 +46,6 @@ const formSwitchLayout = {
 
 
 const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
-  const [parentOfValue, setParentOfValue] = useState('none');
   const [createPageButtonLoading, setCreatePageButtonLoading] = useState(false);
   const [generateCustomHref, setGenerateCustomHref] = useState(false);
 
@@ -64,8 +63,6 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
     try {
       let data = await form.validateFields();
 
-      setCreatePageButtonLoading(true);
-      data.parent = parentOfValue;
       data = {
         metadata: data,
       };
@@ -84,6 +81,10 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
 
   };
 
+  const getPageByHref = (href) => {
+    return  pages.find((page) => page.data.metadata.href === href)
+  }
+
   useEffect(() => {
     form.validateFields(['href']);
   }, [generateCustomHref, form]);
@@ -94,8 +95,9 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   }, [title, generateCustomHref])
 
   useEffect(() => {
-    setDefaultSelectedParent(pathname)
-  }, [pathname])
+    const page = getPageByHref(pathname)
+    setDefaultSelectedParent(page?.id)
+  }, [pathname, pages])
 
 
   return (
@@ -112,6 +114,10 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       ]}
     >
       <Form form={form} {...formItemLayout}
+        initialValues={{
+          parent : defaultSelectedParent,
+          generateCustomHref:false,
+        }}
       >
         <Form.Item
           name='title'
@@ -207,13 +213,11 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
               width: '100%',
               height: '50px',
             }}
-            defaultValue={defaultSelectedParent}
-            onChange={(value) => setParentOfValue(value)}
           >
             <Select.Option value={'none'} key={'none'}>None</Select.Option>
             {
               pages.map((page) => {
-                return <Select.Option value={page.data.metadata.href}
+                return <Select.Option value={page.id}
                                       key={page.data.metadata.href}>{page.data.metadata.title}</Select.Option>;
               })
             }
