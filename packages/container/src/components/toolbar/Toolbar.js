@@ -6,7 +6,7 @@ import AddNewPageForm from '../pages/AddNewPageForm';
 
 const Toolbar = () => {
   const [leaveModalIsOpened, setLeaveModalIsOpened] = useState(false);
-  const [newPageModalIsOpened, setNewPageModalIsOpened] = useState(false)
+  const [newPageModalIsOpened, setNewPageModalIsOpened] = useState(false);
 
   const navigate = useNavigate();
   const isEdit = window.location.pathname.split('/').findIndex((word) => word === 'edit') !== -1;
@@ -23,36 +23,75 @@ const Toolbar = () => {
   };
 
 
-  const preview = <Button
-    type={'text'}
-    onClick={() => setLeaveModalIsOpened(true)}
-  >
-    <Tooltip
-      title={'Preview your website'}
+  const preview =
+    <Space
+      size={'large'}
+      direction={'vertical'}
       style={{
         display: 'flex',
-        flexDirection: 'row',
-      }}
-    >
-      <Row>
-        <Col span={12}>
-          <img
-            src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
-            style={{
-              display: 'inline',
-              fontSize: '200%',
-              marginRight: 20,
-            }}
-          />
-        </Col>
-        <Col span={12}>
-          <Typography.Title level={4}>
-            Preview
-          </Typography.Title>
-        </Col>
-      </Row>
-    </Tooltip>
-  </Button>;
+        flexDirection: 'column',
+        justifyContent: 'center',
+        width: '100%',
+      }}>
+      <Button
+        type={'text'}
+        onClick={() => setLeaveModalIsOpened(true)}
+      >
+        <Tooltip
+          title={'Preview your website'}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <Row>
+            <Col span={12}>
+              <img
+                src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
+                style={{
+                  display: 'inline',
+                  fontSize: '200%',
+                  marginRight: 20,
+                }}
+              />
+            </Col>
+            <Col span={12}>
+              <Typography.Title level={4}>
+                Preview
+              </Typography.Title>
+            </Col>
+          </Row>
+        </Tooltip>
+      </Button>
+      <Button
+        type={'text'}
+        title={'Edit the content of your page'}
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+        }}
+      >
+        <Tooltip>
+          <Row>
+            <Col span={12}>
+              <img
+                src={'https://img.icons8.com/ios/30/000000/content.png'}
+                style={{
+                  display: 'inline',
+                  fontSize: '200%',
+                  marginRight: 20,
+                }}
+              />
+            </Col>
+            <Col span={12}>
+              <Typography.Title level={4}>
+                Content
+              </Typography.Title>
+            </Col>
+          </Row>
+        </Tooltip>
+      </Button>
+    </Space>;
 
   const editPage = <Button
     type={'text'}
