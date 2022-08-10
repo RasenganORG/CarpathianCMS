@@ -7,3 +7,4 @@ const slugify = (str) =>
     .replace(/^-+|-+$/g, '');
 
 export default slugify
+

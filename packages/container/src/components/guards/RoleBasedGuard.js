@@ -42,3 +42,4 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
 
   return <>{children}</>;
 }
+

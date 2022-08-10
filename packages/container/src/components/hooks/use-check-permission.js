@@ -15,3 +15,4 @@ const useCheckPermission = ( accessibleRoles ) => {
 };
 
 export default useCheckPermission;
+

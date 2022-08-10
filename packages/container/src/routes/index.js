@@ -98,3 +98,4 @@ const SettingsLayout = Loadable(lazy(() => import('../components/layouts/Setting
 const ApplicationLayout = Loadable(lazy(() => import('../components/layouts/ApplicationLayout/ApplicationLayout')));
 
 export default Router;
+

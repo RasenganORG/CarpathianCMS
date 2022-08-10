@@ -60,3 +60,4 @@ export const getNavBar = async () => {
     console.log(error)
   }
 }
+
