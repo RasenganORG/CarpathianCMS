@@ -12,7 +12,7 @@ RoleBasedGuard.propTypes = {
   children: PropTypes.node,
 };
 
-const useCurrentRole = () => {
+export const useCurrentRole = () => {
   // Logic here to get current user role
   const role = useSelector(state => state.user.role);
   return role;
@@ -42,3 +42,4 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
 
   return <>{children}</>;
 }
+

@@ -7,7 +7,6 @@ import { PoweroffOutlined } from '@ant-design/icons';
 
 const LogoutButton = () => {
   const { isAuthenticated } = useAuth();
-  const user = useAuth();
   const dispatch = useDispatch();
 
 
@@ -18,12 +17,14 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button
-      type={'primary'}
-      icon={<PoweroffOutlined />}
-      onClick={onLogOutButtonClicked}>
-      Log Out
-    </Button>
+    <div>
+      <Button
+        type={'primary'}
+        icon={<PoweroffOutlined />}
+        onClick={onLogOutButtonClicked}>
+        Log Out
+      </Button>
+    </div>
 
   );
 };

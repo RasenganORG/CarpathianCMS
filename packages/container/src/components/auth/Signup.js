@@ -1,5 +1,5 @@
 import { Button, Col, Form, Input, Row, Typography } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import * as Yup from 'yup';
@@ -9,6 +9,7 @@ import { userActions } from '../../redux/userSlice';
 import { PATHS } from '../../routes/paths';
 
 const Signup = () => {
+  const [buttonDisabled, setButtonDisabled] = useState(false)
   const dispatch = useDispatch()
   const schema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
@@ -22,8 +23,10 @@ const Signup = () => {
   const navigate = useNavigate();
 
   async function onFinishForm(data) {
+    setButtonDisabled(true)
     const apiResponse = await register(data)
     dispatch(userActions.login(apiResponse))
+    setButtonDisabled(false)
     navigate(PATHS.home)
   }
 
@@ -136,6 +139,8 @@ const Signup = () => {
                   backgroundColor: 'aliceblue',
                   color: 'black',
                 }}
+                disabled={buttonDisabled}
+                loading={buttonDisabled}
                 size={'large'}
               >
                 Sign up

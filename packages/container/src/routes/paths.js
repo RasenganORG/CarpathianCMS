@@ -11,3 +11,4 @@ export const PATHS = {
     root: '/settings',
   }
 }
+
