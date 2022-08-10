@@ -6,6 +6,7 @@ const pagesSlice = createSlice({
   name: 'pages',
   initialState: {
     pagesList: [],
+    navBar:[]
   },
   reducers: {
 
@@ -22,10 +23,11 @@ const pagesSlice = createSlice({
       state.pagesList = pages;
     },
 
-    setNavBar(state, action) {
-      state.navBar = action.payload
+    pushToNavBar(state, action) {
       console.log(action.payload)
-    }
+      state.navBar.push(...action.payload)
+    },
+
   },
 });
 

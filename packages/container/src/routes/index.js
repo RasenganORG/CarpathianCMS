@@ -6,9 +6,14 @@ import RoleBasedGuard from '../components/guards/RoleBasedGuard';
 import AuthGuard from '../components/guards/AuthGuard';
 import LoadingScreen from '../components/loading/LoadingScreen';
 import PageLayout from '../components/layouts/PageLayout';
+import { useSelector } from 'react-redux';
+import { getNavBar } from '../services/pages/PagesService';
+import { createNavBar } from '../utils/createNavBar';
+
 
 const Loadable = (Component) => (props) => {
   const { pathname } = useLocation();
+
 
   return (
     <Suspense fallback={<LoadingScreen />}>
@@ -16,6 +21,10 @@ const Loadable = (Component) => (props) => {
     </Suspense>
   );
 };
+
+
+
+
 
 const Router = () => {
 

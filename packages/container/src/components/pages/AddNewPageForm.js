@@ -21,7 +21,7 @@ import FormItem from 'antd/es/form/FormItem';
 import { pagesActions } from '../../redux/pagesSlice';
 import { addNewPage } from '../../services/pages/PagesService';
 import slugify from '../../utils/slugify';
-import { useHref, useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const formItemLayout = {
   labelCol: {
@@ -50,7 +50,6 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   const [generateCustomHref, setGenerateCustomHref] = useState(false);
 
   const pathname = useLocation().pathname.split('/')[1] ?? 'none'
-  const [defaultSelectedParent, setDefaultSelectedParent] = useState(pathname)
   const [form] = Form.useForm();
   let title = Form.useWatch('title',form)
   const dispatch = useDispatch();
@@ -96,7 +95,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
 
   useEffect(() => {
     const page = getPageByHref(pathname)
-    setDefaultSelectedParent(page?.id)
+    form.setFieldValue('parent', page?.id)
   }, [pathname, pages])
 
 
@@ -115,7 +114,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
     >
       <Form form={form} {...formItemLayout}
         initialValues={{
-          parent : defaultSelectedParent,
+          parent : pathname,
           generateCustomHref:false,
         }}
       >

@@ -1,8 +1,14 @@
 import React from 'react';
+import { Col, Row } from 'antd';
+import CalendarGeneratedApp from '../widgets-mfe/CalendarGeneratedApp';
 
 export default () => {
 
-  return(
-    <div> Pagey view</div>
-  )
+  return (
+    <Row>
+      <Col offset={3} span={18}>
+        <CalendarGeneratedApp />
+      </Col>
+    </Row>
+  );
 }
