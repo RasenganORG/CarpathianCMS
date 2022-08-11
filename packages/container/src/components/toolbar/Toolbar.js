@@ -1,12 +1,24 @@
-import { Alert, Button, Card, Col, Modal, Row, Space, Tooltip, Typography } from 'antd';
-import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Col, Layout, Menu, Modal, Row, Space, Tooltip, Typography } from 'antd';
+import {
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
+  EditOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  PlusCircleOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AddNewPageForm from '../pages/AddNewPageForm';
+import Sider from 'antd/es/layout/Sider';
+import MenuButton from '../layouts/toolbarLayouts/MenuButton';
+import classes from './Toolbar.module.css'
 
 const Toolbar = () => {
   const [leaveModalIsOpened, setLeaveModalIsOpened] = useState(false);
   const [newPageModalIsOpened, setNewPageModalIsOpened] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
   const isEdit = window.location.pathname.split('/').findIndex((word) => word === 'edit') !== -1;
@@ -24,99 +36,61 @@ const Toolbar = () => {
 
 
   const preview =
-    <Space
-      size={'large'}
-      direction={'vertical'}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        width: '100%',
-      }}>
-      <Button
-        type={'text'}
-        onClick={() => setLeaveModalIsOpened(true)}
-      >
-        <Tooltip
-          title={'Preview your website'}
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-          }}
-        >
-          <Row>
-            <Col span={12}>
-              <img
-                src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
-                style={{
-                  display: 'inline',
-                  fontSize: '200%',
-                  marginRight: 20,
-                }}
-              />
-            </Col>
-            <Col span={12}>
-              <Typography.Title level={4}>
-                Preview
-              </Typography.Title>
-            </Col>
-          </Row>
-        </Tooltip>
-      </Button>
-      <Button
-        type={'text'}
-        title={'Edit the content of your page'}
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
-        <Tooltip>
-          <Row>
-            <Col span={12}>
-              <img
-                src={'https://img.icons8.com/ios/30/000000/content.png'}
-                style={{
-                  display: 'inline',
-                  fontSize: '200%',
-                  marginRight: 20,
-                }}
-              />
-            </Col>
-            <Col span={12}>
-              <Typography.Title level={4}>
-                Content
-              </Typography.Title>
-            </Col>
-          </Row>
-        </Tooltip>
-      </Button>
-    </Space>;
+    <MenuButton
+      title={'Preview'}
+      tooltipTitle={'Preview your website'}
+      onClick={() => setLeaveModalIsOpened(true)}
+    />;
 
-  const editPage = <Button
-    type={'text'}
-    onClick={() => navigate(`${pageid}/edit`)
-    }
-  >
-    <Tooltip title={'Edit your current page'}>
-      <Row>
-        <Col span={12}>
-          <EditOutlined
-            style={{
-              display: 'inline',
-              fontSize: '200%',
-              marginRight: 20,
-            }}
-          />
-        </Col>
-        <Col span={12}>
-          <Typography.Title level={4}>
-            Edit Page
-          </Typography.Title>
-        </Col>
-      </Row>
-    </Tooltip>
-  </Button>;
+  const content =
+    <MenuButton
+      title={'Content'}
+      tooltipTitle={'Edit the content of your page'}
+      onClick={() => false}
+    />;
+
+
+  const editPage = <MenuButton
+    title={'Edit Page'}
+    tooltipTitle={'Edit your current page'}
+    onClick={() => navigate(`${pageid}/edit`)}
+  />;
+
+  const menuEditPreview = !isEdit ? {
+      key: '2',
+      icon: <EditOutlined
+        style={{
+          display: 'inline',
+          fontSize: '170%',
+        }}
+      />,
+      label: editPage,
+    } :
+    {
+      key: '3',
+      icon:<img
+        src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
+        style={{
+          display: 'inline',
+          fontSize: '170%',
+          marginRight: 20,
+        }}
+      />,
+      label: preview,
+    };
+
+  const menuContent = isEdit ? {
+    key: '4',
+    icon: <img
+      src={'https://img.icons8.com/ios/30/000000/content.png'}
+      style={{
+        display: 'inline',
+        fontSize: '170%',
+        marginRight: 20,
+      }}
+    />,
+    label: content,
+  } : null
 
 
   return (
@@ -138,60 +112,52 @@ const Toolbar = () => {
       <AddNewPageForm
         setNewPageModalIsOpened={setNewPageModalIsOpened}
         newPageModalIsOpened={newPageModalIsOpened} />
-      <Card
-        style={{
-          top: 200,
-          left: 10,
-          paddingRight: 20,
-          width: '220px',
-          position: 'fixed',
-        }}
-      >
-        <Space
-          size={'large'}
-          direction={'vertical'}
+      <Layout>
+
+        <Sider
+          theme={'light'}
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            width: '100%',
-          }}>
-          {isEdit && preview}
-          {!isEdit && editPage}
+            top: 200,
+            left: 10,
+            paddingRight: 20,
+            width: '250px',
+            position: 'fixed',
+          }}
+          collapsible
+          trigger={null}
+          collapsed={collapsed}
+          onCollapse={value => setCollapsed(value)}
+        >
+          {React.createElement(collapsed ? DoubleRightOutlined  : DoubleLeftOutlined , {
+            className: classes.trigger,
+            onClick: () => setCollapsed(!collapsed),
+          })}
+          <Menu
+            mode='inline'
+            items={[
+              {
+                key: '1',
+                icon: <PlusCircleOutlined
+                  style={{
+                    display: 'inline',
+                    fontSize: '170%',
+                  }}
+                />,
+                label:
+                  <MenuButton
+                    title={'Add Page'}
+                    tooltipTitle={'Add a new page'}
+                    onClick={onAddNewPage}
+                  />,
+              },
+              menuEditPreview,
+              menuContent,
+            ]}
+          />
 
-          <Button
-            type={'text'}
-            onClick={onAddNewPage}
-          >
-            <Tooltip
-              title={'Add a new page'}
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
-              <Row>
-                <Col span={12}>
-                  <PlusCircleOutlined
-                    style={{
-                      display: 'inline',
-                      fontSize: '200%',
-                      marginRight: 20,
-                    }}
-                  />
-                </Col>
-                <Col span={12}>
-                  <Typography.Title level={4}>
-                    Add Page
-                  </Typography.Title>
-                </Col>
-              </Row>
-            </Tooltip>
-          </Button>
 
-        </Space>
-
-      </Card>
+        </Sider>
+      </Layout>
     </div>
   );
 };
