@@ -9,6 +9,7 @@ import PageLayout from '../components/layouts/PageLayout';
 import { useSelector } from 'react-redux';
 import { getNavBar } from '../services/pages/PagesService';
 import { createNavBar } from '../utils/createNavBar';
+import ContentManager from '../components/content/ContentManager';
 
 
 const Loadable = (Component) => (props) => {
@@ -65,6 +66,10 @@ const Router = () => {
             {
               path: '/:pageid/edit',
               element: <PageEdit />,
+            },
+            {
+              path: '/:pageid/content',
+              element: <ContentManager />,
             },
           ],
         },

@@ -1,26 +1,33 @@
-import {  Card, Typography } from 'antd';
+import { Button, Card, Typography } from 'antd';
 import React from 'react';
 
 const CardAddBlockItem = (props) => {
 
   return (
+
     <Card
       hoverable
       style={{
-        display:'flex',
-        flexDirection:'column',
-        minHeight:'150px'
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '150px',
       }}
     >
-      <img
-        style={{
-          width: 50,
-        }}
-        src={props.src} />
-      <Typography>
-        {props.name}
+      <Button
+        onClick={props.onClick}
+        type={'text'}
+      >
+        <img
+          style={{
+            width: 50,
+          }}
+          src={props.src} />
+        <Typography>
+          {props.name}
 
-      </Typography>
+        </Typography>
+      </Button>
+
     </Card>
   );
 };

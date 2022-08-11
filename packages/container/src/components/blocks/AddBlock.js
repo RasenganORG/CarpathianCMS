@@ -2,7 +2,7 @@ import { Button, Card, Col, Drawer, Row } from 'antd';
 import React, { useState } from 'react';
 import CardAddBlockItem from './CardAddBlockItem';
 
-const AddBlock = () => {
+const AddBlock = ({onClick}) => {
   const [visible, setVisible] = useState(false);
 
   const showDrawer = () => {
@@ -46,7 +46,9 @@ const AddBlock = () => {
           <Col span={4}>
             <CardAddBlockItem
               src={'https://img.icons8.com/ios/50/000000/swithching-between-tabs.png'}
-              name={'Add tabs'} />
+              name={'Add tabs'}
+              onClick={onClick}
+            />
           </Col>
           <Col span={4} offset={1}>
             <CardAddBlockItem

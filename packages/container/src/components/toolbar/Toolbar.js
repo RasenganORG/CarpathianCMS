@@ -3,8 +3,6 @@ import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
   EditOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   PlusCircleOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -13,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AddNewPageForm from '../pages/AddNewPageForm';
 import Sider from 'antd/es/layout/Sider';
 import MenuButton from '../layouts/toolbarLayouts/MenuButton';
-import classes from './Toolbar.module.css'
+import classes from './Toolbar.module.css';
 
 const Toolbar = () => {
   const [leaveModalIsOpened, setLeaveModalIsOpened] = useState(false);
@@ -21,7 +19,8 @@ const Toolbar = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
-  const isEdit = window.location.pathname.split('/').findIndex((word) => word === 'edit') !== -1;
+  const isEdit = window.location.pathname.split('/').findIndex((word) => word === 'edit' || word === 'content') !== -1;
+  const isEditContent = window.location.pathname.split('/').findIndex((word) =>  word === 'content') !== -1;
   const { pageid = '' } = useParams();
 
 
@@ -44,14 +43,14 @@ const Toolbar = () => {
 
   const content =
     <MenuButton
-      title={'Content'}
+      title={'Contents'}
       tooltipTitle={'Edit the content of your page'}
-      onClick={() => false}
+      onClick={() => navigate(`${pageid}/content`)}
     />;
 
 
   const editPage = <MenuButton
-    title={'Edit Page'}
+    title={isEdit ? 'Edit Page' : 'Edit' }
     tooltipTitle={'Edit your current page'}
     onClick={() => navigate(`${pageid}/edit`)}
   />;
@@ -68,16 +67,26 @@ const Toolbar = () => {
     } :
     {
       key: '3',
-      icon:<img
+      icon: <img
         src={'https://img.icons8.com/ios-filled/30/000000/uchiha-eyes.png'}
         style={{
           display: 'inline',
           fontSize: '170%',
-          marginRight: 20,
         }}
       />,
       label: preview,
     };
+
+  const menuEdit = isEdit ? {
+    key: '2',
+    icon: <EditOutlined
+      style={{
+        display: 'inline',
+        fontSize: '170%',
+      }}
+    />,
+    label: editPage,
+  } : null
 
   const menuContent = isEdit ? {
     key: '4',
@@ -86,11 +95,10 @@ const Toolbar = () => {
       style={{
         display: 'inline',
         fontSize: '170%',
-        marginRight: 20,
       }}
     />,
     label: content,
-  } : null
+  } : null;
 
 
   return (
@@ -128,13 +136,16 @@ const Toolbar = () => {
           collapsed={collapsed}
           onCollapse={value => setCollapsed(value)}
         >
-          {React.createElement(collapsed ? DoubleRightOutlined  : DoubleLeftOutlined , {
+          {React.createElement(collapsed ? DoubleRightOutlined : DoubleLeftOutlined, {
             className: classes.trigger,
             onClick: () => setCollapsed(!collapsed),
           })}
           <Menu
             mode='inline'
             items={[
+              menuEditPreview,
+              menuContent,
+              menuEdit,
               {
                 key: '1',
                 icon: <PlusCircleOutlined
@@ -150,8 +161,6 @@ const Toolbar = () => {
                     onClick={onAddNewPage}
                   />,
               },
-              menuEditPreview,
-              menuContent,
             ]}
           />
 
