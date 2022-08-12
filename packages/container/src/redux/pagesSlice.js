@@ -7,7 +7,8 @@ const pagesSlice = createSlice({
   initialState: {
     pagesList: [],
     navBar:[],
-    wizard:{}
+    wizard:{},
+    hasPermission:false,
   },
   reducers: {
     createNewPage(state, action) {
@@ -23,9 +24,8 @@ const pagesSlice = createSlice({
       state.pagesList = pages;
     },
 
-    pushToNavBar(state, action) {
-      console.log(action.payload)
-      state.navBar.push(...action.payload)
+    setHasPermission(state, action) {
+      state.hasPermission = action.payload
     },
 
     addBlockVariantWizard(state, action){

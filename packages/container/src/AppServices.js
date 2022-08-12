@@ -8,12 +8,26 @@ import { Link } from 'react-router-dom';
 import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
 
+const navBarBasicSettings = [
+  {
+    key: 'settings',
+    label: <Link to={{ pathname: 'settings' }}>Settings</Link>,
+    icon: <DesktopOutlined />,
+
+  },
+  {
+    key: 'account',
+    label: <Link to={'account'}>My account</Link>,
+    icon: <DesktopOutlined />,
+  },
+];
+
 const AppServices = ({children}) => {
   const dispatch = useDispatch()
   const { user } = useAuth()
   const timer = useRef(null);
-  const pages = useSelector(state => state.pages.pagesList)
-  const navBar = useSelector(state => state.pages.navBar)
+  const hasPermission = useSelector(state => state.pages.hasPermission)
+  const [navBar, setNavBar] = useState([])
 
 
   useEffect( () => {
@@ -28,19 +42,31 @@ const AppServices = ({children}) => {
     async function fetchPages(){
       const pages = await getPages()
       const navbar = await getNavBar()
-      console.log(navbar)
-      const navBar = createNavBar(navbar)
-      console.log(navBar)
-      dispatch(pagesActions.pushToNavBar(navBar))
+      const navBarLayout = createNavBar(navbar)
+      navBarLayout.push(navBar)
+      if(hasPermission)
+        navBarLayout.push(...navBarBasicSettings)
+      console.log("services",navBarLayout)
+      setNavBar(navBarLayout)
       dispatch(pagesActions.setPages(pages))
     }
     fetchPages()
 
-  },[])
+  },[hasPermission])
+
+  const childrenWithProps = React.Children.map(children, child => {
+    // Checking isValidElement is the safe way and avoids a typescript
+    // error too.
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { navBar, setNavBar });
+    }
+    return child;
+  });
+
 
 
   return(
-    children
+    childrenWithProps
   )
 }
 

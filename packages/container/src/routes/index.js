@@ -27,12 +27,12 @@ const Loadable = (Component) => (props) => {
 
 
 
-const Router = () => {
+const Router = ({navBar,setNavBar}) => {
 
   return useRoutes([
     {
       path: '/',
-      element: <ApplicationLayout />,
+      element: <ApplicationLayout navBar={navBar} setNavBar={setNavBar} />,
       children: [
         {
           path: 'settings',

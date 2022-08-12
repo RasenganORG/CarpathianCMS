@@ -10,9 +10,9 @@ export const createNavBar = (navbarJson) => {
     if(page[1].children !== {}){
       children = createNavBar(page[1].children)
     }
-    //console.log(page)
     navBarComp.push({
-      key: page[1].metadata.href,
+      key: page[0],
+      id: page[0],
       label: <Link to={page[1].metadata.href}>{page[1].metadata.title}</Link>,
       icon: <DesktopOutlined />,
       children: children.length > 0 ? children : null
