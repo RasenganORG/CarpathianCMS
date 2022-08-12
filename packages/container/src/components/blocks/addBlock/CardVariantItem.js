@@ -1,7 +1,8 @@
 import { Button, Card, Typography } from 'antd';
 import React from 'react';
+import {v4 as uuidv4} from 'uuid'
 
-const CardAddBlockItem = (props) => {
+const CardVariantItem = (props) => {
 
   return (
 
@@ -10,11 +11,12 @@ const CardAddBlockItem = (props) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '150px',
+        minHeight: '130px',
+        minWidth: '160px',
       }}
     >
       <Button
-        onClick={props.onClick}
+        onClick={() => props.onClick(props.name, uuidv4() )}
         type={'text'}
       >
         <img
@@ -31,4 +33,4 @@ const CardAddBlockItem = (props) => {
     </Card>
   );
 };
-export default CardAddBlockItem;
+export default CardVariantItem;

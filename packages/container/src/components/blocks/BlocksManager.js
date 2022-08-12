@@ -1,63 +1,73 @@
-import React from 'react';
-import { Button, Col, Form, Input, Row, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import AddBlock from './AddBlock';
+import React, { useState } from 'react';
+import { Button, Col, Modal, Row } from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import BlockManagerForm from './blockManagerForm/BlockManagerForm';
+import WizardAddBlock from './addBlock/WizardAddBlock/WizardAddBlock';
 
 
 const BlocksManager = () => {
+  const [addBlockModalVisible, setAddBlockModalVisible] = useState(false);
+  const [fields, setFields] = useState([
+    {
+      name: ['username'],
+      value: 'Ant Design',
+    },
+  ]);
 
-  const onFinish = (values) => {
-    console.log('Received values of form:', values);
+  const [form] = useForm();
+
+  const onFinish = data => {
+    console.log(data);
   };
 
-  return (
-    <Row>
-      <Col offset={3} span={20}>
-        <Form name='dynamic_form_nest_item' onFinish={onFinish} autoComplete='off'>
-          <Form.List name='users'>
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space
-                    key={key}
-                    style={{
-                      display: 'flex',
-                      marginBottom: 8,
-                    }}
-                    align='baseline'
-                  >
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'first']}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Missing first name',
-                        },
-                      ]}
+  const onChange = newFields => {
+    setFields(newFields);
+  };
 
-                    >
-                      <Input
-                        placeholder='First Name'
-                      />
-                    </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                  </Space>
-                ))}
-                <Form.Item>
-                  <AddBlock onClick={() => add()}/>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
-          <Form.Item>
-            <Button type='primary' htmlType='submit'>
-              Submit
+  const onAddBlock = (type, id) => {
+    console.log(type);
+  };
+
+
+  const showDrawer = () => {
+    setAddBlockModalVisible(true);
+  };
+
+  const onClose = () => {
+    setAddBlockModalVisible(false);
+  };
+
+
+  return (
+    <div>
+      <Row>
+        <Col offset={3} span={20}>
+          <BlockManagerForm
+            onChange={onChange}
+            onFinish={onFinish}
+            form={form}
+            fields={fields}
+          >
+
+          </BlockManagerForm>
+        </Col>
+        <Col offset={3} span={20}>
+          {
+            !addBlockModalVisible &&
+            <Button type='primary' onClick={showDrawer}>
+              Add more widgets on your page
             </Button>
-          </Form.Item>
-        </Form>
-      </Col>
-    </Row>
+          }
+
+          {addBlockModalVisible &&
+            <WizardAddBlock onAddBlock={onAddBlock} />
+          }
+
+        </Col>
+      </Row>
+
+
+    </div>
   );
 };
-export default BlocksManager
+export default BlocksManager;
