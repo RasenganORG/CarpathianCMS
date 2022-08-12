@@ -6,7 +6,7 @@ import WizardAddBlock from './addBlock/WizardAddBlock/WizardAddBlock';
 
 
 const BlocksManager = () => {
-  const [addBlockModalVisible, setAddBlockModalVisible] = useState(false);
+  const [wizardVisible, setWizardVisible] = useState(false);
   const [fields, setFields] = useState([
     {
       name: ['username'],
@@ -30,11 +30,11 @@ const BlocksManager = () => {
 
 
   const showDrawer = () => {
-    setAddBlockModalVisible(true);
+    setWizardVisible(true);
   };
 
   const onClose = () => {
-    setAddBlockModalVisible(false);
+    setWizardVisible(false);
   };
 
 
@@ -51,16 +51,19 @@ const BlocksManager = () => {
 
           </BlockManagerForm>
         </Col>
-        <Col offset={3} span={20}>
+        <Col offset={3} span={16}>
           {
-            !addBlockModalVisible &&
+            !wizardVisible &&
             <Button type='primary' onClick={showDrawer}>
               Add more widgets on your page
             </Button>
           }
 
-          {addBlockModalVisible &&
-            <WizardAddBlock onAddBlock={onAddBlock} />
+          {wizardVisible &&
+            <WizardAddBlock
+              onAddBlock={onAddBlock}
+              setWizardVisible={setWizardVisible}
+            />
           }
 
         </Col>

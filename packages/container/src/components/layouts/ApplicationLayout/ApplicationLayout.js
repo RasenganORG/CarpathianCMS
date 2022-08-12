@@ -60,6 +60,7 @@ const ApplicationLayout = (factory, deps) => {
   const [layoutOrientation, setLayoutOrientation] = useState('horizontal');
   const accessToSettings = useCheckPermission(['admin']);
   const [collapsed, setCollapsed] = useState(false);
+  console.log(selectedMenu)
 
 
   const dispatch = useDispatch()

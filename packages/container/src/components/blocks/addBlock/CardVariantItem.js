@@ -1,6 +1,5 @@
 import { Button, Card, Typography } from 'antd';
 import React from 'react';
-import {v4 as uuidv4} from 'uuid'
 
 const CardVariantItem = (props) => {
 
@@ -16,7 +15,7 @@ const CardVariantItem = (props) => {
       }}
     >
       <Button
-        onClick={() => props.onClick(props.name, uuidv4() )}
+        onClick={() => props.onClick(props.type)}
         type={'text'}
       >
         <img

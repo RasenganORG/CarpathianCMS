@@ -2,42 +2,43 @@ import { Button, Form, Input, Modal, Select, Switch } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import TextArea from 'antd/es/input/TextArea';
+import { pagesActions } from '../../../redux/pagesSlice';
 
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    md: { span: 12, offset: 6 },
+    md: { span: 16, offset: 4 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    md: { span: 12, offset: 6},
+    md: { span: 16, offset: 4},
   },
 };
 const formSwitchLayout = {
   labelCol: {
     xs: { span: 24 },
-    md: { span: 24, offset:6},
+    md: { span: 16, offset:4},
   },
   wrapperCol: {
     xs: { span: 24 },
-    md: { span: 2, offset:6},
+    md: { span: 2, offset:4},
   },
 };
 
 
 
-export default function BlockInitialForm (){
+export default function BlockInitialForm ({form}){
   const [createBlockButtonLoading, setCreateBlockButtonLoading] = useState(false);
   const [titleDisplayed, setTitleDisplayed] = useState(true);
 
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
 
 
-  const onFinishForm = async () => {
+  const onFinishForm = async (data) => {
     try {
-      let data = await form.validateFields();
       console.log(data)
+      dispatch(pagesActions.addBlockMetadataWizard(data))
     } catch (error) {
       console.log(error);
     }
@@ -50,8 +51,12 @@ export default function BlockInitialForm (){
       <Form
         form={form}
         {...formItemLayout}
+        onFinish={onFinishForm}
         style={{
           width:'100%'
+        }}
+        initialValues={{
+          titleDisplayed: false,
         }}
       >
         <Form.Item
@@ -113,14 +118,15 @@ export default function BlockInitialForm (){
           }}
 
         >
-          <Input
+          <TextArea
+            rows={5}
             placeholder={'Enter the description of the block'}
             allowClear
             style={{
               width: '100%',
-              height: '50px',
+              height: '90px',
             }}
-          ></Input>
+          />
         </Form.Item>
 
       </Form>

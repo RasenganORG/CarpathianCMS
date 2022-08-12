@@ -1,8 +1,22 @@
 import { Col, Row } from 'antd';
 import CardVariantItem from './CardVariantItem';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { pagesActions } from '../../../redux/pagesSlice';
+import {v4 as uuidv4} from 'uuid'
+
 
 export default function BlockVariants({onNext}) {
+  const dispatch = useDispatch()
+
+  const onSelectVariant = (type) => {
+    dispatch(pagesActions.addBlockVariantWizard({
+      type: type,
+      id: uuidv4(),
+    }))
+
+    onNext()
+  }
 
   return (
     <div>
@@ -11,7 +25,8 @@ export default function BlockVariants({onNext}) {
           <CardVariantItem
             src={'https://img.icons8.com/ios/50/000000/swithching-between-tabs.png'}
             name={'Add tabs'}
-            onClick={onNext}
+            type={'tabs'}
+            onClick={onSelectVariant}
           />
         </Col>
         <Col span={5} offset={1}>
@@ -53,7 +68,7 @@ export default function BlockVariants({onNext}) {
         <Col span={5} offset={1}>
           <CardVariantItem
             src={'https://img.icons8.com/ios/50/000000/form.png'}
-            name={'Add a blockManagerForm'} />
+            name={'Add a form'} />
         </Col>
       </Row>
     </div>

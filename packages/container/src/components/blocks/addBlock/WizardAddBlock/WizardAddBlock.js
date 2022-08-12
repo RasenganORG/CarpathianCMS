@@ -1,14 +1,19 @@
-import { Button, message, Steps } from 'antd';
+import { Button, Form, message, Steps } from 'antd';
 import React, { useState } from 'react';
 import BlockVariantsDrawer from '../blockVariantsDrawer/BlockVariantsDrawer';
 const { Step } = Steps;
 import classes from './WizardAddBlock.module.css'
 import BlockInitialForm from '../BlockInitialForm';
 import BlockFormDrawer from '../../../drawers/BlockFormDrawer';
+import { useDispatch } from 'react-redux';
+import { pagesActions } from '../../../../redux/pagesSlice';
 
 
-const WizardAddBlock = () => {
+const WizardAddBlock = ({setWizardVisible}) => {
   const [current, setCurrent] = useState(0);
+  const [initialBlockForm] = Form.useForm();
+  const dispatch = useDispatch()
+
 
   const next = () => {
     setCurrent(current + 1);
@@ -30,14 +35,14 @@ const WizardAddBlock = () => {
     },
     {
       title: 'Complete initial metadata',
-      content: <BlockFormDrawer/>,
+      content: <BlockFormDrawer form={initialBlockForm}/>,
     },
   ];
 
 
-  function onFinish(value) {
-    console.log(value)
-    message.success('Processing complete!')
+  function onFinish() {
+    initialBlockForm.submit()
+    setWizardVisible(false)
   }
 
   return (
@@ -65,6 +70,17 @@ const WizardAddBlock = () => {
       </Steps>
       <div className={classes.stepsContent}>{steps[current].content}</div>
       <div className={classes.stepsAction}>
+        {current === 0 && (
+          <Button
+            type="primary"
+            onClick={() => setWizardVisible(false)}
+            style={{
+              margin: '0 8px',
+            }}
+          >
+            Close
+          </Button>
+        )}
         {current > 0 && (
           <Button
             style={{

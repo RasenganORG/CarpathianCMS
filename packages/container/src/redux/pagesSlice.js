@@ -6,10 +6,10 @@ const pagesSlice = createSlice({
   name: 'pages',
   initialState: {
     pagesList: [],
-    navBar:[]
+    navBar:[],
+    wizard:{}
   },
   reducers: {
-
     createNewPage(state, action) {
       const payload = action.payload;
       state.pagesList.push({
@@ -27,6 +27,21 @@ const pagesSlice = createSlice({
       console.log(action.payload)
       state.navBar.push(...action.payload)
     },
+
+    addBlockVariantWizard(state, action){
+      state.wizard = {
+        type:action.payload.type,
+        id:action.payload.id
+      }
+    },
+
+    addBlockMetadataWizard(state, action){
+      state.wizard.metadata=action.payload
+    },
+
+    resetWizard(state){
+      state.wizard = {}
+    }
 
   },
 });

@@ -2,7 +2,7 @@ import {  Drawer } from 'antd';
 import React, { useState } from 'react';
 import BlockInitialForm from '../blocks/addBlock/BlockInitialForm';
 
-const BlockFormDrawer = ({ children, onClose}) => {
+const BlockFormDrawer = ({ form, onClose}) => {
 
 
   return (
@@ -28,7 +28,7 @@ const BlockFormDrawer = ({ children, onClose}) => {
       >
       </div>
       <Drawer
-        title='Choose what widgets you want to add on this page'
+        title='Complete the form'
         placement='right'
         closable={false}
         onClose={onClose}
@@ -39,7 +39,7 @@ const BlockFormDrawer = ({ children, onClose}) => {
           position: 'absolute',
         }}
       >
-        <BlockInitialForm/>
+        <BlockInitialForm form={form}/>
       </Drawer>
     </div>
   );

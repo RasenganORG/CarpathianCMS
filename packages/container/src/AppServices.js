@@ -30,6 +30,7 @@ const AppServices = ({children}) => {
       const navbar = await getNavBar()
       console.log(navbar)
       const navBar = createNavBar(navbar)
+      console.log(navBar)
       dispatch(pagesActions.pushToNavBar(navBar))
       dispatch(pagesActions.setPages(pages))
     }
