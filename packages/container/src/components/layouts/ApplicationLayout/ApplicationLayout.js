@@ -48,8 +48,8 @@ const navBarBasicSettings = [
 
 
 const ApplicationLayout = ( {navBar, setNavBar}) => {
-  console.log("hehe",navBar)
-  const [selectedMenu, setSelectedMenu] = useState();
+  const defaultSelectedMenu = useSelector(state => state.pages.selectedPage)
+  const [selectedMenu, setSelectedMenu] = useState(defaultSelectedMenu);
   const pages = useSelector(state => state.pages.pagesList);
   const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
   const [navBarRightSettings, setNavBarRightSettings] = useState([]);
@@ -57,7 +57,7 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
   const [layoutOrientation, setLayoutOrientation] = useState('horizontal');
   const accessToSettings = useCheckPermission(['admin']);
   const [collapsed, setCollapsed] = useState(false);
-  console.log("selected menu",selectedMenu)
+
 
 
   const dispatch = useDispatch()
@@ -81,7 +81,7 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
       settingsArray.push(...navBarBasicSettings);
 
     }
-    dispatch(pagesActions.setHasPermission(true))
+    dispatch(pagesActions.setHasPermissionToSettings(true))
     setNavBarRightSettings(accountArray);
 
 
@@ -98,6 +98,10 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
     }
   }, [br, isMobile]);
 
+  useEffect(() => {
+    dispatch(pagesActions.setSelectedPage(selectedMenu?.key))
+  },[selectedMenu])
+
 
 
   const navBarHorizontal = (
@@ -111,7 +115,7 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
         mode='horizontal'
         items={ navBar.length > 0 ? navBar:  null}
         onSelect={(e) => setSelectedMenu(e)}
-        selectedKeys={[`${location.pathname.split('/')[1]}`]}
+        selectedKeys={[defaultSelectedMenu]}
         style={{
           marginLeft: '10%',
           width: '80%',

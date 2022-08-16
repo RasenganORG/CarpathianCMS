@@ -1,19 +1,19 @@
 import { Col, Row } from 'antd';
 import CardVariantItem from './CardVariantItem';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { pagesActions } from '../../../redux/pagesSlice';
 import {v4 as uuidv4} from 'uuid'
 
 
-export default function BlockVariants({onNext}) {
-  const dispatch = useDispatch()
+export default function BlockVariants({onNext, setFieldValue}) {
 
   const onSelectVariant = (type) => {
-    dispatch(pagesActions.addBlockVariantWizard({
-      type: type,
-      id: uuidv4(),
-    }))
+    try{
+      setFieldValue('type', type);
+      setFieldValue('id', uuidv4());
+    }
+    catch (error){
+      console.log(error)
+    }
 
     onNext()
   }

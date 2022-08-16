@@ -68,7 +68,6 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       if (generateCustomHref === false || data.metadata.href === '') {
         data.metadata.href = slugify(data.metadata.title);
       }
-      console.log(data);
 
       const res = await addNewPage(data);
       dispatch(pagesActions.createNewPage(res));

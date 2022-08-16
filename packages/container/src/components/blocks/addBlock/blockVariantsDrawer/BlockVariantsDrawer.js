@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import CardVariantItem from '../CardVariantItem';
 import BlockVariants from '../BlockVariants';
 
-const BlockVariantsDrawer = ({onNext}) => {
+const BlockVariantsDrawer = ({onNext, setFieldValue}) => {
 
 
   return (
@@ -40,7 +40,7 @@ const BlockVariantsDrawer = ({onNext}) => {
           height: '450px',
         }}
       >
-        <BlockVariants onNext={onNext}/>
+        <BlockVariants onNext={onNext} setFieldValue={(name, value) => setFieldValue(name, value)}/>
       </Drawer>
     </div>
   );

@@ -31,7 +31,10 @@ const WizardAddBlock = ({setWizardVisible}) => {
   const steps = [
     {
       title: 'Select type of block',
-      content: <BlockVariantsDrawer onNext={onNext}/>,
+      content: <BlockVariantsDrawer onNext={onNext} setFieldValue={(name, value) => {
+        console.log(name)
+        initialBlockForm.setFieldValue(name, value);
+      }}/>,
     },
     {
       title: 'Complete initial metadata',

@@ -22,11 +22,16 @@ const navBarBasicSettings = [
   },
 ];
 
+export const getIdByHrefFromPages = (href, pages) => {
+  const page = pages.find((page) => page.data.metadata.href === href)
+  return page.id
+}
+
 const AppServices = ({children}) => {
   const dispatch = useDispatch()
   const { user } = useAuth()
   const timer = useRef(null);
-  const hasPermission = useSelector(state => state.pages.hasPermission)
+  const hasPermission = useSelector(state => state.pages.hasPermissionToSettings)
   const [navBar, setNavBar] = useState([])
 
 
@@ -46,9 +51,9 @@ const AppServices = ({children}) => {
       navBarLayout.push(navBar)
       if(hasPermission)
         navBarLayout.push(...navBarBasicSettings)
-      console.log("services",navBarLayout)
-      setNavBar(navBarLayout)
-      dispatch(pagesActions.setPages(pages))
+      setNavBar(navBarLayout.filter(obj => obj.key !== undefined))
+      const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1],pages)
+      dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }))
     }
     fetchPages()
 

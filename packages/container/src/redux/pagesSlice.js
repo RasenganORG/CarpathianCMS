@@ -8,7 +8,8 @@ const pagesSlice = createSlice({
     pagesList: [],
     navBar:[],
     wizard:{},
-    hasPermission:false,
+    hasPermissionToSettings:false,
+    selectedPage:{},
   },
   reducers: {
     createNewPage(state, action) {
@@ -20,12 +21,13 @@ const pagesSlice = createSlice({
     },
 
     setPages(state, action) {
-      const pages = action.payload;
+      const pages = action.payload.pages;
+      state.selectedPage = action.payload.selectedPage
       state.pagesList = pages;
     },
 
-    setHasPermission(state, action) {
-      state.hasPermission = action.payload
+    setHasPermissionToSettings(state, action) {
+      state.hasPermissionToSettings = action.payload
     },
 
     addBlockVariantWizard(state, action){
@@ -35,12 +37,25 @@ const pagesSlice = createSlice({
       }
     },
 
+    addBlockToPage(state, action){
+      const pageId = action.payload.pageId
+      const block = action.payload.block
+      const currentPageIndex = state.pagesList.findIndex(page => page.id === pageId)
+      state.pagesList[currentPageIndex].blocks = []
+      state.pagesList[currentPageIndex].blocks.push(block)
+
+    },
+
     addBlockMetadataWizard(state, action){
       state.wizard.metadata=action.payload
     },
 
     resetWizard(state){
       state.wizard = {}
+    },
+
+    setSelectedPage(state, action){
+      state.selectedPage = action.payload
     }
 
   },
