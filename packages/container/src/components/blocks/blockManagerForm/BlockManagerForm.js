@@ -30,7 +30,7 @@ export default function BlockManagerForm({ onChange, fields, form, onFinish, chi
       {children}
       <Form.Item>
         <Button htmlType={'submit'}>
-          Save
+          Save changes
         </Button>
       </Form.Item>
     </Form>

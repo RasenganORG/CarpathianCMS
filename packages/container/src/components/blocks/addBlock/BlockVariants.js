@@ -32,18 +32,27 @@ export default function BlockVariants({onNext, setFieldValue}) {
         <Col span={5} offset={1}>
           <CardVariantItem
             src={'https://img.icons8.com/ios-glyphs/50/000000/table-1.png'}
-            name={'Add tabel'} />
+            name={'Add tabel'}
+            type={'tabel'}
+            onClick={onSelectVariant}
+          />
         </Col>
         <Col span={5} offset={1}>
           <CardVariantItem
             src={'https://img.icons8.com/material-outlined/50/000000/image.png'}
-            name={'Add an image'} />
+            name={'Add an image'}
+            type={'image'}
+            onClick={onSelectVariant}
+          />
         </Col>
 
         <Col span={5} offset={1}>
           <CardVariantItem
             src={'https://img.icons8.com/external-simple-line-edt.graphics/50/000000/external-Images-images-simple-line-edt.graphics.png'}
-            name={'Add images'} />
+            name={'Add images'}
+            type={'images'}
+            onClick={onSelectVariant}
+          />
         </Col>
       </Row>
 
@@ -53,22 +62,34 @@ export default function BlockVariants({onNext, setFieldValue}) {
         <Col span={5}>
           <CardVariantItem
             src={'https://img.icons8.com/ios-filled/50/000000/paragraph.png'}
-            name={'Add paragraph'} />
+            name={'Add paragraph'}
+            type={'paragraph'}
+            onClick={onSelectVariant}
+          />
         </Col>
         <Col span={5} offset={1}>
           <CardVariantItem
             src={'https://img.icons8.com/ios/50/000000/list--v1.png'}
-            name={'Add list'} />
+            name={'Add list'}
+            type={'list'}
+            onClick={onSelectVariant}
+          />
         </Col>
         <Col span={5} offset={1}>
           <CardVariantItem
             src={'https://img.icons8.com/pix/50/000000/experimental-calendar-pix.png'}
-            name={'Add a calendar'} />
+            name={'Add a calendar'}
+            type={'calendar'}
+            onClick={onSelectVariant}
+          />
         </Col>
         <Col span={5} offset={1}>
           <CardVariantItem
             src={'https://img.icons8.com/ios/50/000000/form.png'}
-            name={'Add a form'} />
+            name={'Add a form'}
+            type={'form'}
+            onClick={onSelectVariant}
+          />
         </Col>
       </Row>
     </div>

@@ -61,3 +61,24 @@ export const getNavBar = async () => {
   }
 }
 
+export const updatePage = async (data, pageId) => {
+  try{
+
+    const config = {
+      method: 'put',
+      url: `http://localhost:5000/pages/updatePage/123/${pageId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+
+    const res = await axios(config)
+    return res
+
+  }
+  catch(error){
+    console.log(error)
+  }
+}
+

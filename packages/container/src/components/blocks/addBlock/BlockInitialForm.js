@@ -42,6 +42,7 @@ export default function BlockInitialForm({ form }) {
       block.metadata.pageId = selectedPage;
       block.metadata.type = form.getFieldValue('type');
       block.id = form.getFieldValue('id');
+      block.data = ''
       dispatch(pagesActions.addBlockToPage({
         block: block,
         pageId: selectedPage,
@@ -63,6 +64,7 @@ export default function BlockInitialForm({ form }) {
       }}
       initialValues={{
         titleDisplayed: false,
+        description:'',
       }}
     >
       <Form.Item

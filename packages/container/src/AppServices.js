@@ -3,7 +3,7 @@ import useAuth from './components/hooks/use-auth';
 import React, { useEffect, useRef, useState } from 'react';
 import { refreshToken } from './services/auth/AuthService';
 import { pagesActions } from './redux/pagesSlice';
-import { getNavBar, getPages } from './services/pages/PagesService';
+import { getNavBar, getPages, updatePage } from './services/pages/PagesService';
 import { Link } from 'react-router-dom';
 import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
@@ -33,6 +33,8 @@ const AppServices = ({children}) => {
   const timer = useRef(null);
   const hasPermission = useSelector(state => state.pages.hasPermissionToSettings)
   const [navBar, setNavBar] = useState([])
+  const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate)
+  const pages = useSelector(state => state.pages.pagesList)
 
 
   useEffect( () => {
@@ -58,6 +60,19 @@ const AppServices = ({children}) => {
     fetchPages()
 
   },[hasPermission])
+
+  useEffect(() => {
+    async function update(){
+      if(pageNeedsUpdate) {
+        const page = pages.find(page => page.id === pageNeedsUpdate)
+        console.log(page)
+        const res = await updatePage(page, pageNeedsUpdate);
+        console.log("update response", res)
+        dispatch(pagesActions.resetPageNeedsUpdate())
+      }
+    }
+    update()
+  }, [pageNeedsUpdate, pages])
 
   const childrenWithProps = React.Children.map(children, child => {
     // Checking isValidElement is the safe way and avoids a typescript

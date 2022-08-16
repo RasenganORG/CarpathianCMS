@@ -10,13 +10,17 @@ const pagesSlice = createSlice({
     wizard:{},
     hasPermissionToSettings:false,
     selectedPage:{},
+    pageNeedsUpdate: false
   },
   reducers: {
     createNewPage(state, action) {
       const payload = action.payload;
       state.pagesList.push({
         id: payload.id,
-        data: payload.object,
+        data: {
+          metadata: payload.object.metadata,
+          blocks: [],
+        }
       });
     },
 
@@ -30,32 +34,21 @@ const pagesSlice = createSlice({
       state.hasPermissionToSettings = action.payload
     },
 
-    addBlockVariantWizard(state, action){
-      state.wizard = {
-        type:action.payload.type,
-        id:action.payload.id
-      }
-    },
 
     addBlockToPage(state, action){
       const pageId = action.payload.pageId
       const block = action.payload.block
       const currentPageIndex = state.pagesList.findIndex(page => page.id === pageId)
-      state.pagesList[currentPageIndex].blocks = []
-      state.pagesList[currentPageIndex].blocks.push(block)
-
-    },
-
-    addBlockMetadataWizard(state, action){
-      state.wizard.metadata=action.payload
-    },
-
-    resetWizard(state){
-      state.wizard = {}
+      state.pagesList[currentPageIndex].data.blocks.push(block)
+      state.pageNeedsUpdate = pageId
     },
 
     setSelectedPage(state, action){
       state.selectedPage = action.payload
+    },
+
+    resetPageNeedsUpdate(state){
+      state.pageNeedsUpdate = false
     }
 
   },
