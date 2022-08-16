@@ -34,7 +34,6 @@ const pagesSlice = createSlice({
       state.hasPermissionToSettings = action.payload
     },
 
-
     addBlockToPage(state, action){
       const pageId = action.payload.pageId
       const block = action.payload.block

@@ -1,23 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Modal, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import BlockManagerForm from './blockManagerForm/BlockManagerForm';
 import WizardAddBlock from './addBlock/WizardAddBlock/WizardAddBlock';
+import { useSelector } from 'react-redux';
 
+const setFieldValues = (blocks) => {
+  let fields = [];
+  blocks?.map(block => fields.push({
+    name: block.id,
+    value: block
+  }));
+  return fields
+};
 
 const BlocksManager = () => {
   const [wizardVisible, setWizardVisible] = useState(false);
-  const [fields, setFields] = useState([
-    {
-      name: ['username'],
-      value: 'Ant Design',
-    },
-  ]);
+  const selectedPage = useSelector(state => state.pages.selectedPage);
+  const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
+  const [fields, setFields] = useState([]);
 
   const [form] = useForm();
 
   const onFinish = data => {
     console.log(data);
+
   };
 
   const onChange = newFields => {
@@ -36,6 +43,12 @@ const BlocksManager = () => {
   const onClose = () => {
     setWizardVisible(false);
   };
+
+  useEffect(() => {
+    if(blocks) {
+      setFields(setFieldValues(blocks));
+    }
+  },[blocks])
 
 
   return (

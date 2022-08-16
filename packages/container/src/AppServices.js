@@ -65,9 +65,7 @@ const AppServices = ({children}) => {
     async function update(){
       if(pageNeedsUpdate) {
         const page = pages.find(page => page.id === pageNeedsUpdate)
-        console.log(page)
         const res = await updatePage(page, pageNeedsUpdate);
-        console.log("update response", res)
         dispatch(pagesActions.resetPageNeedsUpdate())
       }
     }

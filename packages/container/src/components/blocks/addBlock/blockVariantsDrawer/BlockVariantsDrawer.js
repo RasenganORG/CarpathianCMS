@@ -2,8 +2,14 @@ import { Button, Card, Col, Drawer, Row } from 'antd';
 import React, { useState } from 'react';
 import CardVariantItem from '../CardVariantItem';
 import BlockVariants from '../BlockVariants';
+import PropTypes from 'prop-types';
 
-const BlockVariantsDrawer = ({onNext, setFieldValue}) => {
+BlockVariantsDrawer.requiredProps = {
+  onNext:PropTypes.func,
+  setFieldValue: PropTypes.func,
+}
+
+export default function BlockVariantsDrawer ({onNext, setFieldValue})  {
 
 
   return (
@@ -45,5 +51,3 @@ const BlockVariantsDrawer = ({onNext, setFieldValue}) => {
     </div>
   );
 };
-
-export default BlockVariantsDrawer;
