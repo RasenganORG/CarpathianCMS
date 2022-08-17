@@ -48,6 +48,7 @@ const WizardAddBlock = ({setWizardVisible}) => {
     <div
       style={{
         marginTop:'3rem',
+        width:'100%'
       }}
     >
       <Steps

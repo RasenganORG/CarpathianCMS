@@ -18,7 +18,6 @@ export default function BlockManagerForm({ fields, form, onFinish, children, sta
   return (
     <div>
 
-
       {fields.map(field => {
         return (
           <BlockFrame

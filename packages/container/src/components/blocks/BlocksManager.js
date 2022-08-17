@@ -32,7 +32,8 @@ const BlocksManager = () => {
   const [wizardVisible, setWizardVisible] = useState(false);
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
-  const [fields, setFields] = useState([]);
+  console.log(blocks)
+  const [fields, setFields] = useState(blocks? setFieldValuesFromBlocks(blocks): []);
   const [editBlockModalVisible, setEditBlockModalVisible] = useState(false)
   const [selectedBlock, setSelectedBlock] = useState()
   const [formIsUpdated, setFormIsUpdated] = useState(0)
@@ -56,6 +57,7 @@ const BlocksManager = () => {
 
   const showDrawer = () => {
     setWizardVisible(true);
+    scrollToBottom()
   };
 
   const startEditBlock = (blockId) => {
@@ -79,6 +81,17 @@ const BlocksManager = () => {
     setFields(setFieldValuesFromFieldsValues(formFields))
   },[formIsUpdated])
 
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    }, 10)
+
+  };
+
+  console.log(fields)
 
   return (
     <div>
@@ -89,7 +102,7 @@ const BlocksManager = () => {
         onEditFinished={onEditBlockFinished}
       />
       <Row>
-        <Col offset={3} span={20}>
+        <Col offset={2} span={22}>
           <BlockManagerForm
             onChange={onChange}
             onFinish={onFinish}
@@ -100,7 +113,12 @@ const BlocksManager = () => {
 
           </BlockManagerForm>
         </Col>
-        <Col offset={3} span={16}>
+        <Col offset={5} span={16} style={{
+          marginBottom:'30px',
+          marginTop:'30px',
+          display:'flex',
+          justifyContent:'center'
+        }}>
           {
             !wizardVisible &&
             <Button type='primary' onClick={showDrawer}>

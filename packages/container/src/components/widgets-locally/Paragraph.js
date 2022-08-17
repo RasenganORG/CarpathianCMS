@@ -1,6 +1,10 @@
 import React from 'react';
-import { Typography } from 'antd';
+import { Image, Typography } from 'antd';
 import PropTypes from 'prop-types';
+import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
+import rehypeRaw from "rehype-raw";
+
 
 Paragraph.requiredProps = {
   content: PropTypes.string,
@@ -19,9 +23,9 @@ export default function Paragraph({ content, isEdit, id }) {
         width: '100%',
       }}
     >
-      <Typography.Paragraph>
-        {content}
-      </Typography.Paragraph>
+      <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+          {content}
+      </ReactMarkdown>
     </div>
   );
 }

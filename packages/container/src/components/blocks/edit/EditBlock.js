@@ -5,6 +5,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { useSelector } from 'react-redux';
 import { useForm } from 'antd/es/form/Form';
+import TextEditor from '../../editor/TextEditor';
 
 EditBlock.requiredProps = {
   blockId: PropTypes.string,
@@ -77,7 +78,9 @@ export default function EditBlock({ blockId, editBlockModalVisible, setEditBlock
       visible={editBlockModalVisible}
       title={'Edit block'}
       onOk={onEditBlockFinish}
+      cancelText={'Back'}
       onCancel={() => setEditBlockModalVisible(false)}
+      maskClosable={false}
       width={'70%'}
       destroyOnClose
       afterClose={() => form.resetFields()}
@@ -179,14 +182,9 @@ export default function EditBlock({ blockId, editBlockModalVisible, setEditBlock
           }}
 
         >
-          <TextArea
-            rows={5}
-            placeholder={'Enter the data of the block'}
-            allowClear
-            style={{
-              width: '100%',
-              height: '90px',
-            }}
+          <TextEditor
+            placeholder={'Enter the content'}
+            height={'200px'}
           />
         </Form.Item>
 

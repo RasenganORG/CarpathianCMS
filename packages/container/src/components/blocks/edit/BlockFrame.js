@@ -16,12 +16,13 @@ export default function BlockFrame({ children, id, onClick, name }) {
       style={{
         marginBottom: '2rem',
         padding: '1rem',
+        backgroundColor:'#FCFEFF ',
       }}
     >
       <div
         style={{
           display: 'flex',
-          justifyContent:'space-between'
+          justifyContent:'space-between',
         }}
       >
         <Typography.Title level={5}>
