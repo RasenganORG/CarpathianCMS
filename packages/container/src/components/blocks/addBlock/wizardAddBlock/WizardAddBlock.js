@@ -3,16 +3,12 @@ import React, { useState } from 'react';
 import BlockVariantsDrawer from '../blockVariantsDrawer/BlockVariantsDrawer';
 const { Step } = Steps;
 import classes from './WizardAddBlock.module.css'
-import BlockInitialForm from '../BlockInitialForm';
-import BlockFormDrawer from '../../../drawers/BlockFormDrawer';
-import { useDispatch } from 'react-redux';
-import { pagesActions } from '../../../../redux/pagesSlice';
+import InitialFormDrawer from '../initialFormDrawer/InitialFormDrawer';
 
 
 const WizardAddBlock = ({setWizardVisible}) => {
   const [current, setCurrent] = useState(0);
   const [initialBlockForm] = Form.useForm();
-  const dispatch = useDispatch()
 
 
   const next = () => {
@@ -38,7 +34,7 @@ const WizardAddBlock = ({setWizardVisible}) => {
     },
     {
       title: 'Complete initial metadata',
-      content: <BlockFormDrawer form={initialBlockForm}/>,
+      content: <InitialFormDrawer form={initialBlockForm}/>,
     },
   ];
 

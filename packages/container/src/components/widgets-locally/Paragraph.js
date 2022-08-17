@@ -9,7 +9,6 @@ Paragraph.requiredProps = {
 };
 
 export default function Paragraph({ content, isEdit, id }) {
-
   return (
     <div
       style={{

@@ -39,7 +39,6 @@ export default function EditBlock({ blockId, editBlockModalVisible, setEditBlock
   const [titleDisplayed, setTitleDisplayed] = useState(true);
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const block = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks.find(block => block.id === blockId));
-
   const [form] = useForm();
 
 

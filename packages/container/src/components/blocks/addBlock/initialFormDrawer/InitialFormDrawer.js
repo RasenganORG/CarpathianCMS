@@ -1,10 +1,8 @@
-import { Button, Card, Col, Drawer, Row } from 'antd';
-import React, { useState } from 'react';
-import CardVariantItem from '../CardVariantItem';
-import BlockVariants from '../BlockVariants';
+import { Drawer} from 'antd';
+import React from 'react';
 import BlockInitialForm from '../BlockInitialForm';
 
-const InitialFormDrawer = ({onAddBlock}) => {
+const InitialFormDrawer = ({ form }) => {
 
 
   return (
@@ -42,7 +40,7 @@ const InitialFormDrawer = ({onAddBlock}) => {
           height: '450px',
         }}
       >
-        <BlockInitialForm/>
+        <BlockInitialForm form={form}/>
       </Drawer>
     </div>
   );

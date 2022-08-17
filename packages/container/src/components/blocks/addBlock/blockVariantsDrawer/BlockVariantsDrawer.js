@@ -1,6 +1,5 @@
-import { Button, Card, Col, Drawer, Row } from 'antd';
-import React, { useState } from 'react';
-import CardVariantItem from '../CardVariantItem';
+import {  Drawer } from 'antd';
+import React from 'react';
 import BlockVariants from '../BlockVariants';
 import PropTypes from 'prop-types';
 

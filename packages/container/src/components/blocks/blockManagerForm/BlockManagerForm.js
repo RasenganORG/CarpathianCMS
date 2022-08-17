@@ -1,67 +1,44 @@
-import { Button, Form, Input, Modal } from 'antd';
+import { Button, Form} from 'antd';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 import Paragraph from '../../widgets-locally/Paragraph';
 import BlockFrame from '../edit/BlockFrame';
-import EditBlock from '../edit/EditBlock';
-import { useForm } from 'antd/es/form/Form';
 
 BlockManagerForm.requiredProps = {
-  onChange: PropTypes.func,
   fields: PropTypes.array,
   form: PropTypes.any,
   onFinish: PropTypes.func,
   children: PropTypes.node,
+  startEditBlock: PropTypes.func,
 };
 
-export default function BlockManagerForm({ onChange, fields, form, onFinish, children }) {
-  const [editBlockModalVisible, setEditBlockModalVisible] = useState(false)
-  const [selectedBlock, setSelectedBlock] = useState()
+export default function BlockManagerForm({ fields, form, onFinish, children, startEditBlock }) {
 
-  console.log(fields)
-
-
-  const startEditBlock = (blockId) => {
-    setEditBlockModalVisible(true)
-    setSelectedBlock(blockId)
-  }
-
-  const onEditBlockFinished = (blockId, blockData) => {
-    form.setFieldValue(blockId, blockData)
-  }
 
   return (
     <div>
 
-      <EditBlock
-        blockId={selectedBlock}
-        editBlockModalVisible={editBlockModalVisible}
-        setEditBlockModalVisible={setEditBlockModalVisible}
-        onEditFinished={onEditBlockFinished}
-      />
+
       {fields.map(field => {
         return (
           <BlockFrame
-            key={field.name}
-            id={field.name}
+            key={field.name[0]}
+            id={field.name[0]}
             name={field.value.metadata.title}
             onClick={startEditBlock}
           >
             <Paragraph
               content={field.value.data}
               isEdit={true}
-              key={field.name}
-              id={field.name}/>
+              key={field.name[0]}
+              id={field.name[0]}/>
           </BlockFrame>
         );
       })}
       <Form
-        name='global_state'
+        name='block manager form'
         layout='inline'
         fields={fields}
-        onFieldsChange={(_, allFields) => {
-          onChange(allFields);
-        }}
         form={form}
         onFinish={onFinish}
       >

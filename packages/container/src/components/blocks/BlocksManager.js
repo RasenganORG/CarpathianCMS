@@ -3,56 +3,91 @@ import { Button, Col, Modal, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import BlockManagerForm from './blockManagerForm/BlockManagerForm';
 import WizardAddBlock from './addBlock/wizardAddBlock/WizardAddBlock';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { pagesActions } from '../../redux/pagesSlice';
+import EditBlock from './edit/EditBlock';
 
-const setFieldValues = (blocks) => {
+const setFieldValuesFromBlocks = (blocks) => {
   let fields = [];
   blocks?.map(block => fields.push({
-    name: block.id,
+    name: [block.id],
     value: block
   }));
   return fields
 };
+
+const setFieldValuesFromFieldsValues = (fieldsValues) => {
+  let fields = [];
+  for(let fieldValue of Object.entries(fieldsValues)){
+    fields.push({
+      name: [fieldValue[0]],
+      value: fieldValue[1]
+    })
+  }
+  return fields
+};
+
 
 const BlocksManager = () => {
   const [wizardVisible, setWizardVisible] = useState(false);
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
   const [fields, setFields] = useState([]);
+  const [editBlockModalVisible, setEditBlockModalVisible] = useState(false)
+  const [selectedBlock, setSelectedBlock] = useState()
+  const [formIsUpdated, setFormIsUpdated] = useState(0)
 
   const [form] = useForm();
+  const dispatch = useDispatch()
 
   const onFinish = data => {
-    console.log("Block Manager form", data);
+    let newBlockArray = []
+    for(let block of Object.entries(data)){
+      newBlockArray.push(block[1])
+    }
 
+    dispatch(pagesActions.setBlocks(newBlockArray))
+    //call api for upload of data
   };
 
   const onChange = newFields => {
     setFields(newFields);
   };
 
-  const onAddBlock = (type, id) => {
-    console.log(type);
-  };
-
-
   const showDrawer = () => {
     setWizardVisible(true);
   };
 
-  const onClose = () => {
-    setWizardVisible(false);
-  };
+  const startEditBlock = (blockId) => {
+    setEditBlockModalVisible(true)
+    setSelectedBlock(blockId)
+  }
+
+  const onEditBlockFinished = (blockId, blockData) => {
+    form.setFieldValue(blockId, blockData)
+    setFormIsUpdated( prevState => prevState+1)
+  }
 
   useEffect(() => {
     if(blocks) {
-      setFields(setFieldValues(blocks));
+      setFields(setFieldValuesFromBlocks(blocks));
     }
   },[blocks])
+
+  useEffect(() => {
+    const formFields = form.getFieldsValue()
+    setFields(setFieldValuesFromFieldsValues(formFields))
+  },[formIsUpdated])
 
 
   return (
     <div>
+      <EditBlock
+        blockId={selectedBlock}
+        editBlockModalVisible={editBlockModalVisible}
+        setEditBlockModalVisible={setEditBlockModalVisible}
+        onEditFinished={onEditBlockFinished}
+      />
       <Row>
         <Col offset={3} span={20}>
           <BlockManagerForm
@@ -60,6 +95,7 @@ const BlocksManager = () => {
             onFinish={onFinish}
             form={form}
             fields={fields}
+            startEditBlock={startEditBlock}
           >
 
           </BlockManagerForm>
@@ -74,7 +110,6 @@ const BlocksManager = () => {
 
           {wizardVisible &&
             <WizardAddBlock
-              onAddBlock={onAddBlock}
               setWizardVisible={setWizardVisible}
             />
           }
