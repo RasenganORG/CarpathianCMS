@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Modal, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import BlockManagerForm from './blockManagerForm/BlockManagerForm';
-import WizardAddBlock from './addBlock/WizardAddBlock/WizardAddBlock';
+import WizardAddBlock from './addBlock/wizardAddBlock/WizardAddBlock';
 import { useSelector } from 'react-redux';
 
 const setFieldValues = (blocks) => {
@@ -23,7 +23,7 @@ const BlocksManager = () => {
   const [form] = useForm();
 
   const onFinish = data => {
-    console.log(data);
+    console.log("Block Manager form", data);
 
   };
 

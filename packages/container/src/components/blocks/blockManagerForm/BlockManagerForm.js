@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Paragraph from '../../widgets-locally/Paragraph';
 import BlockFrame from '../edit/BlockFrame';
 import EditBlock from '../edit/EditBlock';
+import { useForm } from 'antd/es/form/Form';
 
 BlockManagerForm.requiredProps = {
   onChange: PropTypes.func,
@@ -16,34 +17,36 @@ BlockManagerForm.requiredProps = {
 export default function BlockManagerForm({ onChange, fields, form, onFinish, children }) {
   const [editBlockModalVisible, setEditBlockModalVisible] = useState(false)
   const [selectedBlock, setSelectedBlock] = useState()
-  console.log(fields);
 
-  const onEditBlockFinish = () => {
-    setEditBlockModalVisible(false)
-  };
+  console.log(fields)
+
 
   const startEditBlock = (blockId) => {
     setEditBlockModalVisible(true)
     setSelectedBlock(blockId)
   }
 
+  const onEditBlockFinished = (blockId, blockData) => {
+    form.setFieldValue(blockId, blockData)
+  }
+
   return (
     <div>
-      <Modal
-        visible={editBlockModalVisible}
-        title={'Edit block'}
-        onOk={onEditBlockFinish}
-        onCancel={() => setEditBlockModalVisible(false)}
-      >
-        <EditBlock blockId={selectedBlock}/>
-      </Modal>
+
+      <EditBlock
+        blockId={selectedBlock}
+        editBlockModalVisible={editBlockModalVisible}
+        setEditBlockModalVisible={setEditBlockModalVisible}
+        onEditFinished={onEditBlockFinished}
+      />
       {fields.map(field => {
         return (
           <BlockFrame
             key={field.name}
             id={field.name}
             name={field.value.metadata.title}
-            onClick={startEditBlock}>
+            onClick={startEditBlock}
+          >
             <Paragraph
               content={field.value.data}
               isEdit={true}
