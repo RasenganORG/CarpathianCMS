@@ -11,20 +11,22 @@ const setFieldValuesFromBlocks = (blocks) => {
   let fields = [];
   blocks?.map(block => fields.push({
     name: [block.id],
-    value: block
+    value: block,
   }));
-  return fields
+  return fields;
 };
 
 const setFieldValuesFromFieldsValues = (fieldsValues) => {
   let fields = [];
-  for(let fieldValue of Object.entries(fieldsValues)){
-    fields.push({
-      name: [fieldValue[0]],
-      value: fieldValue[1]
-    })
+  for (let fieldValue of Object.entries(fieldsValues)) {
+    if (fieldValue[1] !== null) {
+      fields.push({
+        name: [fieldValue[0]],
+        value: fieldValue[1],
+      });
+    }
   }
-  return fields
+  return fields;
 };
 
 
@@ -32,24 +34,28 @@ const BlocksManager = () => {
   const [wizardVisible, setWizardVisible] = useState(false);
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
-  console.log(blocks)
-  const [fields, setFields] = useState(blocks? setFieldValuesFromBlocks(blocks): []);
-  const [editBlockModalVisible, setEditBlockModalVisible] = useState(false)
-  const [selectedBlock, setSelectedBlock] = useState()
-  const [formIsUpdated, setFormIsUpdated] = useState(0)
+  const [fields, setFields] = useState(blocks ? setFieldValuesFromBlocks(blocks) : []);
+  const [editBlockModalVisible, setEditBlockModalVisible] = useState(false);
+  const [selectedBlock, setSelectedBlock] = useState();
+  const [formIsUpdated, setFormIsUpdated] = useState(0);
 
   const [form] = useForm();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const onFinish = data => {
-    let newBlockArray = []
-    for(let block of Object.entries(data)){
-      newBlockArray.push(block[1])
+    let newBlockArray = [];
+    for (let block of Object.entries(data)) {
+      newBlockArray.push(block[1]);
     }
-
-    dispatch(pagesActions.setBlocks(newBlockArray))
+    setFormIsUpdated(0);
+    dispatch(pagesActions.setBlocks(newBlockArray));
     //call api for upload of data
   };
+
+  const revertChanges = () => {
+    setFormIsUpdated(0)
+    updateFieldsFromRedux()
+  }
 
   const onChange = newFields => {
     setFields(newFields);
@@ -57,29 +63,23 @@ const BlocksManager = () => {
 
   const showDrawer = () => {
     setWizardVisible(true);
-    scrollToBottom()
+    scrollToBottom();
   };
 
   const startEditBlock = (blockId) => {
-    setEditBlockModalVisible(true)
-    setSelectedBlock(blockId)
-  }
+    setEditBlockModalVisible(true);
+    setSelectedBlock(blockId);
+  };
 
   const onEditBlockFinished = (blockId, blockData) => {
-    form.setFieldValue(blockId, blockData)
-    setFormIsUpdated( prevState => prevState+1)
-  }
+    form.setFieldValue(blockId, blockData);
+    setFormIsUpdated(prevState => prevState + 1);
+  };
 
-  useEffect(() => {
-    if(blocks) {
-      setFields(setFieldValuesFromBlocks(blocks));
-    }
-  },[blocks])
-
-  useEffect(() => {
-    const formFields = form.getFieldsValue()
-    setFields(setFieldValuesFromFieldsValues(formFields))
-  },[formIsUpdated])
+  const onDeleteBlock = (blockId) => {
+    form.setFieldValue(blockId, null);
+    setFormIsUpdated(prevState => prevState + 1);
+  };
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -87,11 +87,25 @@ const BlocksManager = () => {
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
       });
-    }, 10)
+    }, 10);
 
   };
 
-  console.log(fields)
+  const updateFieldsFromRedux = () => {
+    if (blocks) {
+      setFields(setFieldValuesFromBlocks(blocks));
+    }
+  }
+
+  useEffect(() => {
+    updateFieldsFromRedux()
+  }, [blocks]);
+
+  useEffect(() => {
+    const formFields = form.getFieldsValue();
+    setFields(setFieldValuesFromFieldsValues(formFields));
+  }, [formIsUpdated]);
+
 
   return (
     <div>
@@ -109,15 +123,18 @@ const BlocksManager = () => {
             form={form}
             fields={fields}
             startEditBlock={startEditBlock}
+            onDeleteBlock={onDeleteBlock}
+            formIsUpdated={formIsUpdated}
+            revertChanges={revertChanges}
           >
 
           </BlockManagerForm>
         </Col>
         <Col offset={5} span={16} style={{
-          marginBottom:'30px',
-          marginTop:'30px',
-          display:'flex',
-          justifyContent:'center'
+          marginBottom: '30px',
+          marginTop: '30px',
+          display: 'flex',
+          justifyContent: 'center',
         }}>
           {
             !wizardVisible &&

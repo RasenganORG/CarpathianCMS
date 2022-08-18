@@ -10,9 +10,14 @@ BlockManagerForm.requiredProps = {
   onFinish: PropTypes.func,
   children: PropTypes.node,
   startEditBlock: PropTypes.func,
+  onDeleteBlock: PropTypes.func,
+  formIsUpdated: PropTypes.number,
+  revertChanges: PropTypes.func,
 };
 
-export default function BlockManagerForm({ fields, form, onFinish, children, startEditBlock }) {
+export default function BlockManagerForm({ fields, form, onFinish, children, startEditBlock, onDeleteBlock, formIsUpdated, revertChanges }) {
+
+
 
 
   return (
@@ -24,7 +29,8 @@ export default function BlockManagerForm({ fields, form, onFinish, children, sta
             key={field.name[0]}
             id={field.name[0]}
             name={field.value.metadata.title}
-            onClick={startEditBlock}
+            onClickEdit={startEditBlock}
+            onClickDelete={onDeleteBlock}
           >
             <Paragraph
               content={field.value.data}
@@ -43,14 +49,22 @@ export default function BlockManagerForm({ fields, form, onFinish, children, sta
       >
         {fields.map((field) => {
           return (<Form.Item
-            name={field.name} />);
+            name={field.name}
+            key={field.name}
+          ><div></div></Form.Item>);
         })}
         {children}
         <Form.Item>
-          <Button htmlType={'submit'}>
+          <Button htmlType={'submit'} type={'primary'}>
             Save changes
           </Button>
         </Form.Item>
+
+        {formIsUpdated>0 && <Form.Item>
+          <Button htmlType={'reset'} onClick={revertChanges}>
+            Revert changes
+          </Button>
+        </Form.Item>}
       </Form>
     </div>
   );

@@ -130,6 +130,8 @@ export default function EditBlock({ blockId, editBlockModalVisible, setEditBlock
           name={'titleDisplayed'}
           labelAlign={'left'}
           label={'Display title'}
+          valuePropName={'checked'}
+
           {...formSwitchLayout}
           tooltip={{
             icon: <InfoCircleOutlined />,

@@ -10,8 +10,9 @@ const CardVariantItem = (props) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
+        alignItems:'center',
         minHeight: '130px',
-        minWidth: '160px',
+        minWidth: '130px',
       }}
     >
       <Button

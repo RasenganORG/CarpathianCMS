@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import './TextEditor.module.css'
 
 const modules = {
   toolbar: [
@@ -13,7 +14,6 @@ const modules = {
     [{ 'indent': '-1'}, { 'indent': '+1' }],
     [{ 'direction': 'rtl' }],
 
-    [{ 'size': ['small', false, 'large', 'huge'] }],
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
     [{ 'color': [] }, { 'background': [] }],
@@ -23,6 +23,11 @@ const modules = {
     ['clean']
   ],
 };
+
+const customOptions = [{
+  import: 'attributors/style/size',
+  whitelist: ['10', '16', '22', '36', '48', '72', '144']
+}];
 
 const formats = [
   'header',
@@ -53,10 +58,12 @@ const TextEditor = ({ value, onChange, placeholder, height }) => {
   return (
     <>
       <ReactQuill
+        className={'ql-snow'}
         theme="snow"
         value={value || ''}
         modules={modules}
         formats={formats}
+        customOptions={customOptions}
         onChange={onChange}
         placeholder={placeholder}
         style={{

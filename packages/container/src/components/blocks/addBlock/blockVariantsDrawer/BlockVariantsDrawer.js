@@ -14,7 +14,7 @@ export default function BlockVariantsDrawer ({onNext, setFieldValue})  {
   return (
     <div style={{
       position: 'relative',
-      height: '450px',
+      height: '400px',
       width: '100%',
       padding: '48px',
       overflow: 'hidden',
@@ -42,7 +42,7 @@ export default function BlockVariantsDrawer ({onNext, setFieldValue})  {
         width={'100%'}
         style={{
           position: 'absolute',
-          height: '450px',
+          height: '400px',
         }}
       >
         <BlockVariants onNext={onNext} setFieldValue={(name, value) => setFieldValue(name, value)}/>
