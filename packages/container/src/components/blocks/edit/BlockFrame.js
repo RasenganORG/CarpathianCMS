@@ -15,7 +15,6 @@ export default function BlockFrame({ children, id, onClickEdit, name, onClickDel
   return (
     <div
       style={{
-        marginBottom: '2rem',
         padding: '1rem',
         backgroundColor: '#FCFEFF ',
       }}
@@ -47,6 +46,9 @@ const BlockEditButton = ({ onClick, id }) => {
         shape={'circle'}
         icon={<EditTwoTone />}
         onClick={() => onClick(id)}
+        style={{
+          marginBottom:'0.5rem'
+        }}
       />
     </Tooltip>
   );
@@ -75,6 +77,9 @@ const BlockDeleteButton = ({ onClick, id }) => {
           shape={'circle'}
           icon={<DeleteTwoTone />}
           onClick={() => setModalDisplayed(true)}
+          style={{
+            marginBottom:'0.5rem'
+          }}
         />
       </Tooltip>
     </div>

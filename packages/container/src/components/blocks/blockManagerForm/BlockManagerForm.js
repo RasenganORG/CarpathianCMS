@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Paragraph from '../../widgets-locally/Paragraph';
 import BlockFrame from '../edit/BlockFrame';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import DraggableList from '../../draggable-list/DraggableList';
+
 
 BlockManagerForm.requiredProps = {
   fields: PropTypes.array,
@@ -23,23 +26,13 @@ export default function BlockManagerForm({ fields, form, onFinish, children, sta
   return (
     <div>
 
-      {fields.map(field => {
-        return (
-          <BlockFrame
-            key={field.name[0]}
-            id={field.name[0]}
-            name={field.value.metadata.title}
-            onClickEdit={startEditBlock}
-            onClickDelete={onDeleteBlock}
-          >
-            <Paragraph
-              content={field.value.data}
-              isEdit={true}
-              key={field.name[0]}
-              id={field.name[0]}/>
-          </BlockFrame>
-        );
-      })}
+      <DraggableList
+        fields={fields}
+        onDeleteBlock={onDeleteBlock}
+        startEditBlock={startEditBlock}
+      />
+
+
       <Form
         name='block manager form'
         layout='inline'
