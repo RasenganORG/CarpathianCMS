@@ -1,9 +1,9 @@
-import { Button, Form} from 'antd';
+import { Button, Form } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Paragraph from '../../widgets-locally/Paragraph';
 import BlockFrame from '../edit/BlockFrame';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DraggableList from '../../draggable-list/DraggableList';
 
 
@@ -16,11 +16,21 @@ BlockManagerForm.requiredProps = {
   onDeleteBlock: PropTypes.func,
   formIsUpdated: PropTypes.number,
   revertChanges: PropTypes.func,
+  updateBlocksPlaces: PropTypes.func,
 };
 
-export default function BlockManagerForm({ fields, form, onFinish, children, startEditBlock, onDeleteBlock, formIsUpdated, revertChanges }) {
-
-
+export default function BlockManagerForm(
+  {
+    fields,
+    form,
+    onFinish,
+    children,
+    startEditBlock,
+    onDeleteBlock,
+    formIsUpdated,
+    revertChanges,
+    updateBlocksPlaces,
+  }) {
 
 
   return (
@@ -30,6 +40,7 @@ export default function BlockManagerForm({ fields, form, onFinish, children, sta
         fields={fields}
         onDeleteBlock={onDeleteBlock}
         startEditBlock={startEditBlock}
+        updateBlocksPlaces={updateBlocksPlaces}
       />
 
 
@@ -44,7 +55,9 @@ export default function BlockManagerForm({ fields, form, onFinish, children, sta
           return (<Form.Item
             name={field.name}
             key={field.name}
-          ><div></div></Form.Item>);
+          >
+            <div></div>
+          </Form.Item>);
         })}
         {children}
         <Form.Item>
@@ -53,7 +66,7 @@ export default function BlockManagerForm({ fields, form, onFinish, children, sta
           </Button>
         </Form.Item>
 
-        {formIsUpdated>0 && <Form.Item>
+        {formIsUpdated > 0 && <Form.Item>
           <Button htmlType={'reset'} onClick={revertChanges}>
             Revert changes
           </Button>

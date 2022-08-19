@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { pagesActions } from '../../../redux/pagesSlice';
+import PropTypes from 'prop-types';
 
 const formItemLayout = {
   labelCol: {
@@ -26,11 +27,14 @@ const formSwitchLayout = {
   },
 };
 
+BlockInitialForm.propTypes = {
+  form: PropTypes.any,
+}
 
 export default function BlockInitialForm({ form }) {
-  const [createBlockButtonLoading, setCreateBlockButtonLoading] = useState(false);
   const [titleDisplayed, setTitleDisplayed] = useState(true);
   const selectedPage = useSelector(state => state.pages.selectedPage);
+  const numberOfBlocks =  useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks.length)
 
   const dispatch = useDispatch();
 
@@ -41,6 +45,7 @@ export default function BlockInitialForm({ form }) {
       block.metadata = data;
       block.metadata.pageId = selectedPage;
       block.metadata.type = form.getFieldValue('type');
+      block.metadata.place = numberOfBlocks + 1
       block.id = form.getFieldValue('id');
       block.data = ''
       dispatch(pagesActions.addBlockToPage({

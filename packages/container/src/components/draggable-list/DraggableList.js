@@ -2,11 +2,11 @@ import React, { Component, useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import BlockFrame from '../blocks/edit/BlockFrame';
 import Paragraph from '../widgets-locally/Paragraph';
+import PropTypes from 'prop-types';
 
 
-// a little function to help us with reordering the result
+// reorders items
 const reorder = (list, startIndex, endIndex) => {
-  console.log("Reorder",list)
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -16,11 +16,12 @@ const reorder = (list, startIndex, endIndex) => {
 
 const grid = 8;
 
+//create the style of an item
 const getItemStyle = (isDragging, draggableStyle) => ({
   userSelect: "none",
   margin: `0 0 ${grid}px 0`,
 
-  // change background colour if dragging
+  // change background colour when dragging
   border:  isDragging ? '15px solid #74b6ec' : '15px solid white',
   borderRadius: '10px',
 
@@ -34,9 +35,15 @@ const getListStyle = isDraggingOver => ({
   width: '100%'
 });
 
-const DraggableList = ({startEditBlock, onDeleteBlock,fields}) => {
+DraggableList.propTypes = {
+  startEditBlock : PropTypes.func,
+  onDeleteBlock: PropTypes.func,
+  fields: PropTypes.array,
+  updateBlocksPlaces: PropTypes.func,
+}
+
+export default function DraggableList ({startEditBlock, onDeleteBlock,fields,updateBlocksPlaces}) {
   const [items,setItems] = useState(fields)
-  console.log(items)
 
   useEffect(()=> {
     setItems(fields)
@@ -47,20 +54,26 @@ const DraggableList = ({startEditBlock, onDeleteBlock,fields}) => {
     if (!result.destination) {
       return;
     }
-    console.log("Result",result)
 
     const newItems = reorder(
       items,
       result.source.index,
       result.destination.index
     );
-    console.log("final", newItems)
 
-    setItems(newItems)
+    //updates the place value of every block with the new place
+    let updatedPlacesNewItems = []
+    for(let index in newItems){
+      let copy = JSON.parse(JSON.stringify(newItems[index]));
+      copy.value.metadata.place = parseInt(index) + 1
+      updatedPlacesNewItems.push(copy)
+    }
+
+    updateBlocksPlaces(updatedPlacesNewItems)
+    setItems(updatedPlacesNewItems)
   }
 
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
+
   return (
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable block list">
@@ -108,4 +121,3 @@ const DraggableList = ({startEditBlock, onDeleteBlock,fields}) => {
 
 }
 
-export default DraggableList
