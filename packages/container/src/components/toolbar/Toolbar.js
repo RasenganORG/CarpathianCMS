@@ -12,12 +12,14 @@ import AddNewPageForm from '../pages/AddNewPageForm';
 import Sider from 'antd/es/layout/Sider';
 import MenuButton from '../layouts/toolbarLayouts/MenuButton';
 import classes from './Toolbar.module.css';
+import { useDispatch } from 'react-redux';
+import { pagesActions } from '../../redux/pagesSlice';
 
 const Toolbar = () => {
   const [leaveModalIsOpened, setLeaveModalIsOpened] = useState(false);
   const [newPageModalIsOpened, setNewPageModalIsOpened] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const isEdit = window.location.pathname.split('/').findIndex((word) => word === 'edit' || word === 'content') !== -1;
   const isEditContent = window.location.pathname.split('/').findIndex((word) =>  word === 'content') !== -1;
@@ -107,14 +109,14 @@ const Toolbar = () => {
         visible={leaveModalIsOpened}
         onOk={onExitEdit}
         onCancel={() => setLeaveModalIsOpened(false)}
-        okText={'Leave edit page'}
-        cancelText={'Cancel'}
+        okText={'Leave without saving'}
+        cancelText={'Stay'}
       >
         <Typography.Title level={3}>
           Are you sure you want to leave?
         </Typography.Title>
         <Typography.Title level={5}>
-          Your work will be automatically saved upon leaving this page.
+          Your work won't be saved.
         </Typography.Title>
       </Modal>
       <AddNewPageForm

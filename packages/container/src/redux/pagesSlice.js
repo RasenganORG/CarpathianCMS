@@ -53,6 +53,10 @@ const pagesSlice = createSlice({
       state.selectedPage = action.payload
     },
 
+    setPageNeedsUpdate(state){
+      state.pageNeedsUpdate = state.selectedPage
+    },
+
     resetPageNeedsUpdate(state){
       state.pageNeedsUpdate = false
     }
