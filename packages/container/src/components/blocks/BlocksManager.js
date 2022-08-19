@@ -49,8 +49,10 @@ const BlocksManager = () => {
         newBlockArray.push(block[1]);
       }
       setFormIsUpdated(0);
-      dispatch(pagesActions.setBlocks(newBlockArray));
-      //call api for upload of data
+      dispatch(pagesActions.setBlocks({
+        pageId: selectedPage,
+        blocks: newBlockArray
+      }));
     };
 
     const revertChanges = () => {

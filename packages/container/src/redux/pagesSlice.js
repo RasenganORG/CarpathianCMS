@@ -43,8 +43,10 @@ const pagesSlice = createSlice({
     },
 
     setBlocks(state, action){
+      const pageId = action.payload.pageId
       const currentPageIndex = state.pagesList.findIndex(page => page.id === state.selectedPage)
-      state.pagesList[currentPageIndex].data.blocks = action.payload
+      state.pagesList[currentPageIndex].data.blocks = action.payload.blocks
+      state.pageNeedsUpdate = pageId
     },
 
     setSelectedPage(state, action){

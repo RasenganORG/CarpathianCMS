@@ -67,6 +67,7 @@ const AppServices = ({children}) => {
         const page = pages.find(page => page.id === pageNeedsUpdate)
         const res = await updatePage(page, pageNeedsUpdate);
         dispatch(pagesActions.resetPageNeedsUpdate())
+        console.log(res)
       }
     }
     update()
