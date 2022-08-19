@@ -12,6 +12,7 @@ EditBlock.requiredProps = {
   editBlockModalVisible: PropTypes.bool,
   setEditBlockModalVisible: PropTypes.func,
   onEditFinished: PropTypes.func,
+  blocksForm: PropTypes.any,
 };
 
 const formItemLayout = {
@@ -36,12 +37,11 @@ const formSwitchLayout = {
   },
 };
 
-export default function EditBlock({ blockId, editBlockModalVisible, setEditBlockModalVisible, onEditFinished }) {
+export default function EditBlock({ blockId, editBlockModalVisible, setEditBlockModalVisible, onEditFinished, blocksManagerForm }) {
   const [titleDisplayed, setTitleDisplayed] = useState(true);
-  const selectedPage = useSelector(state => state.pages.selectedPage);
-  const block = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks.find(block => block.id === blockId));
-  const [form] = useForm();
+  const block = blockId ? (Object.keys(blocksManagerForm.getFieldValue(blockId)).length !== 0 ?blocksManagerForm.getFieldValue(blockId) :  undefined) :undefined;
 
+  const [form] = useForm();
 
   useEffect(() => {
     if (block && editBlockModalVisible === true) {
@@ -61,6 +61,7 @@ export default function EditBlock({ blockId, editBlockModalVisible, setEditBlock
         pageId:block.metadata.pageId,
         title: data.title,
         titleDisplayed: data.titleDisplayed,
+        place: block.metadata.place,
         type: block.metadata.type
       }
     }

@@ -83,6 +83,8 @@ const BlocksManager = () => {
       for (let block of blocksNewSort) {
         form.setFieldValue(block.name[0], block.value);
       }
+      setFormIsUpdated(prevState => prevState + 1);
+
     };
 
     const onDeleteBlock = (blockId) => {
@@ -94,6 +96,7 @@ const BlocksManager = () => {
       if (blocks) {
         const formattedFields = setFieldValuesFromBlocks(blocks);
         formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place);
+        console.log('formatted', formattedFields);
         setFields(formattedFields);
       }
     };
@@ -115,7 +118,7 @@ const BlocksManager = () => {
     useEffect(() => {
       const formFields = form.getFieldsValue();
       const formattedFields = setFieldValuesFromFieldsValues(formFields);
-      //formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place)
+      formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place)
       setFields(formattedFields);
       console.log('new fields', formattedFields);
     }, [formIsUpdated]);
@@ -138,6 +141,7 @@ const BlocksManager = () => {
             editBlockModalVisible={editBlockModalVisible}
             setEditBlockModalVisible={setEditBlockModalVisible}
             onEditFinished={onFinishEditBlock}
+            blocksManagerForm={form}
           />
           <Row>
             <Col offset={2} span={22}>
