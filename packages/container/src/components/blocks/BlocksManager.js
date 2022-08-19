@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Row, Spin } from 'antd';
+import { Button, Card, Col, Modal, Row, Spin } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import BlockManagerForm from './blockManagerForm/BlockManagerForm';
+import BlockManagerForm from './BlockManagerForm';
 import WizardAddBlock from './addBlock/wizardAddBlock/WizardAddBlock';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
-import EditBlock from './edit/EditBlock';
+import EditBlock from './editBlock/EditBlock';
 
 const setFieldValuesFromBlocks = (blocks) => {
   let fields = [];
@@ -51,7 +51,7 @@ const BlocksManager = () => {
       setFormIsUpdated(0);
       dispatch(pagesActions.setBlocks({
         pageId: selectedPage,
-        blocks: newBlockArray
+        blocks: newBlockArray,
       }));
     };
 
@@ -118,7 +118,7 @@ const BlocksManager = () => {
     useEffect(() => {
       const formFields = form.getFieldsValue();
       const formattedFields = setFieldValuesFromFieldsValues(formFields);
-      formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place)
+      formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place);
       setFields(formattedFields);
       console.log('new fields', formattedFields);
     }, [formIsUpdated]);
@@ -143,21 +143,28 @@ const BlocksManager = () => {
             onEditFinished={onFinishEditBlock}
             blocksManagerForm={form}
           />
+
           <Row>
             <Col offset={2} span={22}>
-              <BlockManagerForm
-                onChange={onFieldChange}
-                onFinish={onFinish}
-                form={form}
-                fields={fields}
-                startEditBlock={onStartEditBlock}
-                onDeleteBlock={onDeleteBlock}
-                formIsUpdated={formIsUpdated}
-                revertChanges={revertChanges}
-                updateBlocksPlaces={updateBlocksPlaces}
+              <Card
+                title={'Block Editor'}
+                bordered={false}
               >
 
-              </BlockManagerForm>
+                <BlockManagerForm
+                  onChange={onFieldChange}
+                  onFinish={onFinish}
+                  form={form}
+                  fields={fields}
+                  startEditBlock={onStartEditBlock}
+                  onDeleteBlock={onDeleteBlock}
+                  formIsUpdated={formIsUpdated}
+                  revertChanges={revertChanges}
+                  updateBlocksPlaces={updateBlocksPlaces}
+                >
+
+                </BlockManagerForm>
+              </Card>
             </Col>
             <Col offset={5} span={16} style={{
               marginBottom: '30px',

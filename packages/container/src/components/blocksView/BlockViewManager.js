@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import BlockFrame from '../blocks/edit/BlockFrame';
-import Paragraph from '../widgets-locally/Paragraph';
+import BlockFrame from '../blocks/editBlock/BlockFrame';
+import Paragraph from '../widgetsLocally/Paragraph/Paragraph';
 import { useSelector } from 'react-redux';
 import BlockViewFrame from './BlockViewFrame';
 import { Spin } from 'antd';
@@ -31,11 +31,11 @@ const BlockViewManager = () => {
                   id={field.id}
                   name={field.metadata.titleDisplayed ? field.metadata.title : null}
                 >
-                  <Paragraph
+                  {field.metadata.type === 'paragraph' ? <Paragraph
                     content={field.data}
                     isEdit={false}
                     key={field.id}
-                    id={field.id} />
+                    id={field.id} /> : null}
                 </BlockViewFrame>);
             },
           )}

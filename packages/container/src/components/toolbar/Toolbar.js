@@ -109,7 +109,7 @@ const Toolbar = () => {
         visible={leaveModalIsOpened}
         onOk={onExitEdit}
         onCancel={() => setLeaveModalIsOpened(false)}
-        okText={'Leave without saving'}
+        okText={'Leave'}
         cancelText={'Stay'}
       >
         <Typography.Title level={3}>

@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import BlockFrame from '../blocks/edit/BlockFrame';
-import Paragraph from '../widgets-locally/Paragraph';
+import BlockFrame from '../blocks/editBlock/BlockFrame';
+import Paragraph from '../widgetsLocally/Paragraph/Paragraph';
 import PropTypes from 'prop-types';
 
 
@@ -102,11 +102,12 @@ export default function DraggableList ({startEditBlock, onDeleteBlock,fields,upd
                         onClickEdit={startEditBlock}
                         onClickDelete={onDeleteBlock}
                       >
-                        <Paragraph
+                        { field.value.metadata.type === 'paragraph' ?
+                          <Paragraph
                           content={field.value.data}
                           isEdit={true}
                           key={field.name[0]}
-                          id={field.name[0]} />
+                          id={field.name[0]} /> : null}
                       </BlockFrame>
                     </div>
                   )}

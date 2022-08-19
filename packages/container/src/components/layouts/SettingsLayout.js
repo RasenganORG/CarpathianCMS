@@ -36,7 +36,7 @@ const menuSettingsConfig = [
     label: 'User ApplicationLayout',
     children: [
       {
-        key: 'edit-roles',
+        key: 'editBlock-roles',
         label: 'Edit roles',
         icon: <IdcardOutlined />,
       },

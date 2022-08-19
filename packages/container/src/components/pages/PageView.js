@@ -1,8 +1,8 @@
 import React from 'react';
 import { Col, Row } from 'antd';
-import CalendarGeneratedApp from '../widgets-mfe/CalendarGeneratedApp';
+import CalendarGeneratedApp from '../widgetsMfe/CalendarGeneratedApp';
 import BlocksManager from '../blocks/BlocksManager';
-import BlockViewManager from '../blocks-view/BlockViewManager';
+import BlockViewManager from '../blocksView/BlockViewManager';
 
 export default () => {
 
