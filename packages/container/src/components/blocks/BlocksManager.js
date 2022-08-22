@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Menu, Modal, Row, Spin } from 'antd';
+import { Button,  Col, Row, Spin } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import BlockManagerForm from './BlockManagerForm';
 import WizardAddBlock from './addBlock/wizardAddBlock/WizardAddBlock';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
 import EditBlock from './editBlock/EditBlock';
-import EditPageMetadata from '../pages/edit/EditPageMetadata';
-import PageSettings from '../pages/edit/PageSettings';
 
 const setFieldValuesFromBlocks = (blocks) => {
   let fields = [];
@@ -32,9 +30,9 @@ const setFieldValuesFromFieldsValues = (fieldsValues) => {
 };
 
 
+//contains all the logic regarding the handling of blocks
 const BlocksManager = () => {
     const [wizardVisible, setWizardVisible] = useState(false);
-    const [currentMenu, setCurrentMenu] = useState('block-editor');
     const selectedPage = useSelector(state => state.pages.selectedPage);
     const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
     const [blocksAreLoading, setBlocksAreLoading] = useState(true);
@@ -43,45 +41,54 @@ const BlocksManager = () => {
     const [selectedBlock, setSelectedBlock] = useState();
     const [formIsUpdated, setFormIsUpdated] = useState(0);
 
-    const [form] = useForm();
+    const [form] = useForm();                   // this form contains a key-value field for every block.
+                                                // key: the id of the block and value: the data object of the block
+                                                // the form it is declared here, but associated to a Form component in BlockManagerForm.js
     const dispatch = useDispatch();
 
+    // called when the form is submitted ( The Save Changes Button is pressed)
     const onFinish = data => {
+                                                 //data contains the fields from form. This contains the latest version of the blocks
       let newBlockArray = [];
       for (let block of Object.entries(data)) {
         newBlockArray.push(block[1]);
       }
-      setFormIsUpdated(0);
+      setFormIsUpdated(0);                  // resets the value to 0 for hiding revert changes as now there aren't any changes to revert to
+
+                                                  // automatically uploads changes to backend with the useEffect in AppServices. To see
+                                                  // how this works, go to AppServices.js
       dispatch(pagesActions.setBlocks({
         pageId: selectedPage,
         blocks: newBlockArray,
       }));
     };
 
+    // reverts changes to the values in redux (those that are on backend)
     const revertChanges = () => {
       setFormIsUpdated(0);
       updateFieldsFromRedux();
     };
 
-    const onFieldChange = newFields => {
-      setFields(newFields);
-    };
 
     const showWizard = () => {
       setWizardVisible(true);
       scrollToBottom();
     };
 
+    // opens modal for editing the block
     const onStartEditBlock = (blockId) => {
       setEditBlockModalVisible(true);
       setSelectedBlock(blockId);
     };
 
+    // when a block is finished editing, set's the new value in form and signals that there is an update to be made
     const onFinishEditBlock = (blockId, blockData) => {
       form.setFieldValue(blockId, blockData);
       setFormIsUpdated(prevState => prevState + 1);
     };
 
+    // used to update the place field for every block
+    // called when a block is moved.
     const updateBlocksPlaces = (blocksNewSort) => {
       for (let block of blocksNewSort) {
         form.setFieldValue(block.name[0], block.value);
@@ -103,6 +110,7 @@ const BlocksManager = () => {
       }
     };
 
+    //scrolls to bottom when the wizard is opened
     const scrollToBottom = () => {
       setTimeout(() => {
         window.scrollTo({
@@ -117,6 +125,8 @@ const BlocksManager = () => {
       updateFieldsFromRedux();
     }, [blocks]);
 
+    // updates the fields state whenever the fields from forms are updated
+    // used to display the latest changes to a block in the list of blocks
     useEffect(() => {
       const formFields = form.getFieldsValue();
       const formattedFields = setFieldValuesFromFieldsValues(formFields);
@@ -125,6 +135,7 @@ const BlocksManager = () => {
     }, [formIsUpdated]);
 
 
+    // used to display the spinner when there are no blocks in redux
     useEffect(() => {
       if (blocks !== undefined) {
         setBlocksAreLoading(false);
@@ -134,10 +145,7 @@ const BlocksManager = () => {
     }, [blocks]);
 
 
-    const items = [
-      { label: 'Blocks Editor', key: 'block-editor' },
-      { label: 'Page Metadata', key: 'page-metadata' },
-      { label: 'Page Settings', key: 'page-settings' }];
+
 
 
     return (
@@ -151,21 +159,10 @@ const BlocksManager = () => {
             blocksManagerForm={form}
           />
 
-          <Menu
-            mode='horizontal'
-            selectedKeys={[currentMenu]}
-            onClick={(k) => setCurrentMenu(k.key)}
-            items={items}
-            style={{
-              marginBottom: '2rem',
-            }}
-          />
 
-          {currentMenu === 'block-editor' && (
             <Row>
               <Col offset={2} span={22}>
                 <BlockManagerForm
-                  onChange={onFieldChange}
                   onFinish={onFinish}
                   form={form}
                   fields={fields}
@@ -196,20 +193,7 @@ const BlocksManager = () => {
                 }
 
               </Col>
-            </Row>)}
-
-          {currentMenu === 'page-metadata' && (
-            <Row>
-              <Col offset={2} span={22}>
-                <EditPageMetadata />
-              </Col>
-            </Row>)}
-          {currentMenu === 'page-settings' && (
-            <Row>
-              <Col offset={2} span={22}>
-                <PageSettings />
-              </Col>
-            </Row>)}
+            </Row>
 
         </Spin>
       </div>
