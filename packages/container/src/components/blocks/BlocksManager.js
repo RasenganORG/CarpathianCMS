@@ -6,8 +6,8 @@ import WizardAddBlock from './addBlock/wizardAddBlock/WizardAddBlock';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
 import EditBlock from './editBlock/EditBlock';
-import EditPageMetadata from '../pages/EditPageMetadata';
-import PageSettings from '../pages/PageSettings';
+import EditPageMetadata from '../pages/edit/EditPageMetadata';
+import PageSettings from '../pages/edit/PageSettings';
 
 const setFieldValuesFromBlocks = (blocks) => {
   let fields = [];

@@ -6,11 +6,11 @@ const pagesSlice = createSlice({
   name: 'pages',
   initialState: {
     pagesList: [],
-    navBar:[],
     wizard:{},
     hasPermissionToSettings:false,
     selectedPage:{},
-    pageNeedsUpdate: false
+    pageNeedsUpdate: false,
+    refreshNavBar:0,
   },
   reducers: {
     createNewPage(state, action) {
@@ -26,6 +26,7 @@ const pagesSlice = createSlice({
 
     setPages(state, action) {
       const pages = action.payload.pages;
+      // console.log("Pages in redux", pages)
       state.selectedPage = action.payload.selectedPage
       state.pagesList = pages;
     },
@@ -59,7 +60,14 @@ const pagesSlice = createSlice({
 
     resetPageNeedsUpdate(state){
       state.pageNeedsUpdate = false
-    }
+    },
+
+    refreshNavBar(state){
+      console.log("here")
+      state.refreshNavBar = state.refreshNavBar + 1
+    },
+
+
 
   },
 });

@@ -1,6 +1,6 @@
 import { Button, Divider, Input, Modal, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { deletePage as deletePageApi } from '../../services/pages/PagesService';
+import { deletePage as deletePageApi } from '../../../services/pages/PagesService';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,9 +15,11 @@ const DeletePageButton = () => {
 
   const deletePage = async () => {
     const res = await deletePageApi(selectedPage);
+    console.log(res)
     setModalIsOpened(false);
-    if (res.result === 'successful') {
+    if (res.data.type === 'success') {
       navigate('/account')
+      window.location.reload(true)
     }
   };
 
@@ -49,7 +51,7 @@ const DeletePageButton = () => {
             display: 'flex',
             justifyContent: 'row',
           }}>
-          <Typography style={{marginRight:'3px'}}>All of it's content will be</Typography>
+          <Typography style={{marginRight:'5px'}}>All of it's content will be</Typography>
           <Typography.Text strong type={'danger'}> permanently deleted.</Typography.Text>
         </div>
         <Divider />

@@ -21,7 +21,7 @@ import FormItem from 'antd/es/form/FormItem';
 import { pagesActions } from '../../redux/pagesSlice';
 import { addNewPage } from '../../services/pages/PagesService';
 import slugify from '../../utils/slugify';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const formItemLayout = {
   labelCol: {
@@ -54,6 +54,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   let title = Form.useWatch('title',form)
   const dispatch = useDispatch();
   const pages = useSelector(state => state.pages.pagesList);
+  const navigate = useNavigate()
 
   const hrefHelp = generateCustomHref ? <a href={'https://ahrefs.com/seo/glossary/url-slug'} target="_blank">How to create a href?</a> : null
 
@@ -74,6 +75,8 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       dispatch(pagesActions.createNewPage(res));
       setCreatePageButtonLoading(false);
       setNewPageModalIsOpened(false);
+      navigate(`/${data.metadata.href}/edit`)
+      window.location.reload(true)
     } catch (error) {
       console.log(error);
     }

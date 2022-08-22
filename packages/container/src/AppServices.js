@@ -35,6 +35,8 @@ const AppServices = ({children}) => {
   const [navBar, setNavBar] = useState([])
   const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate)
   const pages = useSelector(state => state.pages.pagesList)
+  const refreshNavBar = useSelector(state => state.pages.refreshNavBar)
+  console.log(refreshNavBar)
 
 
   useEffect( () => {
@@ -49,7 +51,8 @@ const AppServices = ({children}) => {
     async function fetchPages(){
       const pages = await getPages()
       const navbar = await getNavBar()
-      const navBarLayout = createNavBar(navbar)
+      const navBarLayout = await createNavBar(navbar)
+      // console.log('CREATED NAVBAR1', navBarLayout)
       navBarLayout.push(navBar)
       if(hasPermission)
         navBarLayout.push(...navBarBasicSettings)
@@ -57,9 +60,10 @@ const AppServices = ({children}) => {
       const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1],pages)
       dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }))
     }
+    // console.log('will GET NAVBAR and PAGES')
     fetchPages()
 
-  },[hasPermission])
+  },[hasPermission,refreshNavBar])
 
   useEffect(() => {
     async function update(){

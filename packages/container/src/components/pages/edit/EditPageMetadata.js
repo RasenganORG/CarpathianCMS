@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Modal, Select, Switch } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import slugify from '../../utils/slugify';
-import { addNewPage } from '../../services/pages/PagesService';
-import { pagesActions } from '../../redux/pagesSlice';
+import slugify from '../../../utils/slugify';
+import { addNewPage, updatePage } from '../../../services/pages/PagesService';
+import { pagesActions } from '../../../redux/pagesSlice';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 const formItemLayout = {
@@ -41,6 +41,7 @@ const EditPageMetadata = () => {
   const [form] = Form.useForm();
   let title = Form.useWatch('title', form);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const hrefHelp = generateCustomHref ?
     <a href={'https://ahrefs.com/seo/glossary/url-slug'} target='_blank'>How to create a href?</a> : null;
@@ -59,6 +60,12 @@ const EditPageMetadata = () => {
       }
 
       console.log(data)
+      await updatePage({
+        id: currentPage.id,
+        data: data
+      }, currentPage.id)
+      dispatch(pagesActions.refreshNavBar())
+      navigate(`/${data.metadata.href}/edit`)
       setUpdatePageButtonLoading(false);
     } catch (error) {
       console.log(error);

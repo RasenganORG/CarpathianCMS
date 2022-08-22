@@ -54,7 +54,6 @@ export const getNavBar = async () => {
     };
 
     const res = await axios(config)
-    console.log(res)
     return res.data.object
 
   }catch (error){
@@ -85,8 +84,16 @@ export const updatePage = async (data, pageId) => {
 
 export const deletePage = async (pageId) => {
  try{
-   console.log("deleting ", pageId)
-   return { result: 'successful' }
+   const config = {
+     method: 'delete',
+     url: `http://localhost:5000/pages/deletePage/123/${pageId}`,
+     headers: {
+       'Content-Type': 'application/json'
+     }
+   };
+
+   const res = await axios(config)
+   return res
  } catch (error){
 
  }
