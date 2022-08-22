@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Modal, Row, Spin } from 'antd';
+import { Button, Card, Col, Menu, Modal, Row, Spin } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import BlockManagerForm from './BlockManagerForm';
 import WizardAddBlock from './addBlock/wizardAddBlock/WizardAddBlock';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
 import EditBlock from './editBlock/EditBlock';
+import EditPageMetadata from '../pages/EditPageMetadata';
+import PageSettings from '../pages/PageSettings';
 
 const setFieldValuesFromBlocks = (blocks) => {
   let fields = [];
@@ -32,6 +34,7 @@ const setFieldValuesFromFieldsValues = (fieldsValues) => {
 
 const BlocksManager = () => {
     const [wizardVisible, setWizardVisible] = useState(false);
+    const [currentMenu, setCurrentMenu] = useState('block-editor');
     const selectedPage = useSelector(state => state.pages.selectedPage);
     const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
     const [blocksAreLoading, setBlocksAreLoading] = useState(true);
@@ -96,7 +99,6 @@ const BlocksManager = () => {
       if (blocks) {
         const formattedFields = setFieldValuesFromBlocks(blocks);
         formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place);
-        console.log('formatted', formattedFields);
         setFields(formattedFields);
       }
     };
@@ -120,7 +122,6 @@ const BlocksManager = () => {
       const formattedFields = setFieldValuesFromFieldsValues(formFields);
       formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place);
       setFields(formattedFields);
-      console.log('new fields', formattedFields);
     }, [formIsUpdated]);
 
 
@@ -131,6 +132,12 @@ const BlocksManager = () => {
         setBlocksAreLoading(true);
       }
     }, [blocks]);
+
+
+    const items = [
+      { label: 'Blocks Editor', key: 'block-editor' },
+      { label: 'Page Metadata', key: 'page-metadata' },
+      { label: 'Page Settings', key: 'page-settings' }];
 
 
     return (
@@ -144,13 +151,19 @@ const BlocksManager = () => {
             blocksManagerForm={form}
           />
 
-          <Row>
-            <Col offset={2} span={22}>
-              <Card
-                title={'Block Editor'}
-                bordered={false}
-              >
+          <Menu
+            mode='horizontal'
+            selectedKeys={[currentMenu]}
+            onClick={(k) => setCurrentMenu(k.key)}
+            items={items}
+            style={{
+              marginBottom: '2rem',
+            }}
+          />
 
+          {currentMenu === 'block-editor' && (
+            <Row>
+              <Col offset={2} span={22}>
                 <BlockManagerForm
                   onChange={onFieldChange}
                   onFinish={onFinish}
@@ -160,33 +173,44 @@ const BlocksManager = () => {
                   onDeleteBlock={onDeleteBlock}
                   formIsUpdated={formIsUpdated}
                   revertChanges={revertChanges}
-                  updateBlocksPlaces={updateBlocksPlaces}
-                >
+                  updateBlocksPlaces={updateBlocksPlaces} />
 
-                </BlockManagerForm>
-              </Card>
-            </Col>
-            <Col offset={5} span={16} style={{
-              marginBottom: '30px',
-              marginTop: '30px',
-              display: 'flex',
-              justifyContent: 'center',
-            }}>
-              {
-                !wizardVisible &&
-                <Button type='primary' onClick={showWizard}>
-                  Add more widgets on your page
-                </Button>
-              }
+              </Col>
+              <Col offset={5} span={16} style={{
+                marginBottom: '30px',
+                marginTop: '30px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}>
+                {
+                  !wizardVisible &&
+                  <Button type='primary' onClick={showWizard}>
+                    Add more widgets on your page
+                  </Button>
+                }
 
-              {wizardVisible &&
-                <WizardAddBlock
-                  setWizardVisible={setWizardVisible}
-                />
-              }
+                {wizardVisible &&
+                  <WizardAddBlock
+                    setWizardVisible={setWizardVisible}
+                  />
+                }
 
-            </Col>
-          </Row>
+              </Col>
+            </Row>)}
+
+          {currentMenu === 'page-metadata' && (
+            <Row>
+              <Col offset={2} span={22}>
+                <EditPageMetadata />
+              </Col>
+            </Row>)}
+          {currentMenu === 'page-settings' && (
+            <Row>
+              <Col offset={2} span={22}>
+                <PageSettings />
+              </Col>
+            </Row>)}
+
         </Spin>
       </div>
     );

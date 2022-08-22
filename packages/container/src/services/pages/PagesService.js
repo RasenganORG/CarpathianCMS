@@ -54,6 +54,7 @@ export const getNavBar = async () => {
     };
 
     const res = await axios(config)
+    console.log(res)
     return res.data.object
 
   }catch (error){
@@ -80,5 +81,14 @@ export const updatePage = async (data, pageId) => {
   catch(error){
     console.log(error)
   }
+}
+
+export const deletePage = async (pageId) => {
+ try{
+   console.log("deleting ", pageId)
+   return { result: 'successful' }
+ } catch (error){
+
+ }
 }
 
