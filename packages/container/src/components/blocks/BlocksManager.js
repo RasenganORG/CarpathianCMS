@@ -41,7 +41,7 @@ const BlocksManager = () => {
     const [selectedBlock, setSelectedBlock] = useState();
     const [formIsUpdated, setFormIsUpdated] = useState(0);
 
-    const [form] = useForm();                   // this form contains a key-value pair for every block.
+    const [blockManagerForm] = useForm();                   // this form contains a key-value pair for every block.
                                                 // key: the id of the block || value: the object that contains all the data and metadata of the block
                                                 // the form it is declared here, but associated to a Form component in BlockManagerForm.js
     const dispatch = useDispatch();
@@ -83,7 +83,7 @@ const BlocksManager = () => {
 
     // when a block is finished editing, set's the new value in form and signals that there is an update to be made
     const onFinishEditBlock = (blockId, blockData) => {
-      form.setFieldValue(blockId, blockData);
+      blockManagerForm.setFieldValue(blockId, blockData);
       setFormIsUpdated(prevState => prevState + 1);
     };
 
@@ -91,13 +91,13 @@ const BlocksManager = () => {
     // called when a block is moved.
     const updateBlocksPlaces = (blocksNewSort) => {
       for (let block of blocksNewSort) {
-        form.setFieldValue(block.name[0], block.value);
+        blockManagerForm.setFieldValue(block.name[0], block.value);
       }
       setFormIsUpdated(prevState => prevState + 1);
     };
 
     const onDeleteBlock = (blockId) => {
-      form.setFieldValue(blockId, null);
+      blockManagerForm.setFieldValue(blockId, null);
       setFormIsUpdated(prevState => prevState + 1);
     };
 
@@ -127,7 +127,7 @@ const BlocksManager = () => {
     // updates the fields state whenever the fields from forms are updated
     // used to display the latest changes to a block in the list of blocks
     useEffect(() => {
-      const formFields = form.getFieldsValue();
+      const formFields = blockManagerForm.getFieldsValue();
       const formattedFields = setFieldValuesFromFieldsValues(formFields);
       formattedFields.sort((field1, field2) => field1.value.metadata.place - field2.value.metadata.place);
       setFields(formattedFields);
@@ -152,7 +152,7 @@ const BlocksManager = () => {
             editBlockModalVisible={editBlockModalVisible}
             setEditBlockModalVisible={setEditBlockModalVisible}
             onEditFinished={onFinishEditBlock}
-            blocksManagerForm={form}
+            blocksManagerForm={blockManagerForm}
           />
 
 
@@ -160,7 +160,7 @@ const BlocksManager = () => {
             <Col offset={2} span={22}>
               <BlockManagerForm
                 onFinish={onFinish}
-                form={form}
+                form={blockManagerForm}
                 fields={fields}
                 startEditBlock={onStartEditBlock}
                 onDeleteBlock={onDeleteBlock}

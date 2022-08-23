@@ -23,6 +23,7 @@ const DeletePageButton = () => {
     }
   };
 
+  // enables Delete button only when the input is correct
   useEffect(() => {
     if (confirmationValue === `delete/${currentPage.data.metadata.href}`)
       setButtonDisabled(false);

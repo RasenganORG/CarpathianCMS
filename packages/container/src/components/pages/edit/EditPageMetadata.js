@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Col, Form, Input, Modal, Row, Select, Switch } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import slugify from '../../../utils/slugify';
-import { addNewPage, updatePage } from '../../../services/pages/PagesService';
+import {  updatePage } from '../../../services/pages/PagesService';
 import { pagesActions } from '../../../redux/pagesSlice';
 import { InfoCircleOutlined } from '@ant-design/icons';
 

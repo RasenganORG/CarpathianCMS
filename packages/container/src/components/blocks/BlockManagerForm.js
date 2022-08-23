@@ -44,7 +44,6 @@ export default function BlockManagerForm(
         updateBlocksPlaces={updateBlocksPlaces}
       />
 
-
       <Form
         name='block manager form'
         layout='inline'

@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Modal, Switch } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
-import TextArea from 'antd/es/input/TextArea';
-import { useSelector } from 'react-redux';
+import {  Modal} from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import TextEditor from '../../editor/TextEditor';
 import EditBlockForm from './EditBlockForm';
 
 EditBlock.requiredProps = {
@@ -16,9 +12,6 @@ EditBlock.requiredProps = {
   blocksForm: PropTypes.any,
 };
 
-
-
-
 export default function EditBlock({
                                     blockId,
                                     editBlockModalVisible,
@@ -26,19 +19,25 @@ export default function EditBlock({
                                     onEditFinished,
                                     blocksManagerForm,
                                   }) {
+
+  // takes the values of the block from blockManagerForm so that a user can edit a block multiple times before saving it to the backend ant thus to redux
   const block = blockId ? (Object.keys(blocksManagerForm.getFieldValue(blockId)).length !== 0 ? blocksManagerForm.getFieldValue(blockId) : undefined) : undefined;
 
-  const [form] = useForm();
 
+  // This is the form in which all the data associated with a block is edited
+  const [blockForm] = useForm();
+
+  // when the modal becomes visible it sets the default values of the fields in form with what it is given from the block manager form
   useEffect(() => {
     if (block && editBlockModalVisible === true) {
-      form.setFieldValue('title', block.metadata.title);
-      form.setFieldValue('titleDisplayed', block.metadata.titleDisplayed);
-      form.setFieldValue('description', block.metadata.description);
-      form.setFieldValue('data', block.data);
+      blockForm.setFieldValue('title', block.metadata.title);
+      blockForm.setFieldValue('titleDisplayed', block.metadata.titleDisplayed);
+      blockForm.setFieldValue('description', block.metadata.description);
+      blockForm.setFieldValue('data', block.data);
     }
   }, [block, editBlockModalVisible]);
 
+  // when the form is submitted the object is formatted and sent to the blockManagerForm to store the new value of the block
   const onFinishForm = (data) => {
     const formattedData = {
       data: data.data,
@@ -55,8 +54,9 @@ export default function EditBlock({
     onEditFinished(blockId, formattedData);
   };
 
+  // this is called when ok button in modal is pressed and the form is submitted manually
   const onEditBlockFinish = () => {
-    form.submit();
+    blockForm.submit();
     setEditBlockModalVisible(false);
   };
 
@@ -71,11 +71,11 @@ export default function EditBlock({
       maskClosable={false}
       width={'70%'}
       destroyOnClose
-      afterClose={() => form.resetFields()}
+      afterClose={() => blockForm.resetFields()}
     >
       <EditBlockForm
         block={block}
-        blockForm={form}
+        blockForm={blockForm}
         onFinishForm={onFinishForm}
       />
     </Modal>
