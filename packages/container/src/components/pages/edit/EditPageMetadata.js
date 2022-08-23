@@ -224,16 +224,12 @@ const EditPageMetadata = () => {
               block
               type={'primary'}
               htmlType={'submit'}
-              style={{
-                backgroundColor: 'aliceblue',
-                color: 'black',
-              }}
               onClick={onFinishForm}
               size={'large'}
               loading={updatePageButtonLoading}
               disabled={updatePageButtonLoading}
             >
-              Update page metadata
+              Save changes
             </Button>
           </Form.Item>
         </Form>

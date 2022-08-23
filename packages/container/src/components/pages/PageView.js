@@ -15,6 +15,7 @@ export default () => {
   const dispatch = useDispatch();
   console.log(currentPage);
 
+  // if there are no pages loaded, makes a request to try and download them again
   useEffect(() => {
     if (pages.length === 0) {
       dispatch(pagesActions.refreshNavBar());

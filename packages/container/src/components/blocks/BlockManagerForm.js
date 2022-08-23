@@ -1,10 +1,11 @@
 import { Button, Form } from 'antd';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Paragraph from '../widgetsLocally/Paragraph/Paragraph';
 import BlockFrame from './editBlock/BlockFrame';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DraggableList from '../draggable-list/DraggableList';
+import { useSelector } from 'react-redux';
 
 
 BlockManagerForm.requiredProps = {
@@ -32,7 +33,21 @@ export default function BlockManagerForm(
     updateBlocksPlaces,
   }) {
 
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate)
+  console.log(buttonLoading)
 
+
+  const onFormFinish = async (data) => {
+    setButtonLoading(true)
+    onFinish(data)
+  }
+
+  useEffect(() => {
+    if(pageNeedsUpdate === false){
+      setButtonLoading(false)
+    }
+  },[pageNeedsUpdate])
 
   return (
     <div>
@@ -49,7 +64,7 @@ export default function BlockManagerForm(
         layout='inline'
         fields={fields}
         form={form}
-        onFinish={onFinish}
+        onFinish={onFormFinish}
       >
         {fields.map((field) => {
           return (<Form.Item
@@ -62,14 +77,23 @@ export default function BlockManagerForm(
         {children}
         { (fields.length > 0 || formIsUpdated !== 0) &&
         (<Form.Item>
-          <Button htmlType={'submit'} type={'primary'}>
+          <Button
+            htmlType={'submit'}
+            type={'primary'}
+            size={'large'}
+            loading={buttonLoading}
+            disabled={buttonLoading}
+          >
             Save changes
           </Button>
         </Form.Item>)
         }
 
         {formIsUpdated > 0 && <Form.Item>
-          <Button htmlType={'reset'} onClick={revertChanges}>
+          <Button
+            htmlType={'reset'}
+            onClick={revertChanges}
+          >
             Revert changes
           </Button>
         </Form.Item>}
