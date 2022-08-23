@@ -10,7 +10,7 @@ const BlockViewManager = () => {
 
     const selectedPage = useSelector(state => state.pages.selectedPage);
     const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
-    const sortedBlocks = blocks?.slice().sort((field1, field2) => field1.metadata.place - field2.metadata.place)
+    const sortedBlocks = blocks?.slice().sort((field1, field2) => field1.metadata.place - field2.metadata.place);
     const [blocksAreLoading, setBlocksAreLoading] = useState(true);
     useEffect(() => {
       if (blocks !== undefined) {
@@ -23,7 +23,6 @@ const BlockViewManager = () => {
     return (
       <div>
         <Spin spinning={blocksAreLoading}>
-
           {sortedBlocks?.map((field) => {
               return (
                 <BlockViewFrame
@@ -31,11 +30,12 @@ const BlockViewManager = () => {
                   id={field.id}
                   name={field.metadata.titleDisplayed ? field.metadata.title : null}
                 >
-                  {field.metadata.type === 'paragraph' ? <Paragraph
-                    content={field.data}
-                    isEdit={false}
-                    key={field.id}
-                    id={field.id} /> : null}
+                  {field.metadata.type === 'paragraph' ?
+                    <Paragraph
+                      content={field.data.text}
+                      isEdit={false}
+                      key={field.id}
+                      id={field.id} /> : null}
                 </BlockViewFrame>);
             },
           )}

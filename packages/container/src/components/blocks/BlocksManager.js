@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button,  Col, Row, Spin } from 'antd';
+import { Button, Col, Row, Spin } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import BlockManagerForm from './BlockManagerForm';
 import WizardAddBlock from './addBlock/wizardAddBlock/WizardAddBlock';
@@ -41,22 +41,22 @@ const BlocksManager = () => {
     const [selectedBlock, setSelectedBlock] = useState();
     const [formIsUpdated, setFormIsUpdated] = useState(0);
 
-    const [form] = useForm();                   // this form contains a key-value field for every block.
-                                                // key: the id of the block and value: the data object of the block
+    const [form] = useForm();                   // this form contains a key-value pair for every block.
+                                                // key: the id of the block || value: the object that contains all the data and metadata of the block
                                                 // the form it is declared here, but associated to a Form component in BlockManagerForm.js
     const dispatch = useDispatch();
 
     // called when the form is submitted ( The Save Changes Button is pressed)
     const onFinish = data => {
-                                                 //data contains the fields from form. This contains the latest version of the blocks
+      //data contains the fields from form. This contains the latest version of the blocks
       let newBlockArray = [];
       for (let block of Object.entries(data)) {
         newBlockArray.push(block[1]);
       }
       setFormIsUpdated(0);                  // resets the value to 0 for hiding revert changes as now there aren't any changes to revert to
 
-                                                  // automatically uploads changes to backend with the useEffect in AppServices. To see
-                                                  // how this works, go to AppServices.js
+      // automatically uploads changes to backend with the useEffect in AppServices. To see
+      // how this works, go to AppServices.js
       dispatch(pagesActions.setBlocks({
         pageId: selectedPage,
         blocks: newBlockArray,
@@ -94,7 +94,6 @@ const BlocksManager = () => {
         form.setFieldValue(block.name[0], block.value);
       }
       setFormIsUpdated(prevState => prevState + 1);
-
     };
 
     const onDeleteBlock = (blockId) => {
@@ -145,9 +144,6 @@ const BlocksManager = () => {
     }, [blocks]);
 
 
-
-
-
     return (
       <div>
         <Spin spinning={blocksAreLoading}>
@@ -160,40 +156,40 @@ const BlocksManager = () => {
           />
 
 
-            <Row>
-              <Col offset={2} span={22}>
-                <BlockManagerForm
-                  onFinish={onFinish}
-                  form={form}
-                  fields={fields}
-                  startEditBlock={onStartEditBlock}
-                  onDeleteBlock={onDeleteBlock}
-                  formIsUpdated={formIsUpdated}
-                  revertChanges={revertChanges}
-                  updateBlocksPlaces={updateBlocksPlaces} />
+          <Row>
+            <Col offset={2} span={22}>
+              <BlockManagerForm
+                onFinish={onFinish}
+                form={form}
+                fields={fields}
+                startEditBlock={onStartEditBlock}
+                onDeleteBlock={onDeleteBlock}
+                formIsUpdated={formIsUpdated}
+                revertChanges={revertChanges}
+                updateBlocksPlaces={updateBlocksPlaces} />
 
-              </Col>
-              <Col offset={5} span={16} style={{
-                marginBottom: '30px',
-                marginTop: '30px',
-                display: 'flex',
-                justifyContent: 'center',
-              }}>
-                {
-                  !wizardVisible &&
-                  <Button type='primary' onClick={showWizard}>
-                    Add more widgets on your page
-                  </Button>
-                }
+            </Col>
+            <Col offset={5} span={16} style={{
+              marginBottom: '30px',
+              marginTop: '30px',
+              display: 'flex',
+              justifyContent: 'center',
+            }}>
+              {
+                !wizardVisible &&
+                <Button type='primary' onClick={showWizard}>
+                  Add more widgets on your page
+                </Button>
+              }
 
-                {wizardVisible &&
-                  <WizardAddBlock
-                    setWizardVisible={setWizardVisible}
-                  />
-                }
+              {wizardVisible &&
+                <WizardAddBlock
+                  setWizardVisible={setWizardVisible}
+                />
+              }
 
-              </Col>
-            </Row>
+            </Col>
+          </Row>
 
         </Spin>
       </div>

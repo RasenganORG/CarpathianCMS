@@ -13,21 +13,21 @@ const items = [
 
 
 export default () => {
-  const pages = useSelector(state => state.pages.pagesList)
-  const dispatch = useDispatch()
+  const pages = useSelector(state => state.pages.pagesList);
+  const dispatch = useDispatch();
   const [currentMenu, setCurrentMenu] = useState('block-editor');
 
 
   //used for sending a signal to navBar to refresh. Activated when for some reason pages weren't loaded
   useEffect(() => {
-    if(pages.length === 0){
-      dispatch(pagesActions.refreshNavBar())
+    if (pages.length === 0) {
+      dispatch(pagesActions.refreshNavBar());
     }
-  },[pages])
+  }, [pages]);
 
 
   return (
-    <Row gutter={[20,50]}>
+    <Row gutter={[20, 50]}>
       <Col offset={3} span={18}>
         <Menu
           mode='horizontal'
@@ -39,18 +39,8 @@ export default () => {
           }}
         />
         {currentMenu === 'block-editor' && <BlocksManager />}
-        {currentMenu === 'page-metadata' && (
-          <Row>
-            <Col offset={2} span={22}>
-              <EditPageMetadata />
-            </Col>
-          </Row>)}
-        {currentMenu === 'page-settings' && (
-          <Row>
-            <Col offset={2} span={22}>
-              <PageSettings />
-            </Col>
-          </Row>)}
+        {currentMenu === 'page-metadata' && (<EditPageMetadata />)}
+        {currentMenu === 'page-settings' && (<PageSettings />)}
       </Col>
 
     </Row>

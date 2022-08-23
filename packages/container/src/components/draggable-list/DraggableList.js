@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import BlockFrame from '../blocks/editBlock/BlockFrame';
 import Paragraph from '../widgetsLocally/Paragraph/Paragraph';
 import PropTypes from 'prop-types';
@@ -18,36 +18,36 @@ const grid = 8;
 
 //create the style of an item
 const getItemStyle = (isDragging, draggableStyle) => ({
-  userSelect: "none",
+  userSelect: 'none',
   margin: `0 0 ${grid}px 0`,
 
   // change background colour when dragging
-  border:  isDragging ? '15px solid #74b6ec' : '15px solid white',
+  border: isDragging ? '15px solid #74b6ec' : '15px solid white',
   borderRadius: '10px',
 
   // styles we need to apply on draggables
-  ...draggableStyle
+  ...draggableStyle,
 });
 
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? "#dbecff" : "#f5f9ff",
+  background: isDraggingOver ? '#dbecff' : '#f5f9ff',
   padding: grid,
-  width: '100%'
+  width: '100%',
 });
 
 DraggableList.propTypes = {
-  startEditBlock : PropTypes.func,
+  startEditBlock: PropTypes.func,
   onDeleteBlock: PropTypes.func,
   fields: PropTypes.array,
   updateBlocksPlaces: PropTypes.func,
-}
+};
 
-export default function DraggableList ({startEditBlock, onDeleteBlock,fields,updateBlocksPlaces}) {
-  const [items,setItems] = useState(fields)
+export default function DraggableList({ startEditBlock, onDeleteBlock, fields, updateBlocksPlaces }) {
+  const [items, setItems] = useState(fields);
 
-  useEffect(()=> {
-    setItems(fields)
-  },[fields])
+  useEffect(() => {
+    setItems(fields);
+  }, [fields]);
 
   const onDragEnd = (result) => {
     // dropped outside the list
@@ -58,67 +58,67 @@ export default function DraggableList ({startEditBlock, onDeleteBlock,fields,upd
     const newItems = reorder(
       items,
       result.source.index,
-      result.destination.index
+      result.destination.index,
     );
 
     //updates the place value of every block with the new place
-    let updatedPlacesNewItems = []
-    for(let index in newItems){
+    let updatedPlacesNewItems = [];
+    for (let index in newItems) {
       let copy = JSON.parse(JSON.stringify(newItems[index]));
-      copy.value.metadata.place = parseInt(index) + 1
-      updatedPlacesNewItems.push(copy)
+      copy.value.metadata.place = parseInt(index) + 1;
+      updatedPlacesNewItems.push(copy);
     }
 
-    updateBlocksPlaces(updatedPlacesNewItems)
-    setItems(updatedPlacesNewItems)
-  }
+    updateBlocksPlaces(updatedPlacesNewItems);
+    setItems(updatedPlacesNewItems);
+  };
 
 
   return (
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable block list">
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-            >
-              {items && items.map((field, index) => (
-                <Draggable key={field.name[0]} draggableId={field.name[0]} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style,
-                      )}
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId='droppable block list'>
+        {(provided, snapshot) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            style={getListStyle(snapshot.isDraggingOver)}
+          >
+            {items && items.map((field, index) => (
+              <Draggable key={field.name[0]} draggableId={field.name[0]} index={index}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={getItemStyle(
+                      snapshot.isDragging,
+                      provided.draggableProps.style,
+                    )}
+                  >
+                    <BlockFrame
+                      key={field.name[0]}
+                      id={field.name[0]}
+                      name={field.value.metadata.title}
+                      onClickEdit={startEditBlock}
+                      onClickDelete={onDeleteBlock}
                     >
-                      <BlockFrame
-                        key={field.name[0]}
-                        id={field.name[0]}
-                        name={field.value.metadata.title}
-                        onClickEdit={startEditBlock}
-                        onClickDelete={onDeleteBlock}
-                      >
-                        { field.value.metadata.type === 'paragraph' ?
-                          <Paragraph
-                          content={field.value.data}
+                      {field.value.metadata.type === 'paragraph' ?
+                        <Paragraph
+                          content={field.value.data.text}
                           isEdit={true}
                           key={field.name[0]}
                           id={field.name[0]} /> : null}
-                      </BlockFrame>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    );
+                    </BlockFrame>
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
 
 }
 

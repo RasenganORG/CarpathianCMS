@@ -135,7 +135,7 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
           {block.metadata.type === 'paragraph' &&
             <EditParagraph
               value={blockForm.getFieldValue('data')}
-              onChange={(data) => blockForm.setFieldValue('data', data)}
+              onChangeEditor={(data) => blockForm.setFieldValue('data', data)}
             />}
         </Form.Item>
       </Form>

@@ -33,6 +33,7 @@ export default function BlockManagerForm(
   }) {
 
 
+
   return (
     <div>
 
@@ -60,11 +61,13 @@ export default function BlockManagerForm(
           </Form.Item>);
         })}
         {children}
-        <Form.Item>
+        { (fields.length > 0 || formIsUpdated !== 0) &&
+        (<Form.Item>
           <Button htmlType={'submit'} type={'primary'}>
             Save changes
           </Button>
-        </Form.Item>
+        </Form.Item>)
+        }
 
         {formIsUpdated > 0 && <Form.Item>
           <Button htmlType={'reset'} onClick={revertChanges}>

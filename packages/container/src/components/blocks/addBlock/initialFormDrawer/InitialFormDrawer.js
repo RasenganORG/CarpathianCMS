@@ -1,4 +1,4 @@
-import { Drawer} from 'antd';
+import { Drawer } from 'antd';
 import React from 'react';
 import BlockInitialForm from '../BlockInitialForm';
 
@@ -15,7 +15,7 @@ const InitialFormDrawer = ({ form }) => {
       textAlign: 'center',
       background: '#fafafa',
       border: '1px solid #ebedf0',
-      borderRadius:' 2px',
+      borderRadius: ' 2px',
     }}>
       <div
         style={{
@@ -40,10 +40,11 @@ const InitialFormDrawer = ({ form }) => {
           height: '450px',
         }}
       >
-        <BlockInitialForm form={form}/>
+        <BlockInitialForm form={form} />
       </Drawer>
     </div>
   );
 };
 
 export default InitialFormDrawer;
+

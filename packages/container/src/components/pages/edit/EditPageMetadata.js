@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Form, Input, Modal, Select, Switch } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Select, Switch } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import slugify from '../../../utils/slugify';
 import { addNewPage, updatePage } from '../../../services/pages/PagesService';
@@ -35,13 +35,13 @@ const EditPageMetadata = () => {
   const pages = useSelector(state => state.pages.pagesList);
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
-  const pageMetadata = currentPage.data.metadata
+  const pageMetadata = currentPage.data.metadata;
 
   const pathname = useLocation().pathname.split('/')[1] ?? 'none';
   const [form] = Form.useForm();
   let title = Form.useWatch('title', form);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const hrefHelp = generateCustomHref ?
     <a href={'https://ahrefs.com/seo/glossary/url-slug'} target='_blank'>How to create a href?</a> : null;
@@ -59,13 +59,13 @@ const EditPageMetadata = () => {
         data.metadata.href = slugify(data.metadata.title);
       }
 
-      console.log(data)
+      console.log(data);
       await updatePage({
         id: currentPage.id,
-        data: data
-      }, currentPage.id)
-      dispatch(pagesActions.refreshNavBar())
-      navigate(`/${data.metadata.href}/edit`)
+        data: data,
+      }, currentPage.id);
+      dispatch(pagesActions.refreshNavBar());
+      navigate(`/${data.metadata.href}/edit`);
       setUpdatePageButtonLoading(false);
     } catch (error) {
       console.log(error);
@@ -100,140 +100,145 @@ const EditPageMetadata = () => {
 
 
   return (
-    <Form
-      form={form}
-      {...formItemLayout}
-      initialValues={{
-        parent: pathname,
-        generateCustomHref: false,
-      }}
-      style={{
-        width:'80',
-      }}
-    >
-      <Form.Item
-        name='title'
-        label={'Title'}
-        labelAlign={'left'}
-        tooltip={{
-          icon: <InfoCircleOutlined />,
-          title: 'This is the title that is going to be publicly visible',
-          placement: 'right',
-        }}
-        rules={[
-          {
-            required: true,
-            message: 'Please input the title of your page',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input
-          placeholder={'Enter the title of the page'}
-          allowClear
-          style={{
-            width: '100%',
-            height: '50px',
+
+    <Row>
+      <Col offset={2} span={22}>
+        <Form
+          form={form}
+          {...formItemLayout}
+          initialValues={{
+            parent: pathname,
+            generateCustomHref: false,
           }}
-        ></Input>
-      </Form.Item>
-
-      <Form.Item
-        name={'generateCustomHref'}
-        label={'Create a custom href'}
-        labelAlign={'left'}
-        {...formSwitchLayout}
-        tooltip={{
-          icon: <InfoCircleOutlined />,
-          title: 'Choose whether you want us to generate a href based on your title or if you want to customize it',
-          placement: 'right',
-        }}
-      >
-        <Switch
-          checkedChildren='custom'
-          unCheckedChildren='auto'
-          onChange={(val) => {
-            setGenerateCustomHref(val);
-          }}
-        />
-      </Form.Item>
-
-      <Form.Item
-        name='href'
-        labelAlign={'left'}
-        label={'Href'}
-        hasFeedback
-
-        tooltip={{
-          icon: <InfoCircleOutlined />,
-          title: 'This is the route associated with this page that will pe ' +
-            'displayed in the browser searchbar and in links. It has to respect a certain format ',
-          placement: 'right',
-        }}
-        extra={hrefHelp}
-        rules={[
-          {
-            required: generateCustomHref,
-            message: 'Please input a valid custom href',
-            pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$',
-          },
-        ]}
-      >
-        <Input
-          placeholder={'Enter the href of the page'}
-          allowClear
-          disabled={!generateCustomHref}
           style={{
-            width: '100%',
-            height: '50px',
-          }}
-        ></Input>
-      </Form.Item>
-
-      <Form.Item
-        name={'parent'}
-        labelAlign={'left'}
-        label={'Parent'}
-        tooltip={{
-          icon: <InfoCircleOutlined />,
-          title: 'Choose if you want this page to be a subpage of a certain page. If not, choose none',
-          placement: 'right',
-        }}
-      >
-        <Select
-          style={{
-            width: '100%',
-            height: '50px',
+            width: '80',
           }}
         >
-          <Select.Option value={'none'} key={'none'}>None</Select.Option>
-          {
-            pages.map((page) => {
-              return <Select.Option value={page.id}
-                                    key={page.data.metadata.href}>{page.data.metadata.title}</Select.Option>;
-            })
-          }
-        </Select>
-      </Form.Item>
+          <Form.Item
+            name='title'
+            label={'Title'}
+            labelAlign={'left'}
+            tooltip={{
+              icon: <InfoCircleOutlined />,
+              title: 'This is the title that is going to be publicly visible',
+              placement: 'right',
+            }}
+            rules={[
+              {
+                required: true,
+                message: 'Please input the title of your page',
+              },
+            ]}
+            hasFeedback
+          >
+            <Input
+              placeholder={'Enter the title of the page'}
+              allowClear
+              style={{
+                width: '100%',
+                height: '50px',
+              }}
+            ></Input>
+          </Form.Item>
 
-      <Form.Item>
-        <Button
-          block
-          type={'primary'}
-          htmlType={'submit'}
-          style={{
-            backgroundColor: 'aliceblue',
-            color: 'black',
-          }}
-          onClick={onFinishForm}
-          size={'large'}
-          loading={updatePageButtonLoading}
-          disabled={updatePageButtonLoading}
-        >
-          Update page metadata
-        </Button>
-      </Form.Item>
-    </Form>
+          <Form.Item
+            name={'generateCustomHref'}
+            label={'Create a custom href'}
+            labelAlign={'left'}
+            {...formSwitchLayout}
+            tooltip={{
+              icon: <InfoCircleOutlined />,
+              title: 'Choose whether you want us to generate a href based on your title or if you want to customize it',
+              placement: 'right',
+            }}
+          >
+            <Switch
+              checkedChildren='custom'
+              unCheckedChildren='auto'
+              onChange={(val) => {
+                setGenerateCustomHref(val);
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name='href'
+            labelAlign={'left'}
+            label={'Href'}
+            hasFeedback
+
+            tooltip={{
+              icon: <InfoCircleOutlined />,
+              title: 'This is the route associated with this page that will pe ' +
+                'displayed in the browser searchbar and in links. It has to respect a certain format ',
+              placement: 'right',
+            }}
+            extra={hrefHelp}
+            rules={[
+              {
+                required: generateCustomHref,
+                message: 'Please input a valid custom href',
+                pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$',
+              },
+            ]}
+          >
+            <Input
+              placeholder={'Enter the href of the page'}
+              allowClear
+              disabled={!generateCustomHref}
+              style={{
+                width: '100%',
+                height: '50px',
+              }}
+            ></Input>
+          </Form.Item>
+
+          <Form.Item
+            name={'parent'}
+            labelAlign={'left'}
+            label={'Parent'}
+            tooltip={{
+              icon: <InfoCircleOutlined />,
+              title: 'Choose if you want this page to be a subpage of a certain page. If not, choose none',
+              placement: 'right',
+            }}
+          >
+            <Select
+              style={{
+                width: '100%',
+                height: '50px',
+              }}
+            >
+              <Select.Option value={'none'} key={'none'}>None</Select.Option>
+              {
+                pages.map((page) => {
+                  return <Select.Option value={page.id}
+                                        key={page.data.metadata.href}>{page.data.metadata.title}</Select.Option>;
+                })
+              }
+            </Select>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              block
+              type={'primary'}
+              htmlType={'submit'}
+              style={{
+                backgroundColor: 'aliceblue',
+                color: 'black',
+              }}
+              onClick={onFinishForm}
+              size={'large'}
+              loading={updatePageButtonLoading}
+              disabled={updatePageButtonLoading}
+            >
+              Update page metadata
+            </Button>
+          </Form.Item>
+        </Form>
+      </Col>
+    </Row>
 
   )
     ;
