@@ -16,15 +16,15 @@ export default function Paragraph({ content, isEdit, id }) {
   return (
     <div
       style={{
-        border: '2px solid #04ABF9',
-        borderRadius: '13px',
+        border: content.borderIsVisible ? '2px solid #04ABF9' : null,
+        borderRadius: content.borderIsVisible ? '13px'  : null,
         marginBottom: isEdit ? null : '2rem',
         padding: '1rem',
         width: '100%',
       }}
     >
       <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-          {content}
+          {content.text}
       </ReactMarkdown>
     </div>
   );

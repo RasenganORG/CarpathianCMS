@@ -47,7 +47,10 @@ export default function BlockInitialForm({ form }) {
       block.metadata.type = form.getFieldValue('type');
       block.metadata.place = numberOfBlocks + 1
       block.id = form.getFieldValue('id');
-      block.data = ''
+      block.data = {
+        text:'',
+        borderIsVisible: true
+      }
       dispatch(pagesActions.addBlockToPage({
         block: block,
         pageId: selectedPage,

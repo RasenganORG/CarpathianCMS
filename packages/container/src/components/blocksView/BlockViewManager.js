@@ -32,7 +32,7 @@ const BlockViewManager = () => {
                 >
                   {field.metadata.type === 'paragraph' ?
                     <Paragraph
-                      content={field.data.text}
+                      content={field.data}
                       isEdit={false}
                       key={field.id}
                       id={field.id} /> : null}

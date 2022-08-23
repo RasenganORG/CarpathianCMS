@@ -104,7 +104,7 @@ export default function DraggableList({ startEditBlock, onDeleteBlock, fields, u
                     >
                       {field.value.metadata.type === 'paragraph' ?
                         <Paragraph
-                          content={field.value.data.text}
+                          content={field.value.data}
                           isEdit={true}
                           key={field.name[0]}
                           id={field.name[0]} /> : null}
