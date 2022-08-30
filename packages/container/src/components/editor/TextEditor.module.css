@@ -1,0 +1,14 @@
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-label.ql-active[data-value="10px"]::before {
+    content: '10px';
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-label.ql-active[data-value="16px"]::before {
+    content: '16px';
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="22px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-label.ql-active[data-value="22px"]::before {
+    content: '22px';
+}

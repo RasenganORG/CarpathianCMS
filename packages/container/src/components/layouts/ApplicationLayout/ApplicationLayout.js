@@ -16,6 +16,7 @@ import classes from './ApplicationLayout.module.css'
 import { pagesActions } from '../../../redux/pagesSlice';
 import { createNavBar } from '../../../utils/createNavBar';
 import { getNavBar } from '../../../services/pages/PagesService';
+import { pushToNavBar } from '../../../AppServices';
 
 
 const accountSettings = [
@@ -43,23 +44,20 @@ const navBarBasicSettings = [
   },
 ];
 
-const retrieveNavBar = async () => {
-  const navbar = getNavBar()
-  // console.log(navbar)
-  // const navBar = createNavBar(navbar)
-  return navbar
-}
 
-const ApplicationLayout = (factory, deps) => {
-  const [selectedMenu, setSelectedMenu] = useState();
+
+
+const ApplicationLayout = ( {navBar, setNavBar}) => {
+  const defaultSelectedMenu = useSelector(state => state.pages.selectedPage)
+  const [selectedMenu, setSelectedMenu] = useState(defaultSelectedMenu);
   const pages = useSelector(state => state.pages.pagesList);
-  const navBar = useSelector(state => state.pages.navBar);
   const [navBarLeftSettings, setNavBarLeftSettings] = useState([]);
   const [navBarRightSettings, setNavBarRightSettings] = useState([]);
   const [displayLogoutMenu, setDisplayLogoutMenu] = useState(true);
   const [layoutOrientation, setLayoutOrientation] = useState('horizontal');
   const accessToSettings = useCheckPermission(['admin']);
   const [collapsed, setCollapsed] = useState(false);
+
 
 
   const dispatch = useDispatch()
@@ -83,8 +81,7 @@ const ApplicationLayout = (factory, deps) => {
       settingsArray.push(...navBarBasicSettings);
 
     }
-
-    dispatch(pagesActions.pushToNavBar(settingsArray));
+    dispatch(pagesActions.setHasPermissionToSettings(true))
     setNavBarRightSettings(accountArray);
 
 
@@ -101,6 +98,10 @@ const ApplicationLayout = (factory, deps) => {
     }
   }, [br, isMobile]);
 
+  useEffect(() => {
+    dispatch(pagesActions.setSelectedPage(selectedMenu?.key))
+  },[selectedMenu])
+
 
 
   const navBarHorizontal = (
@@ -112,9 +113,9 @@ const ApplicationLayout = (factory, deps) => {
       <Menu
         theme='dark'
         mode='horizontal'
-        items={navBar}
+        items={ navBar.length > 0 ? navBar:  null}
         onSelect={(e) => setSelectedMenu(e)}
-        selectedKeys={[`${location.pathname.split('/')[1]}`]}
+        selectedKeys={[defaultSelectedMenu]}
         style={{
           marginLeft: '10%',
           width: '80%',

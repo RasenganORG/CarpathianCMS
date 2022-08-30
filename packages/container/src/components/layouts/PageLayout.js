@@ -3,6 +3,7 @@ import React from 'react';
 import Toolbar from '../toolbar/Toolbar';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 import VisibleByRoleGuard from '../guards/VisibleByRoleGuard';
+import ToolbarNew from '../toolbar/Toolbar';
 
 const PageLayout = () => {
 
@@ -10,7 +11,7 @@ const PageLayout = () => {
   return (
     <div>
       <VisibleByRoleGuard accessibleRoles={['admin']}>
-        <Toolbar />
+        <ToolbarNew/>
       </VisibleByRoleGuard>
       <Outlet />
     </div>

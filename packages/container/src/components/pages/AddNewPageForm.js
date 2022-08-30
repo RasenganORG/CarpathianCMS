@@ -21,7 +21,7 @@ import FormItem from 'antd/es/form/FormItem';
 import { pagesActions } from '../../redux/pagesSlice';
 import { addNewPage } from '../../services/pages/PagesService';
 import slugify from '../../utils/slugify';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const formItemLayout = {
   labelCol: {
@@ -30,7 +30,7 @@ const formItemLayout = {
   },
   wrapperCol: {
     xs: { span: 24 },
-    md: { span: 12, offset: 6},
+    md: { span: 12, offset: 6 },
   },
 };
 const formSwitchLayout = {
@@ -40,22 +40,43 @@ const formSwitchLayout = {
   },
   wrapperCol: {
     xs: { span: 24 },
-    md: { span: 12},
+    md: { span: 12 },
   },
 };
+
+const visibilityOptions = [
+  {
+    value: 'public',
+    label: 'Public',
+  },
+  {
+    value: 'link-only',
+    label: 'Link Only',
+  },
+  {
+    value: 'specific-roles',
+    label: 'Specific Roles',
+  },
+  {
+    value: 'invitation only',
+    label: 'Invitation Only',
+  },
+];
 
 
 const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   const [createPageButtonLoading, setCreatePageButtonLoading] = useState(false);
   const [generateCustomHref, setGenerateCustomHref] = useState(false);
 
-  const pathname = useLocation().pathname.split('/')[1] ?? 'none'
+  const pathname = useLocation().pathname.split('/')[1] ?? 'none';
   const [form] = Form.useForm();
-  let title = Form.useWatch('title',form)
+  let title = Form.useWatch('title', form);
   const dispatch = useDispatch();
   const pages = useSelector(state => state.pages.pagesList);
+  const navigate = useNavigate();
 
-  const hrefHelp = generateCustomHref ? <a href={'https://ahrefs.com/seo/glossary/url-slug'} target="_blank">How to create a href?</a> : null
+  const hrefHelp = generateCustomHref ?
+    <a href={'https://ahrefs.com/seo/glossary/url-slug'} target='_blank'>How to create a href?</a> : null;
 
 
   const onFinishForm = async () => {
@@ -64,16 +85,18 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
 
       data = {
         metadata: data,
+        blocks: [],
       };
       if (generateCustomHref === false || data.metadata.href === '') {
         data.metadata.href = slugify(data.metadata.title);
       }
-      console.log(data);
 
       const res = await addNewPage(data);
       dispatch(pagesActions.createNewPage(res));
       setCreatePageButtonLoading(false);
       setNewPageModalIsOpened(false);
+      navigate(`/${data.metadata.href}/edit`);
+      window.location.reload(true);
     } catch (error) {
       console.log(error);
     }
@@ -81,22 +104,22 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
   };
 
   const getPageByHref = (href) => {
-    return  pages.find((page) => page.data.metadata.href === href)
-  }
+    return pages.find((page) => page.data.metadata.href === href);
+  };
 
   useEffect(() => {
     form.validateFields(['href']);
   }, [generateCustomHref, form]);
 
   useEffect(() => {
-    if(title && !generateCustomHref)
-      form.setFieldValue('href', slugify(title))
-  }, [title, generateCustomHref])
+    if (title && !generateCustomHref)
+      form.setFieldValue('href', slugify(title));
+  }, [title, generateCustomHref]);
 
   useEffect(() => {
-    const page = getPageByHref(pathname)
-    form.setFieldValue('parent', page?.id)
-  }, [pathname, pages])
+    const page = getPageByHref(pathname);
+    form.setFieldValue('parent', page?.id);
+  }, [pathname, pages]);
 
 
   return (
@@ -113,19 +136,20 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       ]}
     >
       <Form form={form} {...formItemLayout}
-        initialValues={{
-          parent : pathname,
-          generateCustomHref:false,
-        }}
+            initialValues={{
+              parent: pathname,
+              generateCustomHref: false,
+              visibility: 'public',
+            }}
       >
         <Form.Item
           name='title'
           label={'Title'}
           labelAlign={'left'}
           tooltip={{
-            icon:<InfoCircleOutlined />,
-            title:'This is the title that is going to be publicly visible',
-            placement:'right'
+            icon: <InfoCircleOutlined />,
+            title: 'This is the title that is going to be publicly visible',
+            placement: 'right',
           }}
           rules={[
             {
@@ -151,9 +175,9 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           labelAlign={'left'}
           {...formSwitchLayout}
           tooltip={{
-            icon:<InfoCircleOutlined />,
-            title:'Choose whether you want us to generate a href based on your title or if you want to customize it',
-            placement:'right'
+            icon: <InfoCircleOutlined />,
+            title: 'Choose whether you want us to generate a href based on your title or if you want to customize it',
+            placement: 'right',
           }}
         >
           <Switch
@@ -172,17 +196,17 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           hasFeedback
 
           tooltip={{
-            icon:<InfoCircleOutlined />,
-            title:'This is the route associated with this page that will pe ' +
+            icon: <InfoCircleOutlined />,
+            title: 'This is the route associated with this page that will pe ' +
               'displayed in the browser searchbar and in links. It has to respect a certain format ',
-            placement:'right'
+            placement: 'right',
           }}
           extra={hrefHelp}
           rules={[
             {
               required: generateCustomHref,
               message: 'Please input a valid custom href',
-              pattern:'^[a-z0-9]+(?:-[a-z0-9]+)*$',
+              pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$',
             },
           ]}
         >
@@ -202,9 +226,9 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           labelAlign={'left'}
           label={'Parent'}
           tooltip={{
-            icon:<InfoCircleOutlined />,
-            title:'Choose if you want this page to be a subpage of a certain page. If not, choose none',
-            placement:'right'
+            icon: <InfoCircleOutlined />,
+            title: 'Choose if you want this page to be a subpage of a certain page. If not, choose none',
+            placement: 'right',
           }}
         >
           <Select
@@ -222,6 +246,41 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
             }
           </Select>
         </Form.Item>
+
+        <Form.Item
+          name={'visibility'}
+          labelAlign={'left'}
+          label={'Visibility'}
+          tooltip={{
+            icon: <InfoCircleOutlined />,
+            title: 'Choose what type of visibility you want this page to have',
+            placement: 'right',
+          }}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Select
+            style={{
+              width: '100%',
+              height: '50px',
+            }}
+          >
+            {
+              visibilityOptions.map((opt) => {
+                return (
+                  <Select.Option
+                    value={opt.value}
+                    key={opt.value}>
+                    {opt.label}
+                  </Select.Option>);
+              })
+            }
+          </Select>
+        </Form.Item>
+
 
         <Form.Item>
           <Button
