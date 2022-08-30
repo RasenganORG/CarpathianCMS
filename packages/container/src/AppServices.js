@@ -7,6 +7,8 @@ import { getNavBar, getPages, updatePage } from './services/pages/PagesService';
 import { Link } from 'react-router-dom';
 import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
+import { notification } from 'antd';
+import { notificationActions } from './redux/notificationSlice';
 
 const navBarBasicSettings = [
   {
@@ -70,7 +72,11 @@ const AppServices = ({children}) => {
         const page = pages.find(page => page.id === pageNeedsUpdate)
         const res = await updatePage(page, pageNeedsUpdate);
         dispatch(pagesActions.resetPageNeedsUpdate())
-        console.log(res)
+        dispatch(notificationActions.openNotification({
+          message:'Update successful',
+          description:'',
+          type:'success'
+        }))
       }
     }
     update()
