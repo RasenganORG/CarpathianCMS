@@ -10,6 +10,9 @@ const notificationSlice = createSlice({
     openNotification(state, action) {
       state.config = action.payload
     },
+    resetNotification(state){
+      state.config = {}
+    }
   },
 });
 
