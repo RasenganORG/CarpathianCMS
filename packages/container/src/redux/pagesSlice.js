@@ -63,7 +63,6 @@ const pagesSlice = createSlice({
     },
 
     refreshNavBar(state){
-      console.log("here")
       state.refreshNavBar = state.refreshNavBar + 1
     },
 

@@ -35,7 +35,6 @@ export default function BlockManagerForm(
 
   const [buttonLoading, setButtonLoading] = useState(false);
   const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate)
-  console.log(buttonLoading)
 
 
   const onFormFinish = async (data) => {

@@ -13,7 +13,6 @@ export default () => {
   const currentPage = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage));
   const [pageIsEmpty, setPageIsEmpty] = useState(currentPage?.data?.blocks.length === 0);
   const dispatch = useDispatch();
-  console.log(currentPage);
 
   // if there are no pages loaded, makes a request to try and download them again
   useEffect(() => {

@@ -36,7 +36,6 @@ const AppServices = ({children}) => {
   const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate)
   const pages = useSelector(state => state.pages.pagesList)
   const refreshNavBar = useSelector(state => state.pages.refreshNavBar)
-  console.log(refreshNavBar)
 
 
   useEffect( () => {

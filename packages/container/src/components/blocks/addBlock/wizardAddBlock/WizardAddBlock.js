@@ -28,7 +28,6 @@ const WizardAddBlock = ({setWizardVisible}) => {
     {
       title: 'Select type of block',
       content: <BlockVariantsDrawer onNext={onNext} setFieldValue={(name, value) => {
-        console.log(name)
         initialBlockForm.setFieldValue(name, value);
       }}/>,
     },
