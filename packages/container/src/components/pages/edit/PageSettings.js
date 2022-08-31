@@ -7,6 +7,7 @@ import { pagesActions } from '../../../redux/pagesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import slugify from '../../../utils/slugify';
 import { updatePage } from '../../../services/pages/PagesService';
+import { notificationActions } from '../../../redux/notificationSlice';
 
 const formItemLayout = {
   labelCol: {
@@ -63,10 +64,19 @@ const PageSettings = () => {
       }, currentPage.id);
 
       dispatch(pagesActions.refreshNavBar());
+      dispatch(notificationActions.openNotification({
+        message:'Settings updated successfully',
+        description:'',
+        type:'success'
+      }))
       setButtonLoading(false)
 
     } catch (error) {
-      console.log(error);
+      dispatch(notificationActions.openNotification({
+        message:'Error while trying to update the settings',
+        description:'',
+        type:'error'
+      }))
     }
 
   };

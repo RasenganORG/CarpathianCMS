@@ -22,6 +22,7 @@ import { pagesActions } from '../../redux/pagesSlice';
 import { addNewPage } from '../../services/pages/PagesService';
 import slugify from '../../utils/slugify';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { notificationActions } from '../../redux/notificationSlice';
 
 const formItemLayout = {
   labelCol: {
@@ -96,9 +97,18 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       setCreatePageButtonLoading(false);
       setNewPageModalIsOpened(false);
       navigate(`/${data.metadata.href}/edit`);
-      window.location.reload(true);
+      dispatch(notificationActions.openNotification({
+        message:'New page added successfully',
+        description:'',
+        type:'success'
+      }))
+      dispatch(pagesActions.refreshNavBar())
     } catch (error) {
-      console.log(error);
+      dispatch(notificationActions.openNotification({
+        message:'Error while trying to add a new page',
+        description:'',
+        type:'error'
+      }))
     }
 
   };

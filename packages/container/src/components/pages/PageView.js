@@ -14,9 +14,12 @@ export default () => {
   const [pageIsEmpty, setPageIsEmpty] = useState(currentPage?.data?.blocks.length === 0);
   const dispatch = useDispatch();
 
+  console.log("currentPage", currentPage);
+  console.log("selectedPage", selectedPage)
   // if there are no pages loaded, makes a request to try and download them again
   useEffect(() => {
     if (pages.length === 0) {
+      console.log("trying to get pages")
       dispatch(pagesActions.refreshNavBar());
     }
   }, [pages]);

@@ -71,12 +71,22 @@ const AppServices = ({children}) => {
       if(pageNeedsUpdate) {
         const page = pages.find(page => page.id === pageNeedsUpdate)
         const res = await updatePage(page, pageNeedsUpdate);
+        console.log(res)
         dispatch(pagesActions.resetPageNeedsUpdate())
-        dispatch(notificationActions.openNotification({
-          message:'Update successful',
-          description:'',
-          type:'success'
-        }))
+        if(res.data.type === 'success') {
+          dispatch(notificationActions.openNotification({
+            message: 'Blocks updated successfully',
+            description: '',
+            type: 'success',
+          }));
+        }
+        else{
+          dispatch(notificationActions.openNotification({
+            message: 'Error while trying to update blocks',
+            description: '',
+            type: 'error',
+          }));
+        }
       }
     }
     update()

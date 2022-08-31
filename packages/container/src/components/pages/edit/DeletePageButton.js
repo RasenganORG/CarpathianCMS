@@ -1,8 +1,10 @@
 import { Button, Divider, Input, Modal, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { deletePage as deletePageApi } from '../../../services/pages/PagesService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { notificationActions } from '../../../redux/notificationSlice';
+import { pagesActions } from '../../../redux/pagesSlice';
 
 const DeletePageButton = () => {
   const [modalIsOpened, setModalIsOpened] = useState(false);
@@ -10,16 +12,29 @@ const DeletePageButton = () => {
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const deletePage = async () => {
     const res = await deletePageApi(selectedPage);
-    console.log(res)
+    console.log(res);
     setModalIsOpened(false);
     if (res.data.type === 'success') {
-      navigate('/account')
-      window.location.reload(true)
+      navigate('/account');
+      dispatch(notificationActions.openNotification({
+        message: 'Page deleted successfully',
+        description: '',
+        type: 'success',
+      }));
+      dispatch(pagesActions.refreshNavBar())
+    }
+    else{
+      dispatch(notificationActions.openNotification({
+        message: 'Error while trying to delete the page',
+        description: '',
+        type: 'error',
+      }));
     }
   };
 
@@ -52,7 +67,7 @@ const DeletePageButton = () => {
             display: 'flex',
             justifyContent: 'row',
           }}>
-          <Typography style={{marginRight:'5px'}}>All of it's content will be</Typography>
+          <Typography style={{ marginRight: '5px' }}>All of it's content will be</Typography>
           <Typography.Text strong type={'danger'}> permanently deleted.</Typography.Text>
         </div>
         <Divider />
