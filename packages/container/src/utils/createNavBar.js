@@ -9,7 +9,6 @@ export const createNavBar = (navbarJson, dispatch, navigate) => {
   for(let page of Object.entries(navbarJson)){
     let children = []
     if(Object.keys(page[1].children).length !== 0){
-      console.log(page[1].children)
       children = createNavBar(page[1].children,dispatch,navigate)
     }
     navBarComp.push({

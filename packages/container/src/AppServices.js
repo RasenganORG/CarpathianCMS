@@ -52,6 +52,7 @@ const AppServices = ({children}) => {
     async function fetchPages(){
       const pages = await getPages()
       const navbar = await getNavBar()
+      dispatch(pagesActions.setNavBar(navbar))
       const navBarLayout = await createNavBar(navbar, dispatch, navigate)
       // console.log('CREATED NAVBAR1', navBarLayout)
       navBarLayout.push(navBar)

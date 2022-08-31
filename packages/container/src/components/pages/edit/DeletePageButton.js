@@ -10,6 +10,7 @@ const DeletePageButton = () => {
   const [modalIsOpened, setModalIsOpened] = useState(false);
   const [confirmationValue, setConfirmationValue] = useState('');
   const selectedPage = useSelector(state => state.pages.selectedPage);
+  const navBar = useSelector(state => state.pages.navBar)
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const DeletePageButton = () => {
   const navigate = useNavigate();
 
   const deletePage = async () => {
+    console.log(navBar)
     const res = await deletePageApi(selectedPage);
     console.log(res);
     setModalIsOpened(false);
