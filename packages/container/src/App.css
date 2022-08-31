@@ -1,0 +1,17 @@
+@import '~antd/dist/antd.css';
+
+.navbar .ant-menu-item-selected {
+    background-color: #001529 !important;
+}
+
+.navbar .ant-menu-item-active {
+    background-color: #001529 !important;
+}
+
+.ant-menu-submenu .ant-menu-item-selected {
+    background-color: #001529 !important;
+}
+
+.ant-menu-submenu .ant-menu-item-active {
+    background-color: #001529 !important;
+}

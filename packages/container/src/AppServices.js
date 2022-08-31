@@ -4,10 +4,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { refreshToken } from './services/auth/AuthService';
 import { pagesActions } from './redux/pagesSlice';
 import { getNavBar, getPages, updatePage } from './services/pages/PagesService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
-import { notification } from 'antd';
 import { notificationActions } from './redux/notificationSlice';
 
 const navBarBasicSettings = [
@@ -31,6 +30,7 @@ export const getIdByHrefFromPages = (href, pages) => {
 
 const AppServices = ({children}) => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { user } = useAuth()
   const timer = useRef(null);
   const hasPermission = useSelector(state => state.pages.hasPermissionToSettings)
@@ -52,7 +52,7 @@ const AppServices = ({children}) => {
     async function fetchPages(){
       const pages = await getPages()
       const navbar = await getNavBar()
-      const navBarLayout = await createNavBar(navbar)
+      const navBarLayout = await createNavBar(navbar, dispatch, navigate)
       // console.log('CREATED NAVBAR1', navBarLayout)
       navBarLayout.push(navBar)
       if(hasPermission)

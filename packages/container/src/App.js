@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import Router from './routes';
 import AppServices from './AppServices';
-import Notification from './components/notification/Notification';
-
+import "./App.css"
 
 const App = () => {
 
