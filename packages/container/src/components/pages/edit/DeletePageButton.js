@@ -10,7 +10,6 @@ const DeletePageButton = () => {
   const [modalIsOpened, setModalIsOpened] = useState(false);
   const [confirmationValue, setConfirmationValue] = useState('');
   const selectedPage = useSelector(state => state.pages.selectedPage);
-  const navBar = useSelector(state => state.pages.navBar)
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const dispatch = useDispatch();
@@ -18,26 +17,27 @@ const DeletePageButton = () => {
   const navigate = useNavigate();
 
   const deletePage = async () => {
-    console.log(navBar)
-    const res = await deletePageApi(selectedPage);
-    console.log(res);
-    setModalIsOpened(false);
-    if (res.data.type === 'success') {
-      navigate('/account');
-      dispatch(notificationActions.openNotification({
-        message: 'Page deleted successfully',
-        description: '',
-        type: 'success',
-      }));
-      dispatch(pagesActions.refreshNavBar())
-    }
-    else{
+    try {
+      const res = await deletePageApi(selectedPage);
+      setModalIsOpened(false);
+      if (res.data.type === 'success') {
+        navigate('/account');
+        dispatch(notificationActions.openNotification({
+          message: 'Page deleted successfully',
+          description: '',
+          type: 'success',
+        }));
+        dispatch(pagesActions.refreshNavBar());
+      }
+    } catch (error) {
       dispatch(notificationActions.openNotification({
         message: 'Error while trying to delete the page',
         description: '',
         type: 'error',
       }));
     }
+
+
   };
 
   // enables Delete button only when the input is correct
