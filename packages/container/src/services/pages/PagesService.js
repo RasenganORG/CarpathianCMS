@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { re } from '@babel/core/lib/vendor/import-meta-resolve';
 
 
 export const addNewPage = async (data) => {
