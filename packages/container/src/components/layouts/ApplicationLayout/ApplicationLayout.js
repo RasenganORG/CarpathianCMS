@@ -96,8 +96,9 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
   }, [br, isMobile]);
 
   useEffect(() => {
-    console.log("Use effect selected menu", selectedMenu)
-    dispatch(pagesActions.setSelectedPage(selectedMenu?.key))
+    if(!['logout'].includes(selectedMenu?.key)) {
+      dispatch(pagesActions.setSelectedPage(selectedMenu?.key));
+    }
   },[selectedMenu])
 
 

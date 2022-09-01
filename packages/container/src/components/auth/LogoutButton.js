@@ -15,7 +15,7 @@ const LogoutButton = () => {
     if (isAuthenticated) {
       dispatch(userActions.logout());
       dispatch(notificationActions.openNotification({
-        message:'User Logged Out',
+        message:'User Signed Out',
         description:'',
         type:'success'
       }))

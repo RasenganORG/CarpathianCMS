@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
 import { notificationActions } from './redux/notificationSlice';
+import { instanceOf } from 'prop-types';
 
 const navBarBasicSettings = [
   {
@@ -24,74 +25,109 @@ const navBarBasicSettings = [
 ];
 
 export const getIdByHrefFromPages = (href, pages) => {
-  const page = pages.find((page) => page.data.metadata.href === href)
-  return page.id
-}
+  const page = pages.find((page) => page.data.metadata.href === href);
+  return page.id;
+};
 
-const AppServices = ({children}) => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { user } = useAuth()
+const AppServices = ({ children }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const timer = useRef(null);
-  const hasPermission = useSelector(state => state.pages.hasPermissionToSettings)
-  const [navBar, setNavBar] = useState([])
-  const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate)
-  const pages = useSelector(state => state.pages.pagesList)
-  const refreshNavBar = useSelector(state => state.pages.refreshNavBar)
+  const hasPermission = useSelector(state => state.pages.hasPermissionToSettings);
+  const [navBar, setNavBar] = useState([]);
+  const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate);
+  const pages = useSelector(state => state.pages.pagesList);
+  const refreshNavBar = useSelector(state => state.pages.refreshNavBar);
 
 
-  useEffect( () => {
-    timer.current = setInterval(() => refreshToken(user.refreshToken, dispatch), 3500000 )
+  useEffect(() => {
+    timer.current = setInterval(() => refreshToken(user.refreshToken, dispatch), 3500000);
 
     return () => {
-      clearInterval(timer.current)
-    }
-  },[])
+      clearInterval(timer.current);
+    };
+  }, []);
 
   useEffect(() => {
-    async function fetchPages(){
-      const pages = await getPages()
-      const navbar = await getNavBar()
-      dispatch(pagesActions.setNavBar(navbar))
-      const navBarLayout = await createNavBar(navbar, dispatch, navigate)
-      // console.log('CREATED NAVBAR1', navBarLayout)
-      navBarLayout.push(navBar)
-      if(hasPermission)
-        navBarLayout.push(...navBarBasicSettings)
-      setNavBar(navBarLayout.filter(obj => obj.key !== undefined))
-      const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1],pages)
-      dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }))
-    }
-    // console.log('will GET NAVBAR and PAGES')
-    fetchPages()
+    async function fetchPages() {
+      try {
+        const responsePages = await getPages();
+        const responseNavBar = await getNavBar();
 
-  },[hasPermission,refreshNavBar])
-
-  useEffect(() => {
-    async function update(){
-      if(pageNeedsUpdate) {
-        const page = pages.find(page => page.id === pageNeedsUpdate)
-        const res = await updatePage(page, pageNeedsUpdate);
-        console.log(res)
-        dispatch(pagesActions.resetPageNeedsUpdate())
-        if(res.data.type === 'success') {
-          dispatch(notificationActions.openNotification({
-            message: 'Blocks updated successfully',
-            description: '',
-            type: 'success',
-          }));
+        if (responseNavBar.message === 'ERR_NETWORK') {
+          throw responseNavBar;
         }
-        else{
+
+        if (responsePages.message === 'ERR_NETWORK') {
+          throw responsePages;
+        }
+
+        const navbar = responseNavBar;
+        const pages = responsePages;
+
+        dispatch(pagesActions.setNavBar(navbar));
+        const navBarLayout = await createNavBar(navbar, dispatch, navigate);
+        // console.log('CREATED NAVBAR1', navBarLayout)
+        navBarLayout.push(navBar);
+        if (hasPermission)
+          navBarLayout.push(...navBarBasicSettings);
+        setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
+        const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
+        dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }));
+      } catch (error) {
+        if (error.message === 'ERR_NETWORK') {
           dispatch(notificationActions.openNotification({
-            message: 'Error while trying to update blocks',
-            description: '',
+            message: 'Error',
+            description: 'Our servers might be down or your internet connection is not valid',
+            type: 'error',
+          }));
+        } else {
+          dispatch(notificationActions.openNotification({
+            message: 'Error',
+            description: 'Error while loading pages from server',
             type: 'error',
           }));
         }
       }
     }
-    update()
-  }, [pageNeedsUpdate, pages])
+
+    // console.log('will GET NAVBAR and PAGES')
+
+    fetchPages();
+
+
+  }, [hasPermission, refreshNavBar]);
+
+  useEffect(() => {
+    async function update() {
+      try {
+
+        if (pageNeedsUpdate) {
+          const page = pages.find(page => page.id === pageNeedsUpdate);
+          const res = await updatePage(page, pageNeedsUpdate);
+          dispatch(pagesActions.resetPageNeedsUpdate());
+          if (res.data.type === 'success') {
+            dispatch(notificationActions.openNotification({
+              message: 'Blocks updated successfully',
+              description: '',
+              type: 'success',
+            }));
+          } else {
+            throw new Error()
+          }
+        }
+      } catch (error) {
+        dispatch(notificationActions.openNotification({
+          message: 'Error while trying to update blocks',
+          description: '',
+          type: 'error',
+        }));
+      }
+    }
+
+    update();
+  }, [pageNeedsUpdate, pages]);
 
   const childrenWithProps = React.Children.map(children, child => {
     // Checking isValidElement is the safe way and avoids a typescript
@@ -103,10 +139,9 @@ const AppServices = ({children}) => {
   });
 
 
-
-  return(
+  return (
     childrenWithProps
-  )
-}
+  );
+};
 
-export default AppServices
+export default AppServices;

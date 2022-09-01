@@ -24,10 +24,7 @@ const Loadable = (Component) => (props) => {
 };
 
 
-
-
-
-const Router = ({navBar,setNavBar}) => {
+const Router = ({ navBar, setNavBar }) => {
 
   return useRoutes([
     {
@@ -65,7 +62,12 @@ const Router = ({navBar,setNavBar}) => {
             },
             {
               path: '/:pageid/edit',
-              element: <PageEdit />,
+              element:
+                <AuthGuard>
+                  <RoleBasedGuard accessibleRoles={['admin']}>
+                    <PageEdit />
+                  </RoleBasedGuard>
+                </AuthGuard>,
             },
             {
               path: '/:pageid/content',

@@ -22,7 +22,13 @@ const BlockViewManager = () => {
 
     return (
       <div>
-        <Spin spinning={blocksAreLoading}>
+        <Spin
+          spinning={blocksAreLoading}
+          style={{
+            display:'flex',
+            justifyContent:'center'
+          }}
+        >
           {sortedBlocks?.map((field) => {
               return (
                 <BlockViewFrame

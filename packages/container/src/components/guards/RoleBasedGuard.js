@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { Alert, Modal } from 'antd';
-import { useSelector } from 'react-redux';
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PATHS } from '../../routes/paths';
+import { notificationActions } from '../../redux/notificationSlice';
 
 // ----------------------------------------------------------------------
 
@@ -21,8 +22,20 @@ export const useCurrentRole = () => {
 export default function RoleBasedGuard({ accessibleRoles, children }) {
   const currentRole = useCurrentRole();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
 
   if (!accessibleRoles.includes(currentRole)) {
+
+    useEffect(() => {
+      dispatch(notificationActions.openNotification({
+          message: 'Error',
+          description: 'Not enough permissions',
+          type: 'error',
+        },
+      ));
+    }, []);
     return (
       <div>
         <Modal
@@ -33,7 +46,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
           okText={'Go to Login'}
         >
           <div>
-            You do not have permission to access this page
+            You do not have permission to access this page.
           </div>
         </Modal>
       </div>
