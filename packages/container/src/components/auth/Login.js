@@ -8,17 +8,24 @@ import userSlice, { userActions } from '../../redux/userSlice';
 import { login } from '../../services/auth/AuthService';
 import { PATHS } from '../../routes/paths';
 import { notificationActions } from '../../redux/notificationSlice';
+import { useForm } from 'antd/es/form/Form';
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    md: { span: 24 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    md: { span: 20 },
+  },
+};
 
 const Login = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [form] = useForm()
 
-  const schema = Yup.object().shape({
-    email: Yup.string().email().required('Email is required'),
-    password: Yup.string()
-      .required('Password is required')
-      .min(8, 'Password is too short - should have a minimum length of 8 characters'),
-  });
 
   const navigate = useNavigate();
 
@@ -66,12 +73,6 @@ const Login = () => {
     }
   }
 
-  const yupSync = {
-    async validator({ field }, value) {
-      await schema.validateSyncAt(field, { [field]: value });
-    },
-  };
-
 
   return (
     <>
@@ -115,13 +116,30 @@ const Login = () => {
             style={{
               marginTop: 50,
             }}
+            {...formItemLayout}
+            form={form}
+            requiredMark={'optional'}
+            className={'auth-form'}
           >
-            <Typography.Title level={5}>
-              Email
-            </Typography.Title>
             <Form.Item
               name={'email'}
-              rules={[yupSync]}
+              label={
+                <Typography.Title level={5}>
+                  Email
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                },
+                {
+                  required: true,
+                  message: 'Please enter your E-mail',
+                },
+              ]}
+              hasFeedback
             >
               <Input
                 placeholder={'Enter email'}
@@ -132,12 +150,25 @@ const Login = () => {
                 }}
               ></Input>
             </Form.Item>
-            <Typography.Title level={5}>
-              Password
-            </Typography.Title>
             <Form.Item
               name={'password'}
-              rules={[yupSync]}
+              label={
+                <Typography.Title level={5}>
+                  Password
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a password',
+                },
+                {
+                  min: 8,
+                  message: 'Password is too short - should have a minimum length of 8 characters',
+                },
+              ]}
+              hasFeedback
             >
               <Input.Password
                 placeholder={'Enter Password'}

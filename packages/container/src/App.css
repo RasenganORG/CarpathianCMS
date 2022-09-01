@@ -15,3 +15,7 @@
 .ant-menu-submenu .ant-menu-item-active {
     background-color: #001529 !important;
 }
+
+.auth-form .ant-form-item-required:after {
+    display: none;
+}

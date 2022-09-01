@@ -2,78 +2,74 @@ import { Button, Col, Form, Input, Row, Typography } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
-import * as Yup from 'yup';
 import { login, register } from '../../services/auth/AuthService';
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../redux/userSlice';
 import { PATHS } from '../../routes/paths';
 import { notificationActions } from '../../redux/notificationSlice';
+import { useForm } from 'antd/es/form/Form';
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    md: { span: 24 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    md: { span: 20 },
+  },
+};
 
 const Signup = () => {
-  const [buttonDisabled, setButtonDisabled] = useState(false)
-  const dispatch = useDispatch()
-  const schema = Yup.object().shape({
-    email: Yup.string().email().required('Email is required'),
-    firstName: Yup.string().required("Your first name is required"),
-    lastName: Yup.string().required("Your last name is required"),
-    password: Yup.string()
-      .required('Password is required')
-      .min(8,'Password is too short - should have a minimum length of 8 characters')
-  });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const dispatch = useDispatch();
+  const [form] = useForm()
 
   const navigate = useNavigate();
 
   async function onFinishForm(data) {
     try {
-      setButtonDisabled(true)
-      const response = await register(data)
+      setButtonDisabled(true);
+      const response = await register(data);
 
-      if (response.code === "ERR_NETWORK")
+      if (response.code === 'ERR_NETWORK')
         throw new Error(response.code);
 
-      if(response.error)
-        throw new Error(response.error.message)
+      if (response.error)
+        throw new Error(response.error.message);
 
-      dispatch(userActions.login(response))
+      dispatch(userActions.login(response));
       dispatch(notificationActions.openNotification({
         message: 'User created successfully',
         description: '',
         type: 'success',
       }));
-      navigate(PATHS.home)
-    }
-    catch (error){
+      navigate(PATHS.home);
+    } catch (error) {
       if (error.message === 'ERR_NETWORK') {
         dispatch(notificationActions.openNotification({
           message: 'Error ',
           description: 'Make sure you have a valid internet connection',
           type: 'error',
         }));
-      }else if (error.message === "EMAIL_EXISTS") {
+      } else if (error.message === 'EMAIL_EXISTS') {
         dispatch(notificationActions.openNotification({
           message: 'Error ',
           description: 'This email is already used for an account',
           type: 'error',
         }));
-      }
-      else{
+      } else {
         dispatch(notificationActions.openNotification({
           message: 'Error ',
           description: 'Error while trying to Sign Up',
           type: 'error',
         }));
       }
-    }
-    finally {
+    } finally {
       setButtonDisabled(false);
     }
   }
 
-  const yupSync = {
-    async validator({ field }, value) {
-      await schema.validateSyncAt(field, { [field]: value });
-    },
-  };
 
   return (
     <>
@@ -113,11 +109,32 @@ const Signup = () => {
             style={{
               width: '400px',
             }}
+            {...formItemLayout}
+            form={form}
+            requiredMark={'optional'}
+            className={'auth-form'}
           >
-            <Typography.Title level={5}>
-              Email
-            </Typography.Title>
-            <Form.Item name={'email'} rules={[yupSync]}>
+
+            <Form.Item
+              name={'email'}
+              label={
+                <Typography.Title level={5}>
+                  Email
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                },
+                {
+                  required: true,
+                  message: 'Please enter your E-mail',
+                },
+              ]}
+              hasFeedback
+            >
               <Input
                 placeholder={'Enter email'}
                 allowClear
@@ -128,12 +145,25 @@ const Signup = () => {
               ></Input>
             </Form.Item>
 
-            <Typography.Title level={5}>
-              First Name
-            </Typography.Title>
-            <Form.Item name={'firstName'} rules={[yupSync]}>
+
+            <Form.Item
+              name={'firstName'}
+              label={
+                <Typography.Title level={5}>
+                  First Name
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter your First Name',
+                },
+              ]}
+              hasFeedback
+            >
               <Input
-                placeholder={'First Name'}
+                placeholder={'Enter First Name'}
                 allowClear
                 style={{
                   width: '100%',
@@ -142,12 +172,24 @@ const Signup = () => {
               ></Input>
             </Form.Item>
 
-            <Typography.Title level={5}>
-              Last Name
-            </Typography.Title>
-            <Form.Item name={'lastName'} rules={[yupSync]}>
+            <Form.Item
+              name={'lastName'}
+              label={
+                <Typography.Title level={5}>
+                  Last Name
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter your Last Name',
+                },
+              ]}
+              hasFeedback
+            >
               <Input
-                placeholder={'Last Name'}
+                placeholder={'Enter Last Name'}
                 allowClear
                 style={{
                   width: '100%',
@@ -156,10 +198,61 @@ const Signup = () => {
               ></Input>
             </Form.Item>
 
-            <Typography.Title level={5}>
-              Password
-            </Typography.Title>
-            <Form.Item name={'password'} rules={[yupSync]}>
+
+            <Form.Item
+              name={'password'}
+              label={
+                <Typography.Title level={5}>
+                  Password
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a password',
+                },
+                {
+                  min: 8,
+                  message: 'Password is too short - should have a minimum length of 8 characters',
+                },
+              ]}
+              hasFeedback
+            >
+              <Input.Password
+                placeholder={'Enter Password'}
+                style={{
+                  width: '100%',
+                  height: '50px',
+                }}
+              >
+              </Input.Password>
+            </Form.Item>
+            <Form.Item
+              name={'confirmPassword'}
+              dependencies={['password']}
+              label={
+                <Typography.Title level={5}>
+                  Confirm Password
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please confirm your password',
+                },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('The two passwords that you entered do not match!');
+                  },
+                }),
+              ]}
+              hasFeedback
+            >
               <Input.Password
                 placeholder={'Enter Password'}
                 style={{

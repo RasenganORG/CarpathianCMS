@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userActions } from '../../redux/userSlice';
 import useAuth from '../hooks/use-auth';
 import { PoweroffOutlined } from '@ant-design/icons';
+import { notificationActions } from '../../redux/notificationSlice';
 
 const LogoutButton = () => {
   const { isAuthenticated } = useAuth();
@@ -13,6 +14,11 @@ const LogoutButton = () => {
   const onLogOutButtonClicked = () => {
     if (isAuthenticated) {
       dispatch(userActions.logout());
+      dispatch(notificationActions.openNotification({
+        message:'User Logged Out',
+        description:'',
+        type:'success'
+      }))
     }
   };
 

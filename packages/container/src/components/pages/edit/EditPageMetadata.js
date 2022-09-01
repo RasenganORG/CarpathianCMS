@@ -53,7 +53,7 @@ const EditPageMetadata = () => {
       let data = await form.validateFields();
 
       data = {
-        metadata: data,
+        metadata: { ...data, visibility:currentPage.data.metadata.visibility },
         blocks: currentPage.data.blocks,
       };
       if (generateCustomHref === false || data.metadata.href === '') {
