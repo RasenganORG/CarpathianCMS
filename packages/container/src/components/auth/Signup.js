@@ -7,6 +7,7 @@ import { login, register } from '../../services/auth/AuthService';
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../redux/userSlice';
 import { PATHS } from '../../routes/paths';
+import { notificationActions } from '../../redux/notificationSlice';
 
 const Signup = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -23,11 +24,49 @@ const Signup = () => {
   const navigate = useNavigate();
 
   async function onFinishForm(data) {
-    setButtonDisabled(true)
-    const apiResponse = await register(data)
-    dispatch(userActions.login(apiResponse))
-    setButtonDisabled(false)
-    navigate(PATHS.home)
+    try {
+      setButtonDisabled(true)
+      const response = await register(data)
+
+      if (response.code === "ERR_NETWORK")
+        throw new Error(response.code);
+
+      if(response.error)
+        throw new Error(response.error.message)
+
+      dispatch(userActions.login(response))
+      dispatch(notificationActions.openNotification({
+        message: 'User created successfully',
+        description: '',
+        type: 'success',
+      }));
+      navigate(PATHS.home)
+    }
+    catch (error){
+      if (error.message === 'ERR_NETWORK') {
+        dispatch(notificationActions.openNotification({
+          message: 'Error ',
+          description: 'Make sure you have a valid internet connection',
+          type: 'error',
+        }));
+      }else if (error.message === "EMAIL_EXISTS") {
+        dispatch(notificationActions.openNotification({
+          message: 'Error ',
+          description: 'This email is already used for an account',
+          type: 'error',
+        }));
+      }
+      else{
+        dispatch(notificationActions.openNotification({
+          message: 'Error ',
+          description: 'Error while trying to Sign Up',
+          type: 'error',
+        }));
+      }
+    }
+    finally {
+      setButtonDisabled(false);
+    }
   }
 
   const yupSync = {

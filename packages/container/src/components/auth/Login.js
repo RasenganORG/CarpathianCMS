@@ -7,10 +7,11 @@ import { useDispatch } from 'react-redux';
 import userSlice, { userActions } from '../../redux/userSlice';
 import { login } from '../../services/auth/AuthService';
 import { PATHS } from '../../routes/paths';
+import { notificationActions } from '../../redux/notificationSlice';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const schema = Yup.object().shape({
     email: Yup.string().email().required('Email is required'),
@@ -22,11 +23,47 @@ const Login = () => {
   const navigate = useNavigate();
 
   async function onFinishForm(data) {
-    setIsLoading(true)
-    const response = await login(data)
-    dispatch(userActions.login(response))
-    setIsLoading(false)
-    navigate(PATHS.home)
+    try {
+      setIsLoading(true);
+      const response = await login(data);
+      console.log(response.code);
+
+      if (response.code === 'ERR_NETWORK')
+        throw new Error(response.code);
+
+      if (response.code === 'ERR_BAD_REQUEST')
+        throw new Error(response.code);
+
+      dispatch(userActions.login(response));
+      dispatch(notificationActions.openNotification({
+        message: 'Logged in successfully',
+        description: '',
+        type: 'success',
+      }));
+      navigate(PATHS.home);
+    } catch (error) {
+      if (error.message === 'ERR_NETWORK') {
+        dispatch(notificationActions.openNotification({
+          message: 'Error',
+          description: 'Make sure you have a valid internet connection',
+          type: 'error',
+        }));
+      } else if (error.message === 'ERR_BAD_REQUEST') {
+        dispatch(notificationActions.openNotification({
+          message: 'Error',
+          description: 'Make sure your credentials are valid',
+          type: 'error',
+        }));
+      } else {
+        dispatch(notificationActions.openNotification({
+          message: 'Error',
+          description: 'Error while trying to Log In',
+          type: 'error',
+        }));
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const yupSync = {

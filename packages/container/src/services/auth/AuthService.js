@@ -20,7 +20,7 @@ export const login = async (data) => {
     return res.data
   }
   catch (error){
-    console.log(error)
+    return error
   }
 }
 
@@ -40,7 +40,7 @@ export const register = async (data) => {
     return res.data
   }
   catch (error){
-    console.log(error)
+    return error
   }
 }
 
