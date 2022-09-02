@@ -12,8 +12,8 @@ const DeletePageButton = () => {
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const deletePage = async () => {

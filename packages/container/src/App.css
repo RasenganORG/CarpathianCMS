@@ -19,3 +19,7 @@
 .auth-form .ant-form-item-required:after {
     display: none;
 }
+
+.ant-notification-notice-close {
+    top: 25%;
+}

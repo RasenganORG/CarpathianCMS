@@ -1,56 +1,95 @@
-import React, { useEffect} from 'react';
-import { notification } from 'antd';
+import React, { useEffect } from 'react';
+import { notification, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { notificationActions } from '../../redux/notificationSlice';
-import { CheckCircleOutlined, CloseCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CheckCircleOutlined, CloseCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 
 
 const Notification = ({ children }) => {
   const config = useSelector(state => state.notification.config);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const openNotification = (config) => {
-    if(config.type === 'success') {
+    if (config.type === 'success') {
       notification.open({
         ...config,
+        message: (<Typography.Text style={{
+          color: 'rgb(243,243,243)',
+          fontSize: '18px',
+        }}>
+          {config.message}
+        </Typography.Text>),
         placement: 'bottomLeft',
-        icon:<CheckCircleOutlined
+        icon: <CheckCircleOutlined
           style={{
-            fontSize:'32px',
-            color:'#72bd15'
+            fontSize: '30px',
+            color: 'rgb(243,243,243)',
           }}
         />,
-        closeIcon:<CloseCircleOutlined />,
+        closeIcon: <CaretDownOutlined
+          style={{
+            fontSize: '20px',
+            color: 'rgb(243,243,243)',
+          }}
+        />,
+        duration: 100,
         style: {
-          backgroundColor: 'rgba(187, 223, 254, 0.95)',
+          backgroundColor: 'rgba(73, 160, 120, 0.90)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           borderRadius: '1rem',
           fontSize: '20px',
         },
       });
     }
-    if(config.type === 'error') {
+    if (config.type === 'error') {
       notification.open({
         ...config,
+        message: (<Typography.Text style={{
+          color: 'rgb(243,243,243)',
+          fontSize: '20px',
+        }}>
+
+          {config.message}
+        </Typography.Text>),
+        description: (<Typography.Text style={{
+          color: 'rgb(243,243,243)',
+          fontSize: '15px',
+        }}>
+
+          {config.description}
+        </Typography.Text>),
         placement: 'bottomLeft',
-        icon:<CloseCircleOutlined
+        icon: <CloseCircleOutlined
           style={{
-            fontSize:'32px',
-            color:'#f7b267'
+            fontSize: '30px',
+            color: 'rgb(243,243,243)',
           }}
         />,
-        closeIcon:<CloseCircleOutlined />,
+        closeIcon: <CaretDownOutlined
+          style={{
+            fontSize: '20px',
+            color: 'rgb(243,243,243)',
+          }}
+        />,
+        duration: 100,
         style: {
-          backgroundColor: 'rgba(242, 92, 84, 0.95)',
+          backgroundColor: 'rgba(229, 56, 59, 0.90)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           borderRadius: '1rem',
           fontSize: '20px',
         },
       });
+
     }
-    dispatch(notificationActions.resetNotification())
+    dispatch(notificationActions.resetNotification());
   };
 
   useEffect(() => {
-    if(config.message)
+    if (config.message)
       openNotification(config);
   }, [config]);
 

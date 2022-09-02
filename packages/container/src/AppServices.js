@@ -24,6 +24,8 @@ const navBarBasicSettings = [
 ];
 
 export const getIdByHrefFromPages = (href, pages) => {
+  if(href === "account" || href === "settings")    // temporary fix for bug where it searches account or settings pages in pagesList
+    return null
   const page = pages.find((page) => page.data.metadata.href === href);
   return page.id;
 };

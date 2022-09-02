@@ -22,18 +22,16 @@ const formItemLayout = {
 };
 
 const Login = () => {
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
   const [form] = useForm()
-
-
   const navigate = useNavigate();
 
   async function onFinishForm(data) {
     try {
       setIsLoading(true);
       const response = await login(data);
-      console.log(response.code);
 
       if (response.code === 'ERR_NETWORK')
         throw new Error(response.code);
