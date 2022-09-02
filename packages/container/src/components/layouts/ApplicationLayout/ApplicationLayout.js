@@ -14,9 +14,6 @@ import Sider from 'antd/es/layout/Sider';
 import { DesktopOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PoweroffOutlined } from '@ant-design/icons';
 import classes from './ApplicationLayout.module.css'
 import { pagesActions } from '../../../redux/pagesSlice';
-import { createNavBar } from '../../../utils/createNavBar';
-import { getNavBar } from '../../../services/pages/PagesService';
-import { pushToNavBar } from '../../../AppServices';
 
 
 const accountSettings = [
@@ -99,7 +96,9 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
   }, [br, isMobile]);
 
   useEffect(() => {
-    dispatch(pagesActions.setSelectedPage(selectedMenu?.key))
+    if(!['logout'].includes(selectedMenu?.key)) {
+      dispatch(pagesActions.setSelectedPage(selectedMenu?.key));
+    }
   },[selectedMenu])
 
 
@@ -111,6 +110,7 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
         flexDirection: 'row',
       }}>
       <Menu
+        className={'navbar'}
         theme='dark'
         mode='horizontal'
         items={ navBar.length > 0 ? navBar:  null}

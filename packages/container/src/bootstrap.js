@@ -4,13 +4,16 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import store from './redux';
 import { Provider } from 'react-redux';
+import Notification from './components/notification/Notification';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <Notification>
+        <App />
+      </Notification>
     </Provider>
   </BrowserRouter>,
 );

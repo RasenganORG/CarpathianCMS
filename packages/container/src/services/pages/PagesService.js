@@ -19,7 +19,7 @@ export const addNewPage = async (data) => {
     return res.data
   }
   catch (error){
-    console.log(error)
+    return error
   }
 }
 
@@ -38,7 +38,9 @@ export const getPages = async () => {
     return res.data.object
 
   }catch (error){
-    console.log(error)
+    if(error.code === "ERR_NETWORK")
+      return new Error("ERR_NETWORK")
+    return  error
   }
 }
 
@@ -57,7 +59,9 @@ export const getNavBar = async () => {
     return res.data.object
 
   }catch (error){
-    console.log(error)
+    if(error.code === "ERR_NETWORK")
+      return new Error("ERR_NETWORK")
+    return  error
   }
 }
 
@@ -78,7 +82,7 @@ export const updatePage = async (data, pageId) => {
 
   }
   catch(error){
-    console.log(error)
+    return error
   }
 }
 
@@ -95,7 +99,7 @@ export const deletePage = async (pageId) => {
    const res = await axios(config)
    return res
  } catch (error){
-
+    return error
  }
 }
 

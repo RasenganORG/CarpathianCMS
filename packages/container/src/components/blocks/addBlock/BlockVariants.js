@@ -2,9 +2,12 @@ import { Col, Row } from 'antd';
 import CardVariantItem from './CardVariantItem';
 import React from 'react';
 import {v4 as uuidv4} from 'uuid'
+import { notificationActions } from '../../../redux/notificationSlice';
+import { useDispatch } from 'react-redux';
 
 
 export default function BlockVariants({onNext, setFieldValue}) {
+  const dispatch = useDispatch()
 
   const onSelectVariant = (type) => {
     try{
@@ -12,7 +15,11 @@ export default function BlockVariants({onNext, setFieldValue}) {
       setFieldValue('id', uuidv4());
     }
     catch (error){
-      console.log(error)
+      dispatch(notificationActions.openNotification({
+        message: 'Error while trying to create a new block',
+        description: error.message,
+        type: 'error',
+      }));
     }
 
     onNext()

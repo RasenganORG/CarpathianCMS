@@ -6,6 +6,7 @@ const pagesSlice = createSlice({
   name: 'pages',
   initialState: {
     pagesList: [],
+    navBar:{},
     wizard:{},
     hasPermissionToSettings:false,
     selectedPage:{},
@@ -66,6 +67,9 @@ const pagesSlice = createSlice({
       state.refreshNavBar = state.refreshNavBar + 1
     },
 
+    setNavBar(state, action){
+      state.navBar = action.payload
+    }
 
 
   },

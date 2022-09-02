@@ -3,6 +3,7 @@ import useAuth from '../../components/hooks/use-auth';
 import { useDispatch } from 'react-redux';
 import React from 'react';
 import { userActions } from '../../redux/userSlice';
+import { notificationActions } from '../../redux/notificationSlice';
 
 export const login = async (data) => {
   try {
@@ -20,7 +21,7 @@ export const login = async (data) => {
     return res.data
   }
   catch (error){
-    console.log(error)
+    return error
   }
 }
 
@@ -40,7 +41,7 @@ export const register = async (data) => {
     return res.data
   }
   catch (error){
-    console.log(error)
+    return error
   }
 }
 
@@ -64,6 +65,10 @@ export const refreshToken = async (refreshToken,dispatch) => {
     dispatch(userActions.refreshToken(response))
 
   } catch (error) {
-    console.log(error)
+    dispatch(notificationActions.openNotification({
+      message: 'Error',
+      description: 'Please Log In again',
+      type: 'error',
+    }));
   }
 }

@@ -1,8 +1,10 @@
 import { Button, Divider, Input, Modal, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { deletePage as deletePageApi } from '../../../services/pages/PagesService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { notificationActions } from '../../../redux/notificationSlice';
+import { pagesActions } from '../../../redux/pagesSlice';
 
 const DeletePageButton = () => {
   const [modalIsOpened, setModalIsOpened] = useState(false);
@@ -11,16 +13,31 @@ const DeletePageButton = () => {
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const deletePage = async () => {
-    const res = await deletePageApi(selectedPage);
-    console.log(res)
-    setModalIsOpened(false);
-    if (res.data.type === 'success') {
-      navigate('/account')
-      window.location.reload(true)
+    try {
+      const res = await deletePageApi(selectedPage);
+      setModalIsOpened(false);
+      if (res.data.type === 'success') {
+        navigate('/account');
+        dispatch(notificationActions.openNotification({
+          message: 'Page deleted successfully',
+          description: '',
+          type: 'success',
+        }));
+        dispatch(pagesActions.refreshNavBar());
+      }
+    } catch (error) {
+      dispatch(notificationActions.openNotification({
+        message: 'Error while trying to delete the page',
+        description: '',
+        type: 'error',
+      }));
     }
+
+
   };
 
   // enables Delete button only when the input is correct
@@ -52,7 +69,7 @@ const DeletePageButton = () => {
             display: 'flex',
             justifyContent: 'row',
           }}>
-          <Typography style={{marginRight:'5px'}}>All of it's content will be</Typography>
+          <Typography style={{ marginRight: '5px' }}>All of it's content will be</Typography>
           <Typography.Text strong type={'danger'}> permanently deleted.</Typography.Text>
         </div>
         <Divider />

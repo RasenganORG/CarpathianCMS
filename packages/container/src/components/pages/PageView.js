@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Typography } from 'antd';
-import CalendarGeneratedApp from '../widgetsMfe/CalendarGeneratedApp';
-import BlocksManager from '../blocks/BlocksManager';
 import BlockViewManager from '../blocksView/BlockViewManager';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';

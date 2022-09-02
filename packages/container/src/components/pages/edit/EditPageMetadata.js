@@ -6,6 +6,7 @@ import slugify from '../../../utils/slugify';
 import {  updatePage } from '../../../services/pages/PagesService';
 import { pagesActions } from '../../../redux/pagesSlice';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { notificationActions } from '../../../redux/notificationSlice';
 
 const formItemLayout = {
   labelCol: {
@@ -52,23 +53,31 @@ const EditPageMetadata = () => {
       let data = await form.validateFields();
 
       data = {
-        metadata: data,
+        metadata: { ...data, visibility:currentPage.data.metadata.visibility },
         blocks: currentPage.data.blocks,
       };
       if (generateCustomHref === false || data.metadata.href === '') {
         data.metadata.href = slugify(data.metadata.title);
       }
 
-      console.log(data);
       await updatePage({
         id: currentPage.id,
         data: data,
       }, currentPage.id);
       dispatch(pagesActions.refreshNavBar());
+      dispatch(notificationActions.openNotification({
+        message:'Page metadata updated successfully',
+        description:'',
+        type:'success'
+      }))
       navigate(`/${data.metadata.href}/edit`);
       setUpdatePageButtonLoading(false);
     } catch (error) {
-      console.log(error);
+      dispatch(notificationActions.openNotification({
+        message:'Error while updating page metadata',
+        description:'',
+        type:'error'
+      }))
     }
 
   };

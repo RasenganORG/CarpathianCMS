@@ -5,6 +5,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { pagesActions } from '../../../redux/pagesSlice';
 import PropTypes from 'prop-types';
+import { notificationActions } from '../../../redux/notificationSlice';
 
 const formItemLayout = {
   labelCol: {
@@ -56,7 +57,11 @@ export default function BlockInitialForm({ form }) {
         pageId: selectedPage,
       }));
     } catch (error) {
-      console.log(error);
+      dispatch(notificationActions.openNotification({
+        message: 'Error while trying to create a new block',
+        description: error.message,
+        type: 'error',
+      }));
     }
 
   };

@@ -7,33 +7,69 @@ import { useDispatch } from 'react-redux';
 import userSlice, { userActions } from '../../redux/userSlice';
 import { login } from '../../services/auth/AuthService';
 import { PATHS } from '../../routes/paths';
+import { notificationActions } from '../../redux/notificationSlice';
+import { useForm } from 'antd/es/form/Form';
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    md: { span: 24 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    md: { span: 20 },
+  },
+};
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false)
-
-  const schema = Yup.object().shape({
-    email: Yup.string().email().required('Email is required'),
-    password: Yup.string()
-      .required('Password is required')
-      .min(8, 'Password is too short - should have a minimum length of 8 characters'),
-  });
-
+  const [form] = useForm()
   const navigate = useNavigate();
 
   async function onFinishForm(data) {
-    setIsLoading(true)
-    const response = await login(data)
-    dispatch(userActions.login(response))
-    setIsLoading(false)
-    navigate(PATHS.home)
-  }
+    try {
+      setIsLoading(true);
+      const response = await login(data);
 
-  const yupSync = {
-    async validator({ field }, value) {
-      await schema.validateSyncAt(field, { [field]: value });
-    },
-  };
+      if (response.code === 'ERR_NETWORK')
+        throw new Error(response.code);
+
+      if (response.code === 'ERR_BAD_REQUEST')
+        throw new Error(response.code);
+
+      dispatch(userActions.login(response));
+      dispatch(notificationActions.openNotification({
+        message: 'Logged in successfully',
+        description: '',
+        type: 'success',
+      }));
+      navigate(PATHS.home);
+    } catch (error) {
+      if (error.message === 'ERR_NETWORK') {
+        dispatch(notificationActions.openNotification({
+          message: 'Error',
+          description: 'Make sure you have a valid internet connection',
+          type: 'error',
+        }));
+      } else if (error.message === 'ERR_BAD_REQUEST') {
+        dispatch(notificationActions.openNotification({
+          message: 'Error',
+          description: 'Make sure your credentials are valid',
+          type: 'error',
+        }));
+      } else {
+        dispatch(notificationActions.openNotification({
+          message: 'Error',
+          description: 'Error while trying to Log In',
+          type: 'error',
+        }));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
 
   return (
@@ -78,13 +114,30 @@ const Login = () => {
             style={{
               marginTop: 50,
             }}
+            {...formItemLayout}
+            form={form}
+            requiredMark={'optional'}
+            className={'auth-form'}
           >
-            <Typography.Title level={5}>
-              Email
-            </Typography.Title>
             <Form.Item
               name={'email'}
-              rules={[yupSync]}
+              label={
+                <Typography.Title level={5}>
+                  Email
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                },
+                {
+                  required: true,
+                  message: 'Please enter your E-mail',
+                },
+              ]}
+              hasFeedback
             >
               <Input
                 placeholder={'Enter email'}
@@ -95,12 +148,25 @@ const Login = () => {
                 }}
               ></Input>
             </Form.Item>
-            <Typography.Title level={5}>
-              Password
-            </Typography.Title>
             <Form.Item
               name={'password'}
-              rules={[yupSync]}
+              label={
+                <Typography.Title level={5}>
+                  Password
+                </Typography.Title>
+              }
+              labelAlign={'left'}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a password',
+                },
+                {
+                  min: 8,
+                  message: 'Password is too short - should have a minimum length of 8 characters',
+                },
+              ]}
+              hasFeedback
             >
               <Input.Password
                 placeholder={'Enter Password'}

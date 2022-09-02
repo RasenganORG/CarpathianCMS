@@ -41,7 +41,7 @@ const BlocksManager = () => {
     const [selectedBlock, setSelectedBlock] = useState();
     const [formIsUpdated, setFormIsUpdated] = useState(0);
 
-    const [blockManagerForm] = useForm();                   // this form contains a key-value pair for every block.
+    const [blockManagerForm] = useForm();       // this form contains a key-value pair for every block.
                                                 // key: the id of the block || value: the object that contains all the data and metadata of the block
                                                 // the form it is declared here, but associated to a Form component in BlockManagerForm.js
     const dispatch = useDispatch();
