@@ -32,7 +32,7 @@ const Notification = ({ children }) => {
             color: 'rgb(243,243,243)',
           }}
         />,
-        duration: 100,
+        duration: 4,
         style: {
           backgroundColor: 'rgba(73, 160, 120, 0.90)',
           display: 'flex',
