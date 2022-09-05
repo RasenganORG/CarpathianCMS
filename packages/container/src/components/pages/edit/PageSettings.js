@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DeletePageButton from './DeletePageButton';
-import { Button, Col, Form, Row, Select } from 'antd';
+import { Button, Col, Form, Row, Select, Typography } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/es/form/Form';
 import { pagesActions } from '../../../redux/pagesSlice';
@@ -12,11 +12,11 @@ import { notificationActions } from '../../../redux/notificationSlice';
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    md: { span: 24,  },
+    md: { span: 24 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    md: { span: 12, },
+    md: { span: 12 },
   },
 };
 
@@ -44,19 +44,32 @@ const PageSettings = () => {
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const [form] = useForm();
-  const dispatch = useDispatch()
-  const selectedPage = useSelector(state => state.pages.selectedPage)
+  const dispatch = useDispatch();
+  const selectedPage = useSelector(state => state.pages.selectedPage);
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
+  const [visibilityFormItem, setVisibilityFormItem] = useState(currentPage.data.metadata.visibility);
+  const roles = useSelector(state => state.pages.roles)
 
   const onFinishForm = async () => {
     try {
-      setButtonLoading(true)
+      setButtonLoading(true);
       let data = await form.validateFields();
 
-      data = {
-        metadata: { ...currentPage.data.metadata, visibility:data.visibility },
-        blocks: currentPage.data.blocks,
-      };
+
+      if(visibilityFormItem === "specific-roles") {
+        data = {
+          metadata: { ...currentPage.data.metadata, visibility: data.visibility, accessibleRoles: data.accessibleRoles },
+          blocks: currentPage.data.blocks,
+        };
+      } else{
+        data = {
+          metadata: { ...currentPage.data.metadata, visibility: data.visibility, accessibleRoles: [] },
+          blocks: currentPage.data.blocks,
+        };
+      }
+
+      console.log(data)
+
 
       await updatePage({
         id: currentPage.id,
@@ -65,27 +78,37 @@ const PageSettings = () => {
 
       dispatch(pagesActions.refreshNavBar());
       dispatch(notificationActions.openNotification({
-        message:'Settings updated successfully',
-        description:'',
-        type:'success'
-      }))
-      setButtonLoading(false)
+        message: 'Settings updated successfully',
+        description: '',
+        type: 'success',
+      }));
+      setButtonLoading(false);
 
     } catch (error) {
       dispatch(notificationActions.openNotification({
-        message:'Error while trying to update the settings',
-        description:'',
-        type:'error'
-      }))
+        message: 'Error while trying to update the settings',
+        description: '',
+        type: 'error',
+      }));
     }
 
   };
 
+  const visibilityChanged = (value) => {
+    setVisibilityFormItem(value);
+  };
+
   useEffect(() => {
-    if(currentPage){
-      form.setFieldValue('visibility', currentPage.data.metadata.visibility )
+    if (currentPage) {
+      form.setFieldValue('visibility', currentPage.data.metadata.visibility);
     }
-  }, [currentPage])
+  }, [currentPage]);
+
+  useEffect(() => {
+    form.setFieldValue('accessibleRoles',currentPage?.data.metadata.accessibleRoles )
+  },[currentPage])
+
+
 
 
   return (
@@ -116,6 +139,7 @@ const PageSettings = () => {
             ]}
           >
             <Select
+              onChange={visibilityChanged}
               style={{
                 width: '100%',
                 height: '50px',
@@ -133,6 +157,48 @@ const PageSettings = () => {
               }
             </Select>
           </Form.Item>
+          <Form.Item
+            name={'accessibleRoles'}
+            labelAlign={'left'}
+            label={'Roles with access:'}
+            hidden={visibilityFormItem !== 'specific-roles'}
+            tooltip={{
+              icon: <InfoCircleOutlined />,
+              title: 'Choose what roles will be able to access this page.',
+              placement: 'right',
+            }}
+            dependencies={['visibility']}
+            rules={[
+              {
+                required: visibilityFormItem === 'specific-roles',
+                message: 'Please choose at least one role that can access this page',
+              },
+            ]}
+          >
+            <Select
+              mode='multiple'
+              style={{ width: '100%' }}
+              placeholder='Select the roles that can access this page'
+              optionLabelProp='label'
+              style={{
+                width: '100%',
+                height: '50px',
+              }}
+            >
+              {roles.map(role => (
+                <Select.Option
+                  value={role.value}
+                  label={role.label}
+                  key={role.value}
+                >
+                  <Typography.Text>
+                    {role.label}
+                  </Typography.Text>
+                </Select.Option>
+              ))}
+
+            </Select>
+          </Form.Item>
           <Form.Item>
             <Button
               htmlType={'submit'}
@@ -147,11 +213,11 @@ const PageSettings = () => {
         </Form>
       </Col>
       <Col span={12} offset={2}
-        style={{
-          marginTop:'3rem',
-        }}
+           style={{
+             marginTop: '3rem',
+           }}
       >
-          <DeletePageButton />
+        <DeletePageButton />
       </Col>
     </Row>
   );

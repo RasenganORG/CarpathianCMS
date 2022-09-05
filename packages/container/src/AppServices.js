@@ -69,7 +69,7 @@ const AppServices = ({ children }) => {
         const pages = responsePages;
 
         dispatch(pagesActions.setNavBar(navbar));
-        const navBarLayout = await createNavBar(navbar, dispatch, navigate);
+        const navBarLayout = await createNavBar(navbar, dispatch, navigate, user);
         // console.log('CREATED NAVBAR1', navBarLayout)
         navBarLayout.push(navBar);
         if (hasPermission)
@@ -99,7 +99,7 @@ const AppServices = ({ children }) => {
     fetchPages();
 
 
-  }, [hasPermission, refreshNavBar]);
+  }, [hasPermission, refreshNavBar, user]);
 
   useEffect(() => {
     async function update() {
@@ -130,6 +130,7 @@ const AppServices = ({ children }) => {
 
     update();
   }, [pageNeedsUpdate, pages]);
+
 
   const childrenWithProps = React.Children.map(children, child => {
     // Checking isValidElement is the safe way and avoids a typescript

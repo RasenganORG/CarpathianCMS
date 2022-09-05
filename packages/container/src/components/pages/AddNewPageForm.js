@@ -204,7 +204,6 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
           labelAlign={'left'}
           label={'Href'}
           hasFeedback
-
           tooltip={{
             icon: <InfoCircleOutlined />,
             title: 'This is the route associated with this page that will pe ' +
