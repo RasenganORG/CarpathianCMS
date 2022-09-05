@@ -39,10 +39,12 @@ function ClipboardCopy({ copyText }) {
       <div
         style={{
           border: '2px solid #001529',
+          borderColor: isCopied ? '#00cc7e' : '#1890ff',
           borderRadius: '0.75em',
-
           display: 'flex',
           justifyContent: 'space-between',
+          flexWrap:'nowrap',
+          whiteSpace:'nowrap',
         }}
       >
         <div style={{
@@ -73,8 +75,8 @@ function ClipboardCopy({ copyText }) {
             color: '#ffffff',
             backgroundColor: isCopied ? '#00cc7e' : '#1890ff',
             width:'100%',
-            height:'3.5rem',
-            borderRadius: ' 0 0.6em 0.6em 0',
+            height:'3.7rem',
+            borderRadius: ' 0 0.4em 0.4em 0',
           }}
           variant={isCopied ? 'filled' : 'outlined'}
         >

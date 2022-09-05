@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DeletePageButton from './DeletePageButton';
-import { Button, Col, Form, Row, Select, Typography } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Typography } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/es/form/Form';
 import { pagesActions } from '../../../redux/pagesSlice';
@@ -34,10 +34,6 @@ const visibilityOptions = [
   {
     value: 'specific-roles',
     label: 'Specific Roles',
-  },
-  {
-    value: 'invitation only',
-    label: 'Invitation Only',
   },
 ];
 
@@ -184,7 +180,6 @@ const PageSettings = () => {
           >
             <Select
               mode='multiple'
-              style={{ width: '100%' }}
               placeholder='Select the roles that can access this page'
               optionLabelProp='label'
               style={{
@@ -206,6 +201,7 @@ const PageSettings = () => {
 
             </Select>
           </Form.Item>
+
           <Form.Item>
             <Button
               htmlType={'submit'}

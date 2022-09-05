@@ -6,10 +6,7 @@ import { pagesActions } from '../../redux/pagesSlice';
 import EditPageMetadata from './edit/EditPageMetadata';
 import PageSettings from './edit/PageSettings';
 
-const items = [
-  { label: 'Blocks Editor', key: 'block-editor' },
-  { label: 'Page Metadata', key: 'page-metadata' },
-  { label: 'Page Settings', key: 'page-settings' }];
+
 
 
 export default () => {
@@ -24,6 +21,13 @@ export default () => {
       dispatch(pagesActions.refreshNavBar());
     }
   }, [pages]);
+
+console.log(pages)
+
+  const items = [
+    { label: 'Blocks Editor', key: 'block-editor', disabled: pages.length === 0 },
+    { label: 'Page Metadata', key: 'page-metadata', disabled: pages.length === 0 },
+    { label: 'Page Settings', key: 'page-settings', disabled: pages.length === 0}];
 
 
   return (

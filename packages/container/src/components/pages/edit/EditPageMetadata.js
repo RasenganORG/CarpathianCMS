@@ -91,7 +91,7 @@ const EditPageMetadata = () => {
   }, [generateCustomHref, form]);
 
   useEffect(() => {
-    if (title && !generateCustomHref)
+    if (title && !generateCustomHref && generateCustomHref!== undefined)
       form.setFieldValue('href', slugify(title));
   }, [title, generateCustomHref]);
 
@@ -105,8 +105,12 @@ const EditPageMetadata = () => {
     form.setFieldValue('href', pageMetadata?.href);
     form.setFieldValue('parent', pageMetadata?.parent);
     form.setFieldValue('generateCustomHref', pageMetadata?.generateCustomHref ?? false);
+    setGenerateCustomHref(pageMetadata?.generateCustomHref)
   }, [pageMetadata]);
 
+  console.log(form.getFieldValue('generateCustomHref'))
+  console.log(generateCustomHref)
+  console.log(form.getFieldValue('href'))
 
   return (
 
@@ -115,10 +119,6 @@ const EditPageMetadata = () => {
         <Form
           form={form}
           {...formItemLayout}
-          initialValues={{
-            parent: pathname,
-            generateCustomHref: false,
-          }}
           style={{
             width: '80',
           }}
@@ -167,6 +167,7 @@ const EditPageMetadata = () => {
               onChange={(val) => {
                 setGenerateCustomHref(val);
               }}
+              checked={generateCustomHref}
             />
           </Form.Item>
 
