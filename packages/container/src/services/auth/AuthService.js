@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import React from 'react';
 import { userActions } from '../../redux/userSlice';
 import { notificationActions } from '../../redux/notificationSlice';
+import { asyncCallWithTimeout } from '../../utils/asyncCallWithTimeout';
 
 export const login = async (data) => {
   try {
@@ -17,7 +18,8 @@ export const login = async (data) => {
       data: data
     };
 
-    const res = await axios(config)
+    let res = await asyncCallWithTimeout(axios(config),5000)
+
     return res.data
   }
   catch (error){
@@ -37,7 +39,7 @@ export const register = async (data) => {
       data: data
     };
 
-    const res = await axios(config)
+    let res = await asyncCallWithTimeout(axios(config),5000)
     return res.data
   }
   catch (error){
@@ -60,7 +62,7 @@ export const refreshToken = async (refreshToken,dispatch) => {
       data: data
     };
 
-    let response = await axios(config)
+    let response = await asyncCallWithTimeout(axios(config),5000)
     response = response.data
     dispatch(userActions.refreshToken(response))
 

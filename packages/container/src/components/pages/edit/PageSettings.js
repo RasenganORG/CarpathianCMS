@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import slugify from '../../../utils/slugify';
 import { updatePage } from '../../../services/pages/PagesService';
 import { notificationActions } from '../../../redux/notificationSlice';
+import ClipboardCopy from '../../ClipboardCopy';
+import { useLocation } from 'react-router-dom';
 
 const formItemLayout = {
   labelCol: {
@@ -49,6 +51,8 @@ const PageSettings = () => {
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
   const [visibilityFormItem, setVisibilityFormItem] = useState(currentPage.data.metadata.visibility);
   const roles = useSelector(state => state.pages.roles)
+  const location = useLocation()
+  const link = 'localhost:8080'+ location.pathname.slice(0,location.pathname.search('/edit')) + location.pathname.slice(location.pathname.search('/edit')+ 5)
 
   const onFinishForm = async () => {
     try {
@@ -157,6 +161,9 @@ const PageSettings = () => {
               }
             </Select>
           </Form.Item>
+          {currentPage.data.metadata.visibility === 'link-only' && visibilityFormItem === 'link-only' &&
+            <ClipboardCopy copyText={link}/>
+          }
           <Form.Item
             name={'accessibleRoles'}
             labelAlign={'left'}

@@ -15,6 +15,10 @@ export const createNavBar = (navbarJson, dispatch, navigate, user) => {
     if (page[1].metadata.visibility === 'specific-roles') {
       hasPermission = checkPermissionByRole(page[1].metadata.accessibleRoles, user.role);
     }
+    if (page[1].metadata.visibility === 'link-only') {
+      hasPermission = false
+    }
+
     if (hasPermission === true) {
       navBarComp.push({
         key: page[0],

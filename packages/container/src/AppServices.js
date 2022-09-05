@@ -55,15 +55,16 @@ const AppServices = ({ children }) => {
     async function fetchPages() {
       try {
         const responsePages = await getPages();
+        if (responsePages && responsePages.stack && responsePages.message) {
+          throw responsePages
+        }
+
         const responseNavBar = await getNavBar();
 
-        if (responseNavBar.message === 'ERR_NETWORK') {
-          throw responseNavBar;
+        if (responseNavBar && responseNavBar.stack && responseNavBar.message) {
+          throw responseNavBar
         }
 
-        if (responsePages.message === 'ERR_NETWORK') {
-          throw responsePages;
-        }
 
         const navbar = responseNavBar;
         const pages = responsePages;

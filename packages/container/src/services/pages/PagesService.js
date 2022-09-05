@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { asyncCallWithTimeout } from '../../utils/asyncCallWithTimeout';
 
 
 export const addNewPage = async (data) => {
@@ -15,7 +16,8 @@ export const addNewPage = async (data) => {
       data: data
     };
 
-    const res = await axios(config)
+    const { res } = await asyncCallWithTimeout(axios(config),5000)
+
     return res.data
   }
   catch (error){
@@ -34,7 +36,8 @@ export const getPages = async () => {
 
     };
 
-    const res = await axios(config)
+
+    const res = await asyncCallWithTimeout(axios(config),5000)
     return res.data.object
 
   }catch (error){
@@ -55,7 +58,8 @@ export const getNavBar = async () => {
 
     };
 
-    const res = await axios(config)
+
+    const res = await asyncCallWithTimeout(axios(config),5000)
     return res.data.object
 
   }catch (error){
@@ -77,7 +81,8 @@ export const updatePage = async (data, pageId) => {
       data : data
     };
 
-    const res = await axios(config)
+    const res = await asyncCallWithTimeout(axios(config),5000)
+
     return res
 
   }
@@ -96,7 +101,8 @@ export const deletePage = async (pageId) => {
      }
    };
 
-   const res = await axios(config)
+   const res = await asyncCallWithTimeout(axios(config),5000)
+
    return res
  } catch (error){
     return error
