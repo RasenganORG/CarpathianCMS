@@ -1,7 +1,8 @@
-import { AutoComplete, Button, Form, Input, Select } from 'antd';
+import { AutoComplete, Button, Divider, Form, Input, Select, Space, Typography } from 'antd';
 import { InfoCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import Search from 'antd/es/input/Search';
+import { searchUser } from '../../services/user/UsersService';
 
 const formItemLayout = {
   labelCol: {
@@ -10,23 +11,51 @@ const formItemLayout = {
   },
   wrapperCol: {
     xs: { span: 24 },
-    md: { span: 12 },
+    md: { span: 24 },
   },
 };
 
-export default function UserPermission({ form }) {
+export default function SearchUser({ form, setSelectedUser }) {
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [options, setOptions] = useState([])
+  const [options, setOptions] = useState([]);
 
-  const onSearchUser = () => {
-    setButtonLoading(true);
-    const searchUser = form.getFieldValue('searchUser');
-    console.log(searchUser);
-    setButtonLoading(false);
+  const onSearchUser = async () => {
+    try {
+      setButtonLoading(true);
+      const searchedUser = form.getFieldValue('searchUser');
+      if (searchedUser) {
+        const response = await searchUser(searchedUser);
+        const options = response.map(user => {
+          return {
+            label:
+              <Space
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}>
+                <Typography.Text>{user.email}</Typography.Text>
+                <Typography.Text> {user.firstName} {user.lastName}</Typography.Text>
+              </Space>,
+            value: user.email,
+            user:user
+          };
+        });
+        if (options.length > 0)
+          setOptions(options);
+        else setOptions([{ label: 'No results found', value: '' }]);
+
+      } else {
+        setOptions([]);
+      }
+
+      setButtonLoading(false);
+    } catch (error) {
+
+    }
   };
 
-  const onSelect = (value) => {
-    console.log('onSelect', value);
+  const onSelect = (value, option) => {
+    setSelectedUser(option.user)
   };
 
   return (
@@ -40,21 +69,20 @@ export default function UserPermission({ form }) {
           title: 'Search for a user to manage his permissions for this page',
           placement: 'right',
         }}
+        {...formItemLayout}
       >
         <AutoComplete
           dropdownMatchSelectWidth={252}
-          style={{ width: 300 }}
           options={options}
           onSelect={onSelect}
           onSearch={onSearchUser}
         >
           <Search
-            placeholder='input search text'
+            placeholder='Search by email or name'
             allowClear
-            enterButton='Search'
+            enterButton={<Button onClick={onSearchUser} icon={<SearchOutlined />} />}
             loading={buttonLoading}
             size='large'
-            onSearch={onSearchUser}
             style={{
               width: '100%',
               height: '50px',

@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import DeletePageButton from './DeletePageButton';
-import { Button, Col, Form, Input, Row, Select, Typography } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Modal, Row, Select, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { pagesActions } from '../../../redux/pagesSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import slugify from '../../../utils/slugify';
 import { updatePage } from '../../../services/pages/PagesService';
 import { notificationActions } from '../../../redux/notificationSlice';
-import ClipboardCopy from '../../ClipboardCopy';
-import { useLocation } from 'react-router-dom';
 import VisibilityManager from '../../visibility/VisibilityManager';
-import UserPermission from '../../searchUser/SearchUser';
+import PermissionsWizard from './permission/PermissionsWizard';
 
 const formItemLayout = {
   labelCol: {
@@ -25,9 +21,9 @@ const formItemLayout = {
 };
 
 
-
 const PageSettings = () => {
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [permissionModalVisibility, setPermissionModalVisibility] = useState(false);
 
   const [form] = useForm();
   const dispatch = useDispatch();
@@ -39,21 +35,26 @@ const PageSettings = () => {
     try {
       setButtonLoading(true);
       let data = await form.validateFields();
+      console.log(data)
 
 
-      if(visibilityFormItem === "specific-roles") {
+      if (visibilityFormItem === 'specific-roles') {
         data = {
-          metadata: { ...currentPage.data.metadata, visibility: data.visibility, accessibleRoles: data.accessibleRoles },
+          metadata: {
+            ...currentPage.data.metadata,
+            visibility: data.visibility,
+            accessibleRoles: data.accessibleRoles,
+          },
           blocks: currentPage.data.blocks,
         };
-      } else{
+      } else {
         data = {
           metadata: { ...currentPage.data.metadata, visibility: data.visibility, accessibleRoles: [] },
           blocks: currentPage.data.blocks,
         };
       }
 
-      console.log(data)
+      console.log(data);
 
 
       await updatePage({
@@ -80,7 +81,6 @@ const PageSettings = () => {
   };
 
 
-
   useEffect(() => {
     if (currentPage) {
       form.setFieldValue('visibility', currentPage.data.metadata.visibility);
@@ -88,10 +88,8 @@ const PageSettings = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    form.setFieldValue('accessibleRoles',currentPage?.data.metadata.accessibleRoles )
-  },[currentPage])
-
-
+    form.setFieldValue('accessibleRoles', currentPage?.data.metadata.accessibleRoles);
+  }, [currentPage]);
 
 
   return (
@@ -111,7 +109,23 @@ const PageSettings = () => {
             setVisibilityFormItem={setVisibilityFormItem}
           />
 
-          <UserPermission form={form}/>
+          <Button
+            onClick={() => setPermissionModalVisibility(true)}
+            style={{ marginBottom: '2rem' }}>
+            Edit users permissions
+          </Button>
+
+          <Modal
+            visible={permissionModalVisibility}
+            onOk={() => setPermissionModalVisibility(false)}
+            onCancel={() => setPermissionModalVisibility(false)}
+            okText={null}
+            cancelText={'Close'}
+            destroyOnClose={true}
+            width={'70%'}
+          >
+            <PermissionsWizard form={form} />
+          </Modal>
 
           <Form.Item>
             <Button
