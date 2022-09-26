@@ -9,6 +9,9 @@ import { login } from '../../services/auth/AuthService';
 import { PATHS } from '../../routes/paths';
 import { notificationActions } from '../../redux/notificationSlice';
 import { useForm } from 'antd/es/form/Form';
+import { GoogleOutlined} from '@ant-design/icons';
+import { GoogleLogin } from 'react-google-login';
+
 
 const formItemLayout = {
   labelCol: {
@@ -23,6 +26,7 @@ const formItemLayout = {
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [googleIsLoading, googleSetIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const [form] = useForm()
@@ -69,6 +73,10 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  const responseGoogle = (response) => {
+    console.log(response);
   }
 
 
@@ -195,6 +203,26 @@ const Login = () => {
               </Button>
             </Form.Item>
           </Form>
+          <Row>
+            <Col span={20}>
+              <GoogleLogin
+                  clientId="3002178617-ecbu28ar2r9qjtnjkvnmjkao865j8d4s.apps.googleusercontent.com"
+                  buttonText={
+                  <Row style={{
+                    width:'100%'
+                  }}>
+                    <Col span={24}>
+                      <Typography.Text>Login with your Google Account</Typography.Text>
+                    </Col>
+                  </Row>
+                    }
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                  cookiePolicy={'single_host_origin'}
+
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
     </>
