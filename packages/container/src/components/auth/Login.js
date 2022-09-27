@@ -1,16 +1,18 @@
 import { Button, Card, Col, Form, Image, Input, Row, Space, Typography } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import userSlice, { userActions } from '../../redux/userSlice';
-import { login } from '../../services/auth/AuthService';
+import { login, uploadGoogleAccount } from '../../services/auth/AuthService';
 import { PATHS } from '../../routes/paths';
 import { notificationActions } from '../../redux/notificationSlice';
 import { useForm } from 'antd/es/form/Form';
 import { GoogleOutlined} from '@ant-design/icons';
-import { GoogleLogin } from 'react-google-login';
+import { GoogleLogin } from '@react-oauth/google';
+import useAuth from '../hooks/use-auth'
+import jwt_decode from "jwt-decode";
 
 
 const formItemLayout = {
@@ -27,7 +29,8 @@ const formItemLayout = {
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [googleIsLoading, googleSetIsLoading] = useState(false);
-
+  const clientId ="3002178617-ecbu28ar2r9qjtnjkvnmjkao865j8d4s.apps.googleusercontent.com"
+  const {isAuthenticated} = useAuth()
   const dispatch = useDispatch();
   const [form] = useForm()
   const navigate = useNavigate();
@@ -74,10 +77,22 @@ const Login = () => {
       setIsLoading(false);
     }
   }
+  
+  
 
-  const responseGoogle = (response) => {
-    console.log(response);
-  }
+  const onSuccess = async (res) => {
+    console.log('success:', res.credential);
+    const userObject = jwt_decode(res.credential);
+    console.log("data",await uploadGoogleAccount(userObject)
+    )
+    
+  
+  };
+  const onFailure = (err) => {
+    console.log('failed:', err);
+  };
+  
+  
 
 
   return (
@@ -206,20 +221,12 @@ const Login = () => {
           <Row>
             <Col span={20}>
               <GoogleLogin
-                  clientId="3002178617-ecbu28ar2r9qjtnjkvnmjkao865j8d4s.apps.googleusercontent.com"
-                  buttonText={
-                  <Row style={{
-                    width:'100%'
-                  }}>
-                    <Col span={24}>
-                      <Typography.Text>Login with your Google Account</Typography.Text>
-                    </Col>
-                  </Row>
-                    }
-                  onSuccess={responseGoogle}
-                  onFailure={responseGoogle}
+                  clientId={clientId}
+                  onSuccess={onSuccess}
+                  onFailure={onFailure}
                   cookiePolicy={'single_host_origin'}
-
+                  isSignedIn={isAuthenticated}
+                  onC
               />
             </Col>
           </Row>
@@ -231,3 +238,4 @@ const Login = () => {
 };
 
 export default Login;
+

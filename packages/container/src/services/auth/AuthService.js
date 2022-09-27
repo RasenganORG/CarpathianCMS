@@ -74,3 +74,26 @@ export const refreshToken = async (refreshToken,dispatch) => {
     }));
   }
 }
+
+
+export const uploadGoogleAccount = async (data) => {
+  try {
+    data = JSON.stringify(data)
+    const config = {
+      method: 'post',
+      url: 'http://localhost:5000/users/uploadGoogleAccount',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data
+    };
+    
+    let res = await asyncCallWithTimeout(axios(config),5000)
+    
+    return res.data
+  }
+  catch (error){
+    return error
+  }
+}
+

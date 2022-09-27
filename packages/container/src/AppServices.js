@@ -9,6 +9,7 @@ import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
 import { notificationActions } from './redux/notificationSlice';
 
+
 const navBarBasicSettings = [
   {
     key: 'settings',
