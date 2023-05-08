@@ -64,6 +64,7 @@ export const refreshToken = async (refreshToken,dispatch) => {
 
     let response = await asyncCallWithTimeout(axios(config),5000)
     response = response.data
+    console.log(response)
     dispatch(userActions.refreshToken(response))
 
   } catch (error) {

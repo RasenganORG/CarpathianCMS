@@ -81,11 +81,11 @@ const Login = () => {
   
 
   const onSuccess = async (res) => {
+    console.log("Google info account", res)
     console.log('success:', res.credential);
     const userObject = jwt_decode(res.credential);
-    console.log("data",await uploadGoogleAccount(userObject)
-    )
-    
+    console.log(res.credential.getAuthResponse().id_token)
+    console.log("data",await uploadGoogleAccount(userObject))
   
   };
   const onFailure = (err) => {
@@ -226,7 +226,6 @@ const Login = () => {
                   onFailure={onFailure}
                   cookiePolicy={'single_host_origin'}
                   isSignedIn={isAuthenticated}
-                  onC
               />
             </Col>
           </Row>
