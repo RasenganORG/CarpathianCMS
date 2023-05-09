@@ -1,18 +1,16 @@
-import { Button, Card, Col, Form, Image, Input, Row, Space, Typography } from 'antd';
-import React, { useState, useEffect } from 'react';
+import { Button,  Col, Form,  Input, Row,  Typography } from 'antd';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
-import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import userSlice, { userActions } from '../../redux/userSlice';
+import  { userActions } from '../../redux/userSlice';
 import { login, uploadGoogleAccount } from '../../services/auth/AuthService';
 import { PATHS } from '../../routes/paths';
 import { notificationActions } from '../../redux/notificationSlice';
 import { useForm } from 'antd/es/form/Form';
-import { GoogleOutlined} from '@ant-design/icons';
-import { GoogleLogin } from '@react-oauth/google';
-import useAuth from '../hooks/use-auth'
-import jwt_decode from "jwt-decode";
+import {  useGoogleLogin } from '@react-oauth/google';
+import useAuth from '../hooks/use-auth';
+
 
 
 const formItemLayout = {
@@ -29,11 +27,11 @@ const formItemLayout = {
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [googleIsLoading, googleSetIsLoading] = useState(false);
-  const clientId ="3002178617-ecbu28ar2r9qjtnjkvnmjkao865j8d4s.apps.googleusercontent.com"
-  const {isAuthenticated} = useAuth()
+  const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
-  const [form] = useForm()
+  const [form] = useForm();
   const navigate = useNavigate();
+
 
   async function onFinishForm(data) {
     try {
@@ -77,22 +75,22 @@ const Login = () => {
       setIsLoading(false);
     }
   }
-  
-  
 
-  const onSuccess = async (res) => {
-    console.log("Google info account", res)
-    console.log('success:', res.credential);
-    const userObject = jwt_decode(res.credential);
-    console.log(res.credential.getAuthResponse().id_token)
-    console.log("data",await uploadGoogleAccount(userObject))
-  
-  };
-  const onFailure = (err) => {
-    console.log('failed:', err);
-  };
-  
-  
+
+  const googleLogin = useGoogleLogin({
+    flow: 'auth-code',
+    onSuccess: async (codeResponse) => {
+      console.log(codeResponse);
+      const response = await uploadGoogleAccount({
+        code: codeResponse.code,
+      });
+
+      dispatch(userActions.login(response));
+      navigate(PATHS.home);
+
+    },
+    onError: errorResponse => console.log(errorResponse),
+  });
 
 
   return (
@@ -219,14 +217,33 @@ const Login = () => {
             </Form.Item>
           </Form>
           <Row>
-            <Col span={20}>
-              <GoogleLogin
-                  clientId={clientId}
-                  onSuccess={onSuccess}
-                  onFailure={onFailure}
-                  cookiePolicy={'single_host_origin'}
-                  isSignedIn={isAuthenticated}
-              />
+            <Col span={12}>
+
+              <Button
+                block
+                icon={<img src='https://img.icons8.com/fluency/28/null/google-logo.png' style={{
+                  float: 'left',
+                  marginLeft: '10%',
+                }} />}
+                size='large'
+                onClick={() => googleLogin()}
+                style={{
+                  background: '#fff',
+                  border: 'none',
+                  boxShadow: '0px 4px 14px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '8px',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  color: '#707070',
+                  margin: '10px',
+                  padding: '7px',
+                  width: '20rem',
+                }}
+              >
+                Sign in with Google
+              </Button>
+
+
             </Col>
           </Row>
         </Col>

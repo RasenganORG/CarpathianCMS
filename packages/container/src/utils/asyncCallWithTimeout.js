@@ -10,7 +10,6 @@ export const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
 
   return Promise.race([asyncPromise, timeoutPromise]).then(result => {
     clearTimeout(timeoutHandle);
-    console.log(result)
     return result;
   })
 }

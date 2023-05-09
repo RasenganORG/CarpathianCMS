@@ -5,6 +5,7 @@ import React from 'react';
 import { userActions } from '../../redux/userSlice';
 import { notificationActions } from '../../redux/notificationSlice';
 import { asyncCallWithTimeout } from '../../utils/asyncCallWithTimeout';
+import jwt_decode from 'jwt-decode';
 
 export const login = async (data) => {
   try {
