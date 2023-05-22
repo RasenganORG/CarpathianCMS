@@ -3,15 +3,15 @@ import React from 'react';
 import Toolbar from '../toolbar/Toolbar';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 import VisibleByRoleGuard from '../guards/VisibleByRoleGuard';
-import ToolbarNew from '../toolbar/Toolbar';
 
 const PageLayout = () => {
+  const currentPage = window.location.pathname.split('/')[1]
 
 
   return (
     <div>
-      <VisibleByRoleGuard accessibleRoles={['admin']}>
-        <ToolbarNew/>
+      <VisibleByRoleGuard accessibleRoles={['admin']} currentPage={currentPage}>
+        <Toolbar/>
       </VisibleByRoleGuard>
       <Outlet />
     </div>

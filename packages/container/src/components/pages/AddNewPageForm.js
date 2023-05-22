@@ -88,12 +88,18 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
         metadata: data,
         blocks: [],
       };
+
+      data.metadata.accessibleRoles = []
+      data.metadata.specialPermissions = {}
+
       if (generateCustomHref === false || data.metadata.href === '') {
         data.metadata.href = slugify(data.metadata.title);
       }
 
       const res = await addNewPage(data);
+
       dispatch(pagesActions.createNewPage(res));
+
       setCreatePageButtonLoading(false);
       setNewPageModalIsOpened(false);
       navigate(`/${data.metadata.href}/edit`);
@@ -104,6 +110,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       }))
       dispatch(pagesActions.refreshNavBar())
     } catch (error) {
+      console.log(error)
       dispatch(notificationActions.openNotification({
         message:'Error while trying to add a new page',
         description:'',

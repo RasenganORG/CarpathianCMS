@@ -22,7 +22,6 @@ export default () => {
     }
   }, [pages]);
 
-console.log(pages)
 
   const items = [
     { label: 'Blocks Editor', key: 'block-editor', disabled: pages.length === 0 },

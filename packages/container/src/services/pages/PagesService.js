@@ -16,7 +16,7 @@ export const addNewPage = async (data) => {
       data: data
     };
 
-    const { res } = await asyncCallWithTimeout(axios(config),5000)
+    const res = await asyncCallWithTimeout(axios(config),5000)
 
     return res.data
   }

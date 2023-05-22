@@ -8,6 +8,7 @@ import { updatePage } from '../../../services/pages/PagesService';
 import { notificationActions } from '../../../redux/notificationSlice';
 import VisibilityManager from '../../visibility/VisibilityManager';
 import PermissionsWizard from './permission/PermissionsWizard';
+import FormItem from 'antd/es/form/FormItem';
 
 const formItemLayout = {
   labelCol: {
@@ -31,11 +32,11 @@ const PageSettings = () => {
   const currentPage = useSelector(state => state.pages.pagesList.find((p) => p.id === selectedPage));
   const [visibilityFormItem, setVisibilityFormItem] = useState(currentPage.data.metadata.visibility);
 
+
   const onFinishForm = async () => {
     try {
       setButtonLoading(true);
       let data = await form.validateFields();
-      console.log(data)
 
 
       if (visibilityFormItem === 'specific-roles') {
@@ -44,17 +45,22 @@ const PageSettings = () => {
             ...currentPage.data.metadata,
             visibility: data.visibility,
             accessibleRoles: data.accessibleRoles,
+            specialPermissions: data.specialPermissions,
           },
           blocks: currentPage.data.blocks,
         };
       } else {
         data = {
-          metadata: { ...currentPage.data.metadata, visibility: data.visibility, accessibleRoles: [] },
+          metadata: { ...currentPage.data.metadata,
+            visibility: data.visibility,
+            accessibleRoles: [],
+            specialPermissions:data.specialPermissions,
+          },
           blocks: currentPage.data.blocks,
         };
       }
 
-      console.log(data);
+      console.log('PageSettings final:', data);
 
 
       await updatePage({
@@ -81,15 +87,14 @@ const PageSettings = () => {
   };
 
 
-  useEffect(() => {
-    if (currentPage) {
-      form.setFieldValue('visibility', currentPage.data.metadata.visibility);
-    }
-  }, [currentPage]);
+
 
   useEffect(() => {
     form.setFieldValue('accessibleRoles', currentPage?.data.metadata.accessibleRoles);
+    form.setFieldValue('specialPermissions', currentPage?.data.metadata.specialPermissions)
+    form.setFieldValue('visibility', currentPage?.data.metadata.visibility);
   }, [currentPage]);
+
 
 
   return (
@@ -101,6 +106,7 @@ const PageSettings = () => {
           {...formItemLayout}
           initialValues={{
             visibility: 'public',
+            specialPermissions: {},
           }}
           onFinish={onFinishForm}
         >
@@ -108,6 +114,10 @@ const PageSettings = () => {
             visibilityFormItem={visibilityFormItem}
             setVisibilityFormItem={setVisibilityFormItem}
           />
+          <FormItem
+            name={'specialPermissions'}>
+            <div></div>
+          </FormItem>
 
           <Button
             onClick={() => setPermissionModalVisibility(true)}

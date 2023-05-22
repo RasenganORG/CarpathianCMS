@@ -118,47 +118,6 @@ export default function VisibilityManager({visibilityFormItem,setVisibilityFormI
         </Select>
       </Form.Item>
 
-      <Form.Item
-        name={'accessibleRoles'}
-        labelAlign={'left'}
-        label={'Roles with access:'}
-        hidden={visibilityFormItem !== 'specific-roles'}
-        tooltip={{
-          icon: <InfoCircleOutlined />,
-          title: 'Choose what roles will be able to access this page.',
-          placement: 'right',
-        }}
-        dependencies={['visibility']}
-        rules={[
-          {
-            required: visibilityFormItem === 'specific-roles',
-            message: 'Please choose at least one role that can access this page',
-          },
-        ]}
-      >
-        <Select
-          mode='multiple'
-          placeholder='Select the roles that can access this page'
-          optionLabelProp='label'
-          style={{
-            width: '100%',
-            height: '50px',
-          }}
-        >
-          {roles.map(role => (
-            <Select.Option
-              value={role.value}
-              label={role.label}
-              key={role.value}
-            >
-              <Typography.Text>
-                {role.label}
-              </Typography.Text>
-            </Select.Option>
-          ))}
-
-        </Select>
-      </Form.Item>
 
 
     </>

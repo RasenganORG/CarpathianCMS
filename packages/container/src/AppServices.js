@@ -82,6 +82,7 @@ const AppServices = ({ children }) => {
         const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
         dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }));
       } catch (error) {
+        console.log(error)
         if (error.message === 'ERR_NETWORK') {
           dispatch(notificationActions.openNotification({
             message: 'Error',

@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from 'antd';
 import { pagesActions } from '../redux/pagesSlice';
 import { checkPermissionByRole } from './checkPermissionByRole';
+import { checkPermissionBySpecialPermission } from './checkPermissionBySpecialPermission';
 
 export const createNavBar = (navbarJson, dispatch, navigate, user) => {
   let navBarComp = [];
@@ -12,6 +13,7 @@ export const createNavBar = (navbarJson, dispatch, navigate, user) => {
       children = createNavBar(page[1].children, dispatch, navigate, user);
     }
     let hasPermission = true;
+    let hasSpecialPermission = checkPermissionBySpecialPermission(page[1].metadata.specialPermissions, user.localId);
     if (page[1].metadata.visibility === 'specific-roles') {
       hasPermission = checkPermissionByRole(page[1].metadata.accessibleRoles, user.role);
     }
@@ -19,7 +21,9 @@ export const createNavBar = (navbarJson, dispatch, navigate, user) => {
       hasPermission = false
     }
 
-    if (hasPermission === true) {
+
+
+    if (hasPermission === true || hasSpecialPermission === true) {
       navBarComp.push({
         key: page[0],
         id: page[0],

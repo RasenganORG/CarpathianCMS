@@ -102,6 +102,22 @@ const Toolbar = () => {
     label: content,
   } : null;
 
+  const menuAddPage = {
+    key: '1',
+    icon: <PlusCircleOutlined
+      style={{
+        display: 'inline',
+        fontSize: '170%',
+      }}
+    />,
+    label:
+      <MenuButton
+        title={'Add Page'}
+        tooltipTitle={'Add a new page'}
+        onClick={onAddNewPage}
+      />,
+  }
+
 
   return (
     <div>
@@ -148,25 +164,9 @@ const Toolbar = () => {
               menuEditPreview,
               menuContent,
               menuEdit,
-              {
-                key: '1',
-                icon: <PlusCircleOutlined
-                  style={{
-                    display: 'inline',
-                    fontSize: '170%',
-                  }}
-                />,
-                label:
-                  <MenuButton
-                    title={'Add Page'}
-                    tooltipTitle={'Add a new page'}
-                    onClick={onAddNewPage}
-                  />,
-              },
+              menuAddPage,
             ]}
           />
-
-
         </Sider>
       </Layout>
     </div>

@@ -2,9 +2,22 @@ import React from 'react';
 import { Col, Row, Select, Typography } from 'antd';
 import { useSelector } from 'react-redux';
 
-export default function EditPermissions({ selectedUser }) {
+export default function EditPermissions({ onSelectPermission, selectedUser,form }) {
   const roles = useSelector(state => state.pages.roles)
 
+
+  const getSelectedValues = () => {
+    let specialPermissionsDict = form.getFieldValue('specialPermissions')
+    if(Object.keys(specialPermissionsDict).length > 0) {
+      for (let [userId, permissions] of Object.entries(specialPermissionsDict)) {
+        if (userId === selectedUser.id) {
+          return permissions
+        }
+      }
+    }
+    return [];
+
+  };
 
   return (
     <Row
@@ -102,6 +115,8 @@ export default function EditPermissions({ selectedUser }) {
             mode='multiple'
             placeholder='Choose permissions'
             optionLabelProp='label'
+            onChange={value => onSelectPermission(value)}
+            defaultValue={getSelectedValues()}
             style={{
               height: '50px',
               width: '100%',

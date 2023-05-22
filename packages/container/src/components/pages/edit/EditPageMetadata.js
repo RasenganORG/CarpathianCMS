@@ -108,9 +108,6 @@ const EditPageMetadata = () => {
     setGenerateCustomHref(pageMetadata?.generateCustomHref)
   }, [pageMetadata]);
 
-  console.log(form.getFieldValue('generateCustomHref'))
-  console.log(generateCustomHref)
-  console.log(form.getFieldValue('href'))
 
   return (
 

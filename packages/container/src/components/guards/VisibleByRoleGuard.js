@@ -9,6 +9,7 @@ import { PATHS } from '../../routes/paths';
 
 VisibleByRoleGuard.propTypes = {
   accessibleRoles: PropTypes.array,
+  currentPage: PropTypes.string,
   children: PropTypes.node,
 };
 
@@ -18,9 +19,13 @@ const useCurrentRole = () => {
   return role;
 };
 
-export default function VisibleByRoleGuard({ accessibleRoles, children }) {
+export default function VisibleByRoleGuard({ accessibleRoles,currentPage, children }) {
   const currentRole = useCurrentRole();
+  const specialPermissions = useSelector(state => state.pages.pagesList.find(page => page.data.metadata.href === currentPage)?.data.metadata.specialPermissions)
 
+  //todo
+
+console.log("specialPermissions:", specialPermissions)
   if (accessibleRoles.includes(currentRole)) {
     return <>{children}</>
   }

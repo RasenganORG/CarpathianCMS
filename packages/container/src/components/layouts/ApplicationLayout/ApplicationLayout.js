@@ -78,7 +78,7 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
       settingsArray.push(...navBarBasicSettings);
 
     }
-    dispatch(pagesActions.setHasPermissionToSettings(true))
+    dispatch(pagesActions.setHasPermissionToSettings(accessToSettings))       //todo
     setNavBarRightSettings(accountArray);
 
 

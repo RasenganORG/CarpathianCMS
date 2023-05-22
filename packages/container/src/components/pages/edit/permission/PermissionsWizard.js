@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SearchUser from '../../../searchUser/SearchUser';
-import { Button, Steps } from 'antd';
+import { Button, Form, Steps } from 'antd';
 import EditPermissions from './EditPermission';
 import PermissionFrame from './PermissionFrame';
 
@@ -19,6 +19,19 @@ export default function PermissionsWizard({ form }) {
     setCurrent(current - 1);
   };
 
+  const onSelectPermission = (permissions) => {
+    let specialPermissionsDict = JSON.parse(JSON.stringify(form.getFieldValue('specialPermissions')))     // make deep copy
+    specialPermissionsDict[selectedUser?.id] = permissions
+    form.setFieldValue('specialPermissions', specialPermissionsDict)
+  };
+
+  useEffect(() => {
+    if (selectedUser) {
+      next();
+    }
+  }, [selectedUser]);
+
+
   const steps = [
     {
       title: 'Search for user',
@@ -33,20 +46,19 @@ export default function PermissionsWizard({ form }) {
       title: 'Edit permission',
       content:
         <PermissionFrame>
-          <EditPermissions
-            selectedUser={selectedUser} />
+            <EditPermissions
+              onSelectPermission={onSelectPermission}
+              selectedUser={selectedUser}
+              form={form}
+            />
         </PermissionFrame>,
     },
   ];
 
-  useEffect(() => {
-    if (selectedUser) {
-      next();
-    }
-  }, [selectedUser]);
 
   return (
     <>
+
       <Steps
         current={current}>
         {steps.map(item => (
