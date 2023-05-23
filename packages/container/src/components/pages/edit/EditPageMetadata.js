@@ -51,14 +51,22 @@ const EditPageMetadata = () => {
   const onFinishForm = async () => {
     try {
       let data = await form.validateFields();
+      console.log(data)
 
       data = {
-        metadata: { ...data, visibility:currentPage.data.metadata.visibility },
+        metadata: {
+          ...data,
+          visibility:currentPage.data.metadata.visibility,
+          accessibleRoles:currentPage.data.metadata.accessibleRoles,
+          specialPermissions:currentPage.data.metadata.specialPermissions
+        },
         blocks: currentPage.data.blocks,
       };
       if (generateCustomHref === false || data.metadata.href === '') {
         data.metadata.href = slugify(data.metadata.title);
       }
+
+
 
       await updatePage({
         id: currentPage.id,

@@ -1,21 +1,21 @@
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import React from 'react';
 import Toolbar from '../toolbar/Toolbar';
-import RoleBasedGuard from '../guards/RoleBasedGuard';
-import VisibleByRoleGuard from '../guards/VisibleByRoleGuard';
+import VisibleByRoleWithSpecialPermissionsGuard from '../guards/VisibleByRoleWithSpecialPermissionsGuard';
+import useAuth from '../hooks/use-auth';
 
 const PageLayout = () => {
-  const currentPage = window.location.pathname.split('/')[1]
+  const userId= useAuth().user.localId
 
 
   return (
     <div>
-      <VisibleByRoleGuard accessibleRoles={['admin']} currentPage={currentPage}>
-        <Toolbar/>
-      </VisibleByRoleGuard>
+      <VisibleByRoleWithSpecialPermissionsGuard accessibleRoles={['admin','editor']}  userId={userId}>
+        <Toolbar />
+      </VisibleByRoleWithSpecialPermissionsGuard>
       <Outlet />
     </div>
-  );
+  )
 };
 
 export default PageLayout;

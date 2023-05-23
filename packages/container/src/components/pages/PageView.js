@@ -4,6 +4,8 @@ import BlockViewManager from '../blocksView/BlockViewManager';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
 import EmptyPage from './EmptyPage';
+import VisibleByRoleWithSpecialPermissionsGuard from '../guards/VisibleByRoleWithSpecialPermissionsGuard';
+import useAuth from '../hooks/use-auth';
 
 export default () => {
   const pages = useSelector(state => state.pages.pagesList);
@@ -11,6 +13,7 @@ export default () => {
   const currentPage = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage));
   const [pageIsEmpty, setPageIsEmpty] = useState(currentPage?.data?.blocks.length === 0);
   const dispatch = useDispatch();
+  const userId = useAuth().user.localId;
 
   // if there are no pages loaded, makes a request to try and download them again
   useEffect(() => {
@@ -40,9 +43,15 @@ export default () => {
       <Col offset={3} span={18}>
         <BlockViewManager />
       </Col>
+
       {pageIsEmpty &&
         <Col offset={3} span={18}>
-          <EmptyPage />
+          <VisibleByRoleWithSpecialPermissionsGuard
+            accessibleRoles={['admin', 'editor']}
+            userId={userId}>
+            <EmptyPage />
+          </VisibleByRoleWithSpecialPermissionsGuard>
+
         </Col>}
     </Row>
   );

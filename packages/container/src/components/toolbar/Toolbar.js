@@ -6,24 +6,37 @@ import {
   PlusCircleOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AddNewPageForm from '../pages/AddNewPageForm';
 import Sider from 'antd/es/layout/Sider';
 import MenuButton from '../layouts/toolbarLayouts/MenuButton';
 import classes from './Toolbar.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
+import { checkPermissionByRole } from '../../utils/checkPermissionByRole';
+import { checkPermissionBySpecialPermission } from '../../utils/checkPermissionBySpecialPermission';
+import useAuth from '../hooks/use-auth';
+import { useCurrentRole } from '../guards/RoleBasedGuard';
 
 const Toolbar = () => {
   const [leaveModalIsOpened, setLeaveModalIsOpened] = useState(false);
   const [newPageModalIsOpened, setNewPageModalIsOpened] = useState(false);
+  const [menuItems, setMenuItems] = useState([])
   const [collapsed, setCollapsed] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const isEdit = window.location.pathname.split('/').findIndex((word) => word === 'edit' || word === 'content') !== -1;
-  const isEditContent = window.location.pathname.split('/').findIndex((word) =>  word === 'content') !== -1;
+  const isEditContent = window.location.pathname.split('/').findIndex((word) => word === 'content') !== -1;
   const { pageid = '' } = useParams();
+  const userId = useAuth().user.localId
+  const role = useCurrentRole()
+
+  const currentPage = window.location.pathname.split('/')[1];
+
+  let specialPermissions = useSelector(state => state.pages.pagesList
+    .find(page => page.data.metadata.href === currentPage)
+    ?.data.metadata.specialPermissions)
 
 
   const onExitEdit = () => {
@@ -52,7 +65,7 @@ const Toolbar = () => {
 
 
   const editPage = <MenuButton
-    title={isEdit ? 'Edit Page' : 'Edit' }
+    title={isEdit ? 'Edit Page' : 'Edit'}
     tooltipTitle={'Edit your current page'}
     onClick={() => navigate(`${pageid}/edit`)}
   />;
@@ -88,7 +101,7 @@ const Toolbar = () => {
       }}
     />,
     label: editPage,
-  } : null
+  } : null;
 
   const menuContent = isEdit ? {
     key: '4',
@@ -116,7 +129,38 @@ const Toolbar = () => {
         tooltipTitle={'Add a new page'}
         onClick={onAddNewPage}
       />,
-  }
+  };
+
+
+
+
+  //used to dynamically create the toolbar based on role or special role for a particular page
+
+  useEffect(() => {
+    const hasAdminRolePermissions = checkPermissionByRole(['admin'],role)
+    const hasEditorRolePermissions = checkPermissionByRole(['admin','editor'],role)
+    const hasAdminRoleSpecialPermissions = checkPermissionBySpecialPermission(specialPermissions,['admin'],userId)
+    const hasEditorRoleSpecialPermissions = checkPermissionBySpecialPermission(specialPermissions,['admin','editor'],userId)
+
+
+    if(isEdit){
+      setMenuItems([menuEditPreview])
+      if(hasEditorRoleSpecialPermissions || hasEditorRolePermissions){
+        setMenuItems(current => [...current,menuContent])
+        setMenuItems(current => [...current,menuEdit])
+      }
+      if( hasAdminRolePermissions){
+        setMenuItems(current => [...current,menuAddPage])
+      }
+    } else{
+      setMenuItems([menuEditPreview])
+      if(hasAdminRolePermissions){
+        setMenuItems(current => [...current,menuAddPage])
+      }
+    }
+
+  },[specialPermissions,userId,role,isEdit])
+
 
 
   return (
@@ -160,12 +204,7 @@ const Toolbar = () => {
           })}
           <Menu
             mode='inline'
-            items={[
-              menuEditPreview,
-              menuContent,
-              menuEdit,
-              menuAddPage,
-            ]}
+            items={menuItems}
           />
         </Sider>
       </Layout>

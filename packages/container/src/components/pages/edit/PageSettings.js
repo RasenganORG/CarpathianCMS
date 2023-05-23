@@ -36,10 +36,19 @@ const PageSettings = () => {
   const onFinishForm = async () => {
     try {
       setButtonLoading(true);
-      let data = await form.validateFields();
+      let data = JSON.parse(JSON.stringify(await form.validateFields()));
 
 
       if (visibilityFormItem === 'specific-roles') {
+        const isUserOrEditor = data.accessibleRoles.some(role => ['user', 'editor'].includes(role));
+
+        console.log(isUserOrEditor)
+        console.log(data.accessibleRoles)
+
+        if (isUserOrEditor && !data.accessibleRoles.includes('admin')) {
+          data.accessibleRoles.push('admin');
+        }
+
         data = {
           metadata: {
             ...currentPage.data.metadata,
@@ -51,17 +60,17 @@ const PageSettings = () => {
         };
       } else {
         data = {
-          metadata: { ...currentPage.data.metadata,
+          metadata: {
+            ...currentPage.data.metadata,
             visibility: data.visibility,
             accessibleRoles: [],
-            specialPermissions:data.specialPermissions,
+            specialPermissions: data.specialPermissions,
           },
           blocks: currentPage.data.blocks,
         };
       }
 
       console.log('PageSettings final:', data);
-
 
       await updatePage({
         id: currentPage.id,
@@ -87,14 +96,11 @@ const PageSettings = () => {
   };
 
 
-
-
   useEffect(() => {
     form.setFieldValue('accessibleRoles', currentPage?.data.metadata.accessibleRoles);
-    form.setFieldValue('specialPermissions', currentPage?.data.metadata.specialPermissions)
+    form.setFieldValue('specialPermissions', currentPage?.data.metadata.specialPermissions);
     form.setFieldValue('visibility', currentPage?.data.metadata.visibility);
   }, [currentPage]);
-
 
 
   return (

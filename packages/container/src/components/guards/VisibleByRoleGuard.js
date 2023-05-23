@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
-import { Alert, Modal } from 'antd';
 import { useSelector } from 'react-redux';
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { PATHS } from '../../routes/paths';
+
 
 // ----------------------------------------------------------------------
 
@@ -21,11 +19,7 @@ const useCurrentRole = () => {
 
 export default function VisibleByRoleGuard({ accessibleRoles,currentPage, children }) {
   const currentRole = useCurrentRole();
-  const specialPermissions = useSelector(state => state.pages.pagesList.find(page => page.data.metadata.href === currentPage)?.data.metadata.specialPermissions)
 
-  //todo
-
-console.log("specialPermissions:", specialPermissions)
   if (accessibleRoles.includes(currentRole)) {
     return <>{children}</>
   }

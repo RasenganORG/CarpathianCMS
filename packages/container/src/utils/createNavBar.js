@@ -12,18 +12,19 @@ export const createNavBar = (navbarJson, dispatch, navigate, user) => {
     if (Object.keys(page[1].children).length !== 0) {
       children = createNavBar(page[1].children, dispatch, navigate, user);
     }
-    let hasPermission = true;
-    let hasSpecialPermission = checkPermissionBySpecialPermission(page[1].metadata.specialPermissions, user.localId);
+    let hasRolePermission = true;
+    let hasSpecialPermission = checkPermissionBySpecialPermission(page[1].metadata.specialPermissions,['admin','editor'], user.localId);
     if (page[1].metadata.visibility === 'specific-roles') {
-      hasPermission = checkPermissionByRole(page[1].metadata.accessibleRoles, user.role);
+      hasRolePermission = checkPermissionByRole(page[1].metadata.accessibleRoles, user.role);
     }
     if (page[1].metadata.visibility === 'link-only') {
-      hasPermission = false
+      hasRolePermission = checkPermissionByRole(['admin','editor'], user.role);
     }
 
 
 
-    if (hasPermission === true || hasSpecialPermission === true) {
+
+    if (hasRolePermission === true || hasSpecialPermission === true) {
       navBarComp.push({
         key: page[0],
         id: page[0],

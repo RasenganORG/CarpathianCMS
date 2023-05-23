@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const EmptyPage = () => {
   const navigate = useNavigate();
 
+
   return (
 
     <Empty

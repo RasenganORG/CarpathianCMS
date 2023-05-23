@@ -22,6 +22,9 @@ export default function PermissionsWizard({ form }) {
   const onSelectPermission = (permissions) => {
     let specialPermissionsDict = JSON.parse(JSON.stringify(form.getFieldValue('specialPermissions')))     // make deep copy
     specialPermissionsDict[selectedUser?.id] = permissions
+    if(specialPermissionsDict[selectedUser?.id].length === 0) {
+      delete specialPermissionsDict[selectedUser?.id]
+    }
     form.setFieldValue('specialPermissions', specialPermissionsDict)
   };
 
