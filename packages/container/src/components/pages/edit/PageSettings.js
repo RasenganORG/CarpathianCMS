@@ -41,13 +41,16 @@ const PageSettings = () => {
 
       if (visibilityFormItem === 'specific-roles') {
         const isUserOrEditor = data.accessibleRoles.some(role => ['user', 'editor'].includes(role));
+        const isUser = data.accessibleRoles.some(role => ['user'].includes(role));
 
-        console.log(isUserOrEditor)
-        console.log(data.accessibleRoles)
+        if (isUser&& !data.accessibleRoles.includes('editor')) {
+          data.accessibleRoles.push('editor');
+        }
 
         if (isUserOrEditor && !data.accessibleRoles.includes('admin')) {
           data.accessibleRoles.push('admin');
         }
+
 
         data = {
           metadata: {

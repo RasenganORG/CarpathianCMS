@@ -1,4 +1,3 @@
-import useAuth from '../components/hooks/use-auth';
 
 export const checkPermissionBySpecialPermission = (specialPermissionsDict, accessibleRoles, userId) => {
   if(specialPermissionsDict !== undefined) {

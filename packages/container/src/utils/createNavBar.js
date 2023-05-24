@@ -13,7 +13,7 @@ export const createNavBar = (navbarJson, dispatch, navigate, user) => {
       children = createNavBar(page[1].children, dispatch, navigate, user);
     }
     let hasRolePermission = true;
-    let hasSpecialPermission = checkPermissionBySpecialPermission(page[1].metadata.specialPermissions,['admin','editor'], user.localId);
+    let hasSpecialPermission = checkPermissionBySpecialPermission(page[1].metadata.specialPermissions,['admin','editor','user'], user.localId);
     if (page[1].metadata.visibility === 'specific-roles') {
       hasRolePermission = checkPermissionByRole(page[1].metadata.accessibleRoles, user.role);
     }

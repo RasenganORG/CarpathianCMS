@@ -47,8 +47,10 @@ export default () => {
       {pageIsEmpty &&
         <Col offset={3} span={18}>
           <VisibleByRoleWithSpecialPermissionsGuard
-            accessibleRoles={['admin', 'editor']}
-            userId={userId}>
+            defaultAccessibleRoles={['admin', 'editor']}
+            userId={userId}
+            onlyForEditors={true}
+          >
             <EmptyPage />
           </VisibleByRoleWithSpecialPermissionsGuard>
 

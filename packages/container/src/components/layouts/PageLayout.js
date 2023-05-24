@@ -5,12 +5,12 @@ import VisibleByRoleWithSpecialPermissionsGuard from '../guards/VisibleByRoleWit
 import useAuth from '../hooks/use-auth';
 
 const PageLayout = () => {
-  const userId= useAuth().user.localId
-
 
   return (
     <div>
-      <VisibleByRoleWithSpecialPermissionsGuard accessibleRoles={['admin','editor']}  userId={userId}>
+      <VisibleByRoleWithSpecialPermissionsGuard
+        defaultAccessibleRoles={['admin','editor']}
+        onlyForEditors={true}>
         <Toolbar />
       </VisibleByRoleWithSpecialPermissionsGuard>
       <Outlet />

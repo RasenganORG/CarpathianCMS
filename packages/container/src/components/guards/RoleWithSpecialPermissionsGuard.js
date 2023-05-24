@@ -12,26 +12,27 @@ import useCheckPermissionAdvanced from '../hooks/use-check-permission-advanced';
 
 RoleWithSpecialPermissionsGuard.propTypes = {
   accessibleRoles: PropTypes.array,
-  isForEdit: PropTypes.bool,
+  onlyForEditors: PropTypes.bool,
   children: PropTypes.node,
 };
 
 
-export default function RoleWithSpecialPermissionsGuard({ accessibleRoles, isForEdit, children }) {
+export default function RoleWithSpecialPermissionsGuard({ defaultAccessibleRoles, onlyForEditors, children }) {
   const navigate = useNavigate();
   const currentPage = window.location.pathname.split('/')[1];
   let is404 = currentPage === '404';
 
-  const [hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly] = useCheckPermissionAdvanced(accessibleRoles)
+  const [hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly] = useCheckPermissionAdvanced(defaultAccessibleRoles,onlyForEditors)
 
-  console.log(hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly, isForEdit);
+  console.log("Role")
+  console.log(hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly, onlyForEditors);
 
 
   if ((
-    ((hasRolePermission || hasSpecialPermission) && isForEdit) ||
-    (isPublicOrLinkOnly && !isForEdit) ||
-    ((hasRolePermission || hasSpecialPermission) && !isForEdit)) &&
-    is404 === false) {
+    ((hasRolePermission || hasSpecialPermission) && onlyForEditors) ||
+    (isPublicOrLinkOnly && !onlyForEditors) ||
+    ((hasRolePermission || hasSpecialPermission) && !onlyForEditors)
+    ) && is404 === false) {
     return <>{children}</>;
   } else {
 

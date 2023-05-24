@@ -8,7 +8,7 @@ import useCheckPermissionAdvanced from '../hooks/use-check-permission-advanced';
 VisibleByRoleWithSpecialPermissionsGuard.propTypes = {
   accessibleRoles: PropTypes.array,
   currentPage: PropTypes.string,
-  userId: PropTypes.string,
+  onlyForEditors: PropTypes.bool,
   children: PropTypes.node,
 };
 
@@ -19,15 +19,15 @@ const useCurrentRole = () => {
 };
 
 
-export default function VisibleByRoleWithSpecialPermissionsGuard({ accessibleRoles, userId, children }) {
-  const currentRole = useCurrentRole();
+export default function VisibleByRoleWithSpecialPermissionsGuard({ defaultAccessibleRoles, onlyForEditors, children }) {
 
   const currentPage = window.location.pathname.split('/')[1];
   let is404 = currentPage === '404'
 
-  const [hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly] = useCheckPermissionAdvanced(accessibleRoles)
+  const [hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly] = useCheckPermissionAdvanced(defaultAccessibleRoles,onlyForEditors)
 
-  console.log(hasSpecialPermission)
+  console.log("Visible")
+  console.log(hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly);
 
 
   if ((hasSpecialPermission || hasRolePermission) && is404 === false) {

@@ -65,7 +65,9 @@ const Router = ({ navBar, setNavBar }) => {
             {
               path: '/:pageid',
               element:
-                <RoleWithSpecialPermissionsGuard accessibleRoles={['admin', 'editor']} isForEdit={false}>
+                <RoleWithSpecialPermissionsGuard
+                  defaultAccessibleRoles={['admin','editor','user']}
+                  onlyForEditors={false}>
                   <PageView />
                 </RoleWithSpecialPermissionsGuard>
               ,
@@ -74,7 +76,9 @@ const Router = ({ navBar, setNavBar }) => {
               path: '/:pageid/edit',
               element:
                 <AuthGuard>
-                  <RoleWithSpecialPermissionsGuard accessibleRoles={['admin', 'editor']} isForEdit={true}>
+                  <RoleWithSpecialPermissionsGuard
+                    defaultAccessibleRoles={['admin','editor']}
+                    onlyForEditors={true}>
                     <PageEdit />
                   </RoleWithSpecialPermissionsGuard>
                 </AuthGuard>,
