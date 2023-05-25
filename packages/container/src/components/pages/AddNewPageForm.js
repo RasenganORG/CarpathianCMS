@@ -103,6 +103,8 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
       setCreatePageButtonLoading(false);
       setNewPageModalIsOpened(false);
       navigate(`/${data.metadata.href}/edit`);
+
+      dispatch(pagesActions.setSelectedPage(res.id))
       dispatch(notificationActions.openNotification({
         message:'New page added successfully',
         description:'',

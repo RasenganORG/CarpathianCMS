@@ -24,8 +24,8 @@ export default function RoleWithSpecialPermissionsGuard({ defaultAccessibleRoles
 
   const [hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly] = useCheckPermissionAdvanced(defaultAccessibleRoles,onlyForEditors)
 
-  console.log("Role")
-  console.log(hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly, onlyForEditors);
+  //console.log("Role")
+  //console.log(hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly, onlyForEditors);
 
 
   if ((

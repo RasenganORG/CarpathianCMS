@@ -9,7 +9,7 @@ const pagesSlice = createSlice({
     navBar: {},
     wizard: {},
     hasPermissionToSettings: false,
-    selectedPage: {},
+    selectedPage: "",
     pageNeedsUpdate: false,
     refreshNavBar: 0,
     roles: [],
@@ -29,7 +29,9 @@ const pagesSlice = createSlice({
     setPages(state, action) {
       const pages = action.payload.pages;
       // console.log("Pages in redux", pages)
-      state.selectedPage = action.payload.selectedPage;
+      if(action.payload.selectedPage) {
+        state.selectedPage = action.payload.selectedPage;
+      }
       state.pagesList = pages;
       state.roles = [
         {
@@ -67,7 +69,12 @@ const pagesSlice = createSlice({
     },
 
     setSelectedPage(state, action) {
-      state.selectedPage = action.payload;
+      if(action.payload) {
+        state.selectedPage = action.payload;
+      }
+      else{
+        state.selectedPage = null
+      }
     },
 
     setPageNeedsUpdate(state) {

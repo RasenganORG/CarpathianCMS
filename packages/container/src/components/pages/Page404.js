@@ -9,7 +9,7 @@ const { Title, Text } = Typography;
 const Page404 = () => {
   return (
     <div style={{ minHeight: '100vh' }}>
-      <Row justify="center" align="middle" style={{ paddingTop: '15vh', paddingBottom: '10vh' }}>
+      <Row justify="center" align="middle" style={{ paddingTop: '7vh', paddingBottom: '5vh' }}>
         <Col xs={24} sm={18} md={12} lg={8}>
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
             <Title level={3}>Sorry, page not found!</Title>

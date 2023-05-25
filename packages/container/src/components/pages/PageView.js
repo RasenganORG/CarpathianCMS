@@ -6,6 +6,8 @@ import { pagesActions } from '../../redux/pagesSlice';
 import EmptyPage from './EmptyPage';
 import VisibleByRoleWithSpecialPermissionsGuard from '../guards/VisibleByRoleWithSpecialPermissionsGuard';
 import useAuth from '../hooks/use-auth';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '../../routes/paths';
 
 export default () => {
   const pages = useSelector(state => state.pages.pagesList);
@@ -14,6 +16,8 @@ export default () => {
   const [pageIsEmpty, setPageIsEmpty] = useState(currentPage?.data?.blocks.length === 0);
   const dispatch = useDispatch();
   const userId = useAuth().user.localId;
+  const navigate = useNavigate()
+
 
   // if there are no pages loaded, makes a request to try and download them again
   useEffect(() => {
@@ -24,7 +28,11 @@ export default () => {
 
   useEffect(() => {
     setPageIsEmpty(currentPage?.data?.blocks.length === 0);
-  }, [currentPage]);
+    if(selectedPage === null) {
+      //console.log("PageView 404")
+      navigate(PATHS['404']);
+    }
+  }, [currentPage,selectedPage]);
 
   return (
     <Row gutter={[20, 50]}>
@@ -53,7 +61,6 @@ export default () => {
           >
             <EmptyPage />
           </VisibleByRoleWithSpecialPermissionsGuard>
-
         </Col>}
     </Row>
   );

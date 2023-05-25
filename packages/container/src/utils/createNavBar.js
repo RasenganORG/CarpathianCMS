@@ -23,7 +23,6 @@ export const createNavBar = (navbarJson, dispatch, navigate, user) => {
 
 
 
-
     if (hasRolePermission === true || hasSpecialPermission === true) {
       navBarComp.push({
         key: page[0],

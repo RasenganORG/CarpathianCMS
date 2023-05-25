@@ -6,6 +6,7 @@ import useAuth from '../hooks/use-auth';
 
 const PageLayout = () => {
 
+
   return (
     <div>
       <VisibleByRoleWithSpecialPermissionsGuard

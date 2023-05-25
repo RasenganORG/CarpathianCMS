@@ -26,8 +26,8 @@ export default function VisibleByRoleWithSpecialPermissionsGuard({ defaultAccess
 
   const [hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly] = useCheckPermissionAdvanced(defaultAccessibleRoles,onlyForEditors)
 
-  console.log("Visible")
-  console.log(hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly);
+  //console.log("Visible")
+  //console.log(hasRolePermission, hasSpecialPermission, isPublicOrLinkOnly);
 
 
   if ((hasSpecialPermission || hasRolePermission) && is404 === false) {

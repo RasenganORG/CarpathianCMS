@@ -9,6 +9,8 @@ export const PATHS = {
   },
   settings: {
     root: '/settings',
-  }
+  },
+  404:'/404',
+  getStarted:'get-started'
 }
 

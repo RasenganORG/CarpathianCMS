@@ -12,6 +12,7 @@ import { createNavBar } from '../utils/createNavBar';
 import ContentManager from '../components/content/ContentManager';
 import RoleWithSpecialPermissionsGuard from '../components/guards/RoleWithSpecialPermissionsGuard';
 import Page404 from '../components/pages/Page404';
+import PageEmptySite from '../components/pages/PageEmptySite';
 
 
 const Loadable = (Component) => (props) => {
@@ -51,6 +52,20 @@ const Router = ({ navBar, setNavBar }) => {
           element: <Home />,
         },
         {
+          path: '404',
+          element: <Page404 />,
+        },
+        {
+          path: 'get-started',
+          element:
+            <AuthGuard>
+              <RoleBasedGuard
+                accessibleRoles={['admin']}>
+                <PageEmptySite />
+              </RoleBasedGuard>
+            </AuthGuard>,
+        },
+        {
           path: '',
           element: <PageLayout />,
           children: [
@@ -59,14 +74,10 @@ const Router = ({ navBar, setNavBar }) => {
               element: <Navigate to={'home'} />,
             },
             {
-              path: '404',
-              element: <Page404 />,
-            },
-            {
               path: '/:pageid',
               element:
                 <RoleWithSpecialPermissionsGuard
-                  defaultAccessibleRoles={['admin','editor','user']}
+                  defaultAccessibleRoles={['admin', 'editor', 'user']}
                   onlyForEditors={false}>
                   <PageView />
                 </RoleWithSpecialPermissionsGuard>
@@ -77,7 +88,7 @@ const Router = ({ navBar, setNavBar }) => {
               element:
                 <AuthGuard>
                   <RoleWithSpecialPermissionsGuard
-                    defaultAccessibleRoles={['admin','editor']}
+                    defaultAccessibleRoles={['admin', 'editor']}
                     onlyForEditors={true}>
                     <PageEdit />
                   </RoleWithSpecialPermissionsGuard>

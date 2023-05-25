@@ -51,7 +51,6 @@ const EditPageMetadata = () => {
   const onFinishForm = async () => {
     try {
       let data = await form.validateFields();
-      console.log(data)
 
       data = {
         metadata: {

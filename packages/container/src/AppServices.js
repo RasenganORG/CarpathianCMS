@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
 import { notificationActions } from './redux/notificationSlice';
+import { PATHS } from './routes/paths';
 
 
 const navBarBasicSettings = [
@@ -44,6 +45,28 @@ const AppServices = ({ children }) => {
   const pageNeedsUpdate = useSelector(state => state.pages.pageNeedsUpdate);
   const pages = useSelector(state => state.pages.pagesList);
   const refreshNavBar = useSelector(state => state.pages.refreshNavBar);
+  const selectedPage = useSelector(state => state.pages.selectedPage);
+  const [currentPage, setCurrentPage] = useState(window.location.pathname.split('/')[1]);
+
+
+  useEffect(() => {
+    if(pages.length > 0) {
+      const pageExists = pages.find(page => page.data.metadata.href === currentPage);
+      if(pageExists === undefined &&
+        !['settings', "account", 'auth', 'get-started'].includes(currentPage) &&
+        (selectedPage === null || selectedPage.length === 0)
+      ) {
+        //console.log("AppServices 404")
+        navigate(PATHS['404']);
+      }
+    }
+  },[currentPage,pages,selectedPage])
+
+  useEffect(() => {
+    if(navBar.length === 2 && !['auth'].includes(currentPage)){
+      navigate(PATHS.getStarted)
+    }
+  },[navBar])
 
 
   useEffect(() => {
@@ -72,15 +95,25 @@ const AppServices = ({ children }) => {
         const navbar = responseNavBar;
         const pages = responsePages;
 
-        dispatch(pagesActions.setNavBar(navbar));
-        const navBarLayout = await createNavBar(navbar, dispatch, navigate, user);
-        // console.log('CREATED NAVBAR1', navBarLayout)
-        navBarLayout.push(navBar);
-        if (hasPermission)
-          navBarLayout.push(...navBarBasicSettings);
-        setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
-        const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
-        dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }));
+        //console.log("navbar", navbar)
+        if(navbar.name !== "AxiosError") {
+          dispatch(pagesActions.setNavBar(navbar));
+          const navBarLayout = await createNavBar(navbar, dispatch, navigate, user);
+          //console.log('CREATED NAVBAR1', navBarLayout)
+          navBarLayout.push(navBar);
+          if (hasPermission)
+            navBarLayout.push(...navBarBasicSettings);
+          setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
+          const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
+          dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }));
+        }
+        else{
+          let navBarLayout = []
+          if (hasPermission)
+            navBarLayout.push(...navBarBasicSettings);
+          setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
+
+        }
       } catch (error) {
         console.log(error)
         if (error.message === 'ERR_NETWORK') {

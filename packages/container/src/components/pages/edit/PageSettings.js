@@ -73,7 +73,6 @@ const PageSettings = () => {
         };
       }
 
-      console.log('PageSettings final:', data);
 
       await updatePage({
         id: currentPage.id,
@@ -131,7 +130,7 @@ const PageSettings = () => {
           <Button
             onClick={() => setPermissionModalVisibility(true)}
             style={{ marginBottom: '2rem' }}>
-            Edit users permissions
+            Edit special permissions for users on this page
           </Button>
 
           <Modal
