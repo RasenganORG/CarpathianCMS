@@ -17,14 +17,16 @@ export default () => {
   const dispatch = useDispatch();
   const userId = useAuth().user.localId;
   const navigate = useNavigate()
+  const isPageListEmpty = useSelector(state => state.pages.isPageListEmpty)
+
 
 
   // if there are no pages loaded, makes a request to try and download them again
   useEffect(() => {
-    if (pages.length === 0) {
+    if (isPageListEmpty === false) {
       dispatch(pagesActions.refreshNavBar());
     }
-  }, [pages]);
+  }, [isPageListEmpty]);
 
   useEffect(() => {
     setPageIsEmpty(currentPage?.data?.blocks.length === 0);

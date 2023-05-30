@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Link } from 'react-router-dom';
 import React from 'react';
 
 const pagesSlice = createSlice({
@@ -13,6 +12,7 @@ const pagesSlice = createSlice({
     pageNeedsUpdate: false,
     refreshNavBar: 0,
     roles: [],
+    isPageListEmpty: null,
   },
   reducers: {
     createNewPage(state, action) {
@@ -24,6 +24,7 @@ const pagesSlice = createSlice({
           blocks: [],
         },
       });
+      state.isPageListEmpty = false
     },
 
     setPages(state, action) {
@@ -47,6 +48,8 @@ const pagesSlice = createSlice({
           label: 'User',
         },
       ];
+      state.isPageListEmpty = false
+
     },
 
     setHasPermissionToSettings(state, action) {
@@ -92,6 +95,10 @@ const pagesSlice = createSlice({
     setNavBar(state, action) {
       state.navBar = action.payload;
     },
+
+    setIsPagesListEmpty(state,action){
+      state.isPageListEmpty = action.payload
+    }
 
 
   },

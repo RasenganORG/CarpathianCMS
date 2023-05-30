@@ -90,7 +90,7 @@ const EditPageMetadata = () => {
   };
 
   const getPageByHref = (href) => {
-    return pages.find((page) => page.data.metadata.href === href);
+    return pages?.find((page) => page.data.metadata.href === href);
   };
 
   useEffect(() => {

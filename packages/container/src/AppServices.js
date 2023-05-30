@@ -4,11 +4,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { refreshToken } from './services/auth/AuthService';
 import { pagesActions } from './redux/pagesSlice';
 import { getNavBar, getPages, updatePage } from './services/pages/PagesService';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { DesktopOutlined } from '@ant-design/icons';
 import { createNavBar } from './utils/createNavBar';
 import { notificationActions } from './redux/notificationSlice';
 import { PATHS } from './routes/paths';
+import { useCurrentRole } from './components/guards/RoleBasedGuard';
 
 
 const navBarBasicSettings = [
@@ -46,27 +47,43 @@ const AppServices = ({ children }) => {
   const pages = useSelector(state => state.pages.pagesList);
   const refreshNavBar = useSelector(state => state.pages.refreshNavBar);
   const selectedPage = useSelector(state => state.pages.selectedPage);
-  const [currentPage, setCurrentPage] = useState(window.location.pathname.split('/')[1]);
+  const currentPage = useLocation().pathname.split('/')[1]
+  const role = useCurrentRole()
+  const isPageListEmpty = useSelector(state => state.pages.isPageListEmpty)
+
+
+  console.log("currentPage",currentPage)
+
+
 
 
   useEffect(() => {
-    if(pages.length > 0) {
+    console.log("isPageListEmpty",isPageListEmpty)
+    if(isPageListEmpty === false) {
       const pageExists = pages.find(page => page.data.metadata.href === currentPage);
+      console.log("pageExists",pageExists)
       if(pageExists === undefined &&
         !['settings', "account", 'auth', 'get-started'].includes(currentPage) &&
         (selectedPage === null || selectedPage.length === 0)
       ) {
-        //console.log("AppServices 404")
+        console.log("AppServices 404")
         navigate(PATHS['404']);
       }
     }
-  },[currentPage,pages,selectedPage])
+    if(isPageListEmpty === true){
+      if(role !== 'admin'){
+        if(!['auth','settings','account'].includes(currentPage)){
+          navigate(PATHS['404']);
+        }
+      }
+    }
+  },[currentPage,pages,selectedPage,isPageListEmpty,role])
 
   useEffect(() => {
-    if(navBar.length === 2 && !['auth'].includes(currentPage)){
+    if(navBar.length === 2 && !['auth','settings','account'].includes(currentPage)){
       navigate(PATHS.getStarted)
     }
-  },[navBar])
+  },[navBar,currentPage])
 
 
   useEffect(() => {
@@ -95,7 +112,7 @@ const AppServices = ({ children }) => {
         const navbar = responseNavBar;
         const pages = responsePages;
 
-        //console.log("navbar", navbar)
+        console.log("pages", pages)
         if(navbar.name !== "AxiosError") {
           dispatch(pagesActions.setNavBar(navbar));
           const navBarLayout = await createNavBar(navbar, dispatch, navigate, user);
@@ -105,14 +122,20 @@ const AppServices = ({ children }) => {
             navBarLayout.push(...navBarBasicSettings);
           setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
           const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
-          dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }));
+          console.log("pages",pages)
+          if(pages.length > 0) {
+            dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }));
+          }
+          else{
+            dispatch(pagesActions.setIsPagesListEmpty(true));
+          }
         }
         else{
           let navBarLayout = []
           if (hasPermission)
             navBarLayout.push(...navBarBasicSettings);
           setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
-
+          dispatch(pagesActions.setIsPagesListEmpty(true));
         }
       } catch (error) {
         console.log(error)
