@@ -52,21 +52,16 @@ const AppServices = ({ children }) => {
   const isPageListEmpty = useSelector(state => state.pages.isPageListEmpty)
 
 
-  console.log("currentPage",currentPage)
-
-
 
 
   useEffect(() => {
-    console.log("isPageListEmpty",isPageListEmpty)
     if(isPageListEmpty === false) {
       const pageExists = pages.find(page => page.data.metadata.href === currentPage);
-      console.log("pageExists",pageExists)
       if(pageExists === undefined &&
         !['settings', "account", 'auth', 'get-started'].includes(currentPage) &&
         (selectedPage === null || selectedPage.length === 0)
       ) {
-        console.log("AppServices 404")
+        //console.log("AppServices 404")
         navigate(PATHS['404']);
       }
     }
@@ -112,7 +107,6 @@ const AppServices = ({ children }) => {
         const navbar = responseNavBar;
         const pages = responsePages;
 
-        console.log("pages", pages)
         if(navbar.name !== "AxiosError") {
           dispatch(pagesActions.setNavBar(navbar));
           const navBarLayout = await createNavBar(navbar, dispatch, navigate, user);
@@ -122,7 +116,6 @@ const AppServices = ({ children }) => {
             navBarLayout.push(...navBarBasicSettings);
           setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
           const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
-          console.log("pages",pages)
           if(pages.length > 0) {
             dispatch(pagesActions.setPages({ pages: pages, selectedPage: currentPageId }));
           }

@@ -80,7 +80,6 @@ const Login = () => {
   const googleLogin = useGoogleLogin({
     flow: 'auth-code',
     onSuccess: async (codeResponse) => {
-      console.log(codeResponse);
       const response = await uploadGoogleAccount({
         code: codeResponse.code,
       });
