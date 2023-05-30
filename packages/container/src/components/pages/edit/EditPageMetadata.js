@@ -53,12 +53,19 @@ const EditPageMetadata = () => {
       let data = await form.validateFields();
 
       data = {
-        metadata: { ...data, visibility:currentPage.data.metadata.visibility },
+        metadata: {
+          ...data,
+          visibility:currentPage.data.metadata.visibility,
+          accessibleRoles:currentPage.data.metadata.accessibleRoles,
+          specialPermissions:currentPage.data.metadata.specialPermissions
+        },
         blocks: currentPage.data.blocks,
       };
       if (generateCustomHref === false || data.metadata.href === '') {
         data.metadata.href = slugify(data.metadata.title);
       }
+
+
 
       await updatePage({
         id: currentPage.id,
@@ -83,7 +90,7 @@ const EditPageMetadata = () => {
   };
 
   const getPageByHref = (href) => {
-    return pages.find((page) => page.data.metadata.href === href);
+    return pages?.find((page) => page.data.metadata.href === href);
   };
 
   useEffect(() => {
@@ -91,7 +98,7 @@ const EditPageMetadata = () => {
   }, [generateCustomHref, form]);
 
   useEffect(() => {
-    if (title && !generateCustomHref)
+    if (title && !generateCustomHref && generateCustomHref!== undefined)
       form.setFieldValue('href', slugify(title));
   }, [title, generateCustomHref]);
 
@@ -105,6 +112,7 @@ const EditPageMetadata = () => {
     form.setFieldValue('href', pageMetadata?.href);
     form.setFieldValue('parent', pageMetadata?.parent);
     form.setFieldValue('generateCustomHref', pageMetadata?.generateCustomHref ?? false);
+    setGenerateCustomHref(pageMetadata?.generateCustomHref)
   }, [pageMetadata]);
 
 
@@ -115,10 +123,6 @@ const EditPageMetadata = () => {
         <Form
           form={form}
           {...formItemLayout}
-          initialValues={{
-            parent: pathname,
-            generateCustomHref: false,
-          }}
           style={{
             width: '80',
           }}
@@ -167,6 +171,7 @@ const EditPageMetadata = () => {
               onChange={(val) => {
                 setGenerateCustomHref(val);
               }}
+              checked={generateCustomHref}
             />
           </Form.Item>
 

@@ -11,6 +11,7 @@ const userSlice = createSlice({
     role:`${localStorage.getItem('role') ? localStorage.getItem('role') : ''  }`,
     localId:`${localStorage.getItem('localId') ? localStorage.getItem('localId') : ''  }`,
     email:`${localStorage.getItem('email') ? localStorage.getItem('email') : ''  }`,
+    specialPermissions:`${localStorage.getItem('specialPermissions') ? localStorage.getItem('specialPermissions') : ''  }`,
   },
   reducers:{
     login(state, action) {
@@ -23,6 +24,7 @@ const userSlice = createSlice({
       state.lastName = authResponse.data.lastName
       state.role = authResponse.data.role
       state.localId = authResponse.localId
+      state.specialPermissions = authResponse.data.specialPermissions
       localStorage.setItem('email', authResponse.data.email);
       localStorage.setItem('idToken', authResponse.idToken);
       localStorage.setItem('refreshToken', authResponse.refreshToken);
@@ -30,6 +32,7 @@ const userSlice = createSlice({
       localStorage.setItem('lastName', authResponse.data.lastName);
       localStorage.setItem('role', authResponse.data.role);
       localStorage.setItem('localId', authResponse.localId);
+      localStorage.setItem('specialPermissions', authResponse.data.specialPermissions);
     },
     logout(state, action){
       state.isAuthenticated = false
@@ -40,6 +43,7 @@ const userSlice = createSlice({
       state.lastName = ''
       state.role = ''
       state.localId = ''
+      state.specialPermissions = { }
       localStorage.removeItem('email');
       localStorage.removeItem('idToken');
       localStorage.removeItem('refreshToken');
@@ -47,6 +51,7 @@ const userSlice = createSlice({
       localStorage.removeItem('lastName');
       localStorage.removeItem('role');
       localStorage.removeItem('localId');
+      localStorage.removeItem('specialPermissions');
     },
     refreshToken(state, action){
       state.idToken = action.payload.id_token

@@ -78,7 +78,7 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
       settingsArray.push(...navBarBasicSettings);
 
     }
-    dispatch(pagesActions.setHasPermissionToSettings(true))
+    dispatch(pagesActions.setHasPermissionToSettings(accessToSettings))       //todo
     setNavBarRightSettings(accountArray);
 
 
@@ -95,11 +95,16 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
     }
   }, [br, isMobile]);
 
-  useEffect(() => {
-    if(!['logout'].includes(selectedMenu?.key)) {
-      dispatch(pagesActions.setSelectedPage(selectedMenu?.key));
-    }
-  },[selectedMenu])
+
+  /// I don't know why this was here
+
+  // useEffect(() => {
+  //   console.log(selectedMenu)
+  //   if(selectedMenu?.key !== 'logout') {
+  //     console.log("HAHAHAHAHAHAHAHAHAHAH")
+  //     dispatch(pagesActions.setSelectedPage(selectedMenu?.key));
+  //   }
+  // },[selectedMenu])
 
 
 

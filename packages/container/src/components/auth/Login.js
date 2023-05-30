@@ -1,14 +1,17 @@
-import { Button, Card, Col, Form, Image, Input, Row, Space, Typography } from 'antd';
+import { Button,  Col, Form,  Input, Row,  Typography } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
-import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import userSlice, { userActions } from '../../redux/userSlice';
-import { login } from '../../services/auth/AuthService';
+import  { userActions } from '../../redux/userSlice';
+import { login, uploadGoogleAccount } from '../../services/auth/AuthService';
 import { PATHS } from '../../routes/paths';
 import { notificationActions } from '../../redux/notificationSlice';
 import { useForm } from 'antd/es/form/Form';
+import {  useGoogleLogin } from '@react-oauth/google';
+import useAuth from '../hooks/use-auth';
+
+
 
 const formItemLayout = {
   labelCol: {
@@ -23,10 +26,12 @@ const formItemLayout = {
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
-
+  const [googleIsLoading, googleSetIsLoading] = useState(false);
+  const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
-  const [form] = useForm()
+  const [form] = useForm();
   const navigate = useNavigate();
+
 
   async function onFinishForm(data) {
     try {
@@ -70,6 +75,22 @@ const Login = () => {
       setIsLoading(false);
     }
   }
+
+
+  const googleLogin = useGoogleLogin({
+    flow: 'auth-code',
+    onSuccess: async (codeResponse) => {
+      console.log(codeResponse);
+      const response = await uploadGoogleAccount({
+        code: codeResponse.code,
+      });
+
+      dispatch(userActions.login(response));
+      navigate(PATHS.home);
+
+    },
+    onError: errorResponse => console.log(errorResponse),
+  });
 
 
   return (
@@ -195,6 +216,36 @@ const Login = () => {
               </Button>
             </Form.Item>
           </Form>
+          <Row>
+            <Col span={12}>
+
+              <Button
+                block
+                icon={<img src='https://img.icons8.com/fluency/28/null/google-logo.png' style={{
+                  float: 'left',
+                  marginLeft: '10%',
+                }} />}
+                size='large'
+                onClick={() => googleLogin()}
+                style={{
+                  background: '#fff',
+                  border: 'none',
+                  boxShadow: '0px 4px 14px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '8px',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  color: '#707070',
+                  margin: '10px',
+                  padding: '7px',
+                  width: '20rem',
+                }}
+              >
+                Sign in with Google
+              </Button>
+
+
+            </Col>
+          </Row>
         </Col>
       </Row>
     </>
@@ -203,3 +254,4 @@ const Login = () => {
 };
 
 export default Login;
+

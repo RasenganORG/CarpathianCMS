@@ -4,6 +4,10 @@ import BlockViewManager from '../blocksView/BlockViewManager';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
 import EmptyPage from './EmptyPage';
+import VisibleByRoleWithSpecialPermissionsGuard from '../guards/VisibleByRoleWithSpecialPermissionsGuard';
+import useAuth from '../hooks/use-auth';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '../../routes/paths';
 
 export default () => {
   const pages = useSelector(state => state.pages.pagesList);
@@ -11,17 +15,26 @@ export default () => {
   const currentPage = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage));
   const [pageIsEmpty, setPageIsEmpty] = useState(currentPage?.data?.blocks.length === 0);
   const dispatch = useDispatch();
+  const userId = useAuth().user.localId;
+  const navigate = useNavigate()
+  const isPageListEmpty = useSelector(state => state.pages.isPageListEmpty)
+
+
 
   // if there are no pages loaded, makes a request to try and download them again
   useEffect(() => {
-    if (pages.length === 0) {
+    if (isPageListEmpty === false) {
       dispatch(pagesActions.refreshNavBar());
     }
-  }, [pages]);
+  }, [isPageListEmpty]);
 
   useEffect(() => {
     setPageIsEmpty(currentPage?.data?.blocks.length === 0);
-  }, [currentPage]);
+    if(selectedPage === null) {
+      //console.log("PageView 404")
+      navigate(PATHS['404']);
+    }
+  }, [currentPage,selectedPage]);
 
   return (
     <Row gutter={[20, 50]}>
@@ -40,9 +53,16 @@ export default () => {
       <Col offset={3} span={18}>
         <BlockViewManager />
       </Col>
+
       {pageIsEmpty &&
         <Col offset={3} span={18}>
-          <EmptyPage />
+          <VisibleByRoleWithSpecialPermissionsGuard
+            defaultAccessibleRoles={['admin', 'editor']}
+            userId={userId}
+            onlyForEditors={true}
+          >
+            <EmptyPage />
+          </VisibleByRoleWithSpecialPermissionsGuard>
         </Col>}
     </Row>
   );

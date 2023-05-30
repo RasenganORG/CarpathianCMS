@@ -37,6 +37,7 @@ const BlocksManager = () => {
     const blocks = useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks);
     const [blocksAreLoading, setBlocksAreLoading] = useState(true);
     const [fields, setFields] = useState(blocks ? setFieldValuesFromBlocks(blocks) : []);
+
     const [editBlockModalVisible, setEditBlockModalVisible] = useState(false);
     const [selectedBlock, setSelectedBlock] = useState();
     const [formIsUpdated, setFormIsUpdated] = useState(0);

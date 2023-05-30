@@ -10,6 +10,9 @@ import { useSelector } from 'react-redux';
 import { getNavBar } from '../services/pages/PagesService';
 import { createNavBar } from '../utils/createNavBar';
 import ContentManager from '../components/content/ContentManager';
+import RoleWithSpecialPermissionsGuard from '../components/guards/RoleWithSpecialPermissionsGuard';
+import Page404 from '../components/pages/Page404';
+import PageEmptySite from '../components/pages/PageEmptySite';
 
 
 const Loadable = (Component) => (props) => {
@@ -49,6 +52,20 @@ const Router = ({ navBar, setNavBar }) => {
           element: <Home />,
         },
         {
+          path: '404',
+          element: <Page404 />,
+        },
+        {
+          path: 'get-started',
+          element:
+            <AuthGuard>
+              <RoleBasedGuard
+                accessibleRoles={['admin']}>
+                <PageEmptySite />
+              </RoleBasedGuard>
+            </AuthGuard>,
+        },
+        {
           path: '',
           element: <PageLayout />,
           children: [
@@ -58,15 +75,23 @@ const Router = ({ navBar, setNavBar }) => {
             },
             {
               path: '/:pageid',
-              element: <PageView />,
+              element:
+                <RoleWithSpecialPermissionsGuard
+                  defaultAccessibleRoles={['admin', 'editor', 'user']}
+                  onlyForEditors={false}>
+                  <PageView />
+                </RoleWithSpecialPermissionsGuard>
+              ,
             },
             {
               path: '/:pageid/edit',
               element:
                 <AuthGuard>
-                  <RoleBasedGuard accessibleRoles={['admin']}>
+                  <RoleWithSpecialPermissionsGuard
+                    defaultAccessibleRoles={['admin', 'editor']}
+                    onlyForEditors={true}>
                     <PageEdit />
-                  </RoleBasedGuard>
+                  </RoleWithSpecialPermissionsGuard>
                 </AuthGuard>,
             },
             {
