@@ -48,9 +48,25 @@ export default function BlockInitialForm({ form }) {
       block.metadata.type = form.getFieldValue('type');
       block.metadata.place = numberOfBlocks + 1
       block.id = form.getFieldValue('id');
-      block.data = {
-        text:'',
-        borderIsVisible: true
+      if(block.metadata.type === 'paragraph') {
+        block.data = {
+          text: '',
+          borderIsVisible: true,
+        };
+      }
+      if(block.metadata.type === 'image') {
+        block.data = {
+          alt: '',
+          src:'',
+          filename:'',
+          enablePreview: false,
+        };
+      }
+      if(block.metadata.type === 'list') {
+        block.data = {
+          listData:[],
+          borderIsVisible: true,
+        };
       }
       dispatch(pagesActions.addBlockToPage({
         block: block,

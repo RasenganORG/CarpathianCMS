@@ -109,3 +109,28 @@ export const deletePage = async (pageId) => {
  }
 }
 
+export const uploadImage = async (pageId,data) => {
+  try {
+    const siteId = 123
+    let form = new FormData();
+    console.log("data",data)
+    form.append("filename", data);
+
+    const config = {
+      url: "http://localhost:5000/pages/addImage/123/123",
+      method: "POST",
+      timeout: 0,
+      processData: false,
+      mimeType: "multipart/form-data",
+      contentType: false,
+      content: form
+    };
+
+   const res = await asyncCallWithTimeout(axios(config), 5000)
+
+    return res.data
+  } catch (error) {
+    return error
+  }
+}
+

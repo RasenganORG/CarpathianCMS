@@ -1,9 +1,6 @@
 import { Button, Form } from 'antd';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import Paragraph from '../widgetsLocally/Paragraph/Paragraph';
-import BlockFrame from './editBlock/BlockFrame';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DraggableList from '../draggable-list/DraggableList';
 import { useSelector } from 'react-redux';
 

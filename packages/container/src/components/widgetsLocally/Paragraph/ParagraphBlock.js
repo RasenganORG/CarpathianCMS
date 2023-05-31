@@ -6,13 +6,13 @@ import { Link } from 'react-router-dom';
 import rehypeRaw from "rehype-raw";
 
 
-Paragraph.requiredProps = {
+ParagraphBlock.requiredProps = {
   content: PropTypes.string,
   isEdit: PropTypes.bool,
   id: PropTypes.string,
 };
 
-export default function Paragraph({ content, isEdit, id }) {
+export default function ParagraphBlock({ content, isEdit, id }) {
   return (
     <div
       style={{

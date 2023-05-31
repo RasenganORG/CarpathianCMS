@@ -1,8 +1,10 @@
 import React, { Component, useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import BlockFrame from '../blocks/editBlock/BlockFrame';
-import Paragraph from '../widgetsLocally/Paragraph/Paragraph';
+import ParagraphBlock from '../widgetsLocally/Paragraph/ParagraphBlock';
 import PropTypes from 'prop-types';
+import ImageBlock from '../widgetsLocally/Image/ImageBlock';
+import ListBlock from '../widgetsLocally/List/ListBlock';
 
 
 // reorders items
@@ -103,7 +105,19 @@ export default function DraggableList({ startEditBlock, onDeleteBlock, fields, u
                       onClickDelete={onDeleteBlock}
                     >
                       {field.value.metadata.type === 'paragraph' ?
-                        <Paragraph
+                        <ParagraphBlock
+                          content={field.value.data}
+                          isEdit={true}
+                          key={field.name[0]}
+                          id={field.name[0]} /> : null}
+                      {field.value.metadata.type === 'image' ?
+                        <ImageBlock
+                          content={field.value.data}
+                          isEdit={true}
+                          key={field.name[0]}
+                          id={field.name[0]} /> : null}
+                      {field.value.metadata.type === 'list' ?
+                        <ListBlock
                           content={field.value.data}
                           isEdit={true}
                           key={field.name[0]}

@@ -4,6 +4,8 @@ import TextArea from 'antd/es/input/TextArea';
 import TextEditor from '../../editor/TextEditor';
 import React, { useState } from 'react';
 import EditParagraph from '../../widgetsLocally/Paragraph/EditParagraph';
+import EditImage from '../../widgetsLocally/Image/EditImage';
+import EditList from '../../widgetsLocally/List/EditList';
 
 const formItemLayout = {
   labelCol: {
@@ -29,6 +31,7 @@ const formSwitchLayout = {
 
 export default function EditBlockForm({ block, blockForm, onFinishForm }) {
   const [titleDisplayed, setTitleDisplayed] = useState(true);
+  console.log("form",blockForm.getFieldValue('data'))
 
 
   return (
@@ -134,6 +137,16 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
         >
           {block.metadata.type === 'paragraph' &&
             <EditParagraph
+              value={blockForm.getFieldValue('data')}
+              onChange={(data) => blockForm.setFieldValue('data', data)}
+            />}
+          {block.metadata.type === 'image' &&
+            <EditImage
+              value={blockForm.getFieldValue('data')}
+              onChange={(data) => blockForm.setFieldValue('data', data)}
+            />}
+          {block.metadata.type === 'list' &&
+            <EditList
               value={blockForm.getFieldValue('data')}
               onChange={(data) => blockForm.setFieldValue('data', data)}
             />}
