@@ -44,7 +44,7 @@ DraggableList.propTypes = {
   updateBlocksPlaces: PropTypes.func,
 };
 
-export default function DraggableList({ startEditBlock, onDeleteBlock, fields, updateBlocksPlaces }) {
+export default function DraggableList({ startEditBlock, onDeleteBlock, fields, updateBlocksPlaces, onFormFinish }) {
   const [items, setItems] = useState(fields);
 
   useEffect(() => {

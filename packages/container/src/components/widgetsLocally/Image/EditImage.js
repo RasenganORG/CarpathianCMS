@@ -6,8 +6,8 @@ import DragAndDropImage from '../../upload/DragAndDropImage';
 export default function EditImage({ value, onChange }) {
   const src = value.src;
 
-  const onChangeImage = (src, filename) => {
-    onChange({ ...value, src: src, filename:filename });
+  const onChangeImage = (src, originalFilename,newFilename) => {
+    onChange({ ...value, src: src, originalFilename:originalFilename, newFilename:newFilename });
   };
 
   const onChangeSwitch = (val) => {
@@ -19,7 +19,11 @@ export default function EditImage({ value, onChange }) {
       direction={'vertical'}
       size={18}
     >
-      <DragAndDropImage onChangeImage={onChangeImage} defaultSrc={src} filename={value.filename}/>
+      <DragAndDropImage
+        onChangeImage={onChangeImage}
+        defaultSrc={src}
+        originalFilename={value.originalFilename}
+        newFilename={value.newFilename}/>
       <Switch
         defaultChecked={value.enablePreview}
         onChange={onChangeSwitch}

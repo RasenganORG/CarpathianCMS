@@ -58,7 +58,8 @@ export default function BlockInitialForm({ form }) {
         block.data = {
           alt: '',
           src:'',
-          filename:'',
+          originalFilename:'',
+          newFilename:'',
           enablePreview: false,
         };
       }

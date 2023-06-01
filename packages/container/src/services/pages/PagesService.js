@@ -134,3 +134,42 @@ export const uploadImage = async (pageId,data) => {
   }
 }
 
+export const deleteImage = async (pageId,imageName) => {
+  try {
+    const siteId = 123
+
+    const config = {
+      url: `http://localhost:5000/pages/deleteImage/123/${pageId}/${imageName}`,
+      method: "DELETE",
+      timeout: 0,
+    };
+
+    const res = await asyncCallWithTimeout(axios(config), 5000)
+
+    return res.data
+  } catch (error) {
+    return error
+  }
+}
+
+export const getImagesByPage = async (pageId) => {
+  try {
+    const siteId = 123
+    console.log(`http://localhost:5000/pages/getImagesByPage/${siteId}/${pageId}`)
+
+    const config = {
+      url: `http://localhost:5000/pages/getImagesByPage/${siteId}/${pageId}`,
+      method: "GET",
+      timeout: 0,
+    };
+
+    const res = await asyncCallWithTimeout(axios(config), 5000)
+
+    console.log(res)
+
+    return res.data
+  } catch (error) {
+    return error
+  }
+}
+
