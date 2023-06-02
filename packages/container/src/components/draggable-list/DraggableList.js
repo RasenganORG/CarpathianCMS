@@ -5,6 +5,7 @@ import ParagraphBlock from '../widgetsLocally/Paragraph/ParagraphBlock';
 import PropTypes from 'prop-types';
 import ImageBlock from '../widgetsLocally/Image/ImageBlock';
 import ListBlock from '../widgetsLocally/List/ListBlock';
+import ImagesBlock from '../widgetsLocally/Images/ImagesBlock';
 
 
 // reorders items
@@ -118,6 +119,12 @@ export default function DraggableList({ startEditBlock, onDeleteBlock, fields, u
                           id={field.name[0]} /> : null}
                       {field.value.metadata.type === 'list' ?
                         <ListBlock
+                          content={field.value.data}
+                          isEdit={true}
+                          key={field.name[0]}
+                          id={field.name[0]} /> : null}
+                      {field.value.metadata.type === 'images' ?
+                        <ImagesBlock
                           content={field.value.data}
                           isEdit={true}
                           key={field.name[0]}

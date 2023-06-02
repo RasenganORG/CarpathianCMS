@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import EditParagraph from '../../widgetsLocally/Paragraph/EditParagraph';
 import EditImage from '../../widgetsLocally/Image/EditImage';
 import EditList from '../../widgetsLocally/List/EditList';
+import EditImages from '../../widgetsLocally/Images/EditImages';
 
 const formItemLayout = {
   labelCol: {
@@ -148,6 +149,11 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
                 />}
               {block.metadata.type === 'list' &&
                 <EditList
+                  value={blockForm.getFieldValue('data')}
+                  onChange={(data) => blockForm.setFieldValue('data', data)}
+                />}
+              {block.metadata.type === 'images' &&
+                <EditImages
                   value={blockForm.getFieldValue('data')}
                   onChange={(data) => blockForm.setFieldValue('data', data)}
                 />}

@@ -1,12 +1,17 @@
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Typography, Upload } from 'antd';
 import { useEffect, useState } from 'react';
-import React from 'react'
+import React from 'react';
 import Dragger from 'antd/es/upload/Dragger';
 import { useSelector } from 'react-redux';
-import classes from './DragAndDropImage.module.css'
+import classes from './DragAndDropImage.module.css';
 import { deleteImage } from '../../services/pages/PagesService';
-const DragAndDropImage = ({onChangeImage,defaultSrc,originalFilename,newFilename}) => {
+
+const DragAndDropImage = ({
+                            onChangeImage,
+                            defaultFilelist,
+                            multiple,
+                          }) => {
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
   const selectedPage = useSelector(state => state.pages.selectedPage);
@@ -14,99 +19,186 @@ const DragAndDropImage = ({onChangeImage,defaultSrc,originalFilename,newFilename
   const [imageToBeDeleted, setImageToBeDeleted] = useState({});
 
 
-  console.log("fileList", fileList)
+  console.log('fileList', fileList);
 
   useEffect(() => {
-    if(defaultSrc){
-      console.log(defaultSrc)
-      setFileList([{
-        uid:1,
-        status:'success',
-        url:defaultSrc,
-        name:originalFilename,
-        newFilename:newFilename,
-        thumbUrl:defaultSrc,
-      }])
+    if (defaultFilelist.length > 0) {
+      console.log('defaultFilelist', defaultFilelist);
+      if (multiple === false) {
+        if (defaultFilelist[0].src) {
+          setFileList([{
+            uid: defaultFilelist[0].newFilename,
+            status: 'success',
+            url: defaultFilelist[0].src,
+            name: defaultFilelist[0].originalFilename,
+            newFilename: defaultFilelist[0].newFilename,
+            thumbUrl: defaultFilelist[0].src,
+          }]);
+        }
+      } else {
+        const arr = [];
+        for (let img of defaultFilelist) {
+          console.log(img);
+          arr.push({
+              uid: img.newFilename,
+              status: 'success',
+              url: img.src,
+              name: img.originalFilename,
+              newFilename: img.newFilename,
+              thumbUrl: img.src,
+            },
+          );
+        }
+        setFileList(arr);
+      }
     }
-  },[])
+  }, [defaultFilelist]);
 
 
-
-  const handleUpload = () => {
-    const formData = new FormData();
-    fileList.forEach((file) => {
-      formData.append('filename', file.file);
-    });
-    setUploading(true);
+  const handleUpload = async (formData) => {
     // You can use any AJAX library you like
-    fetch(`http://localhost:5000/pages/addImage/123/${selectedPage}`, {
+    const res = await fetch(`http://localhost:5000/pages/addImage/123/${selectedPage}`, {
       method: 'POST',
       body: formData,
     })
       .then((res) => res.json())
-      .then((res) => {
-        message.success('upload successfully.');
-
-        setFileList([{
-          uid:1,
-          status:'success',
-          url:res.imageUrl,
-          name:res.originalFilename,
-          newFilename:res.newFilename,
-          thumbUrl:res.imageUrl,
-        }])
-
-        onChangeImage(res.imageUrl, res.originalFilename, res.newFilename)
-
-      })
       .catch(() => {
         message.error('upload failed.');
       })
-      .finally(() => {
-        setUploading(false);
-      });
+
+    message.success('upload successfully.');
+
+    if (multiple === false) {
+      setFileList([{
+        uid: 1,
+        status: 'success',
+        url: res.imageUrl,
+        name: res.originalFilename,
+        newFilename: res.newFilename,
+        thumbUrl: res.imageUrl,
+      }]);
+
+      onChangeImage(res.imageUrl, res.originalFilename, res.newFilename);
+    } else {
+
+      const newImg = {
+        src: res.imageUrl,
+        originalFilename: res.originalFilename,
+        newFilename: res.newFilename,
+      };
+      return newImg
+    }
+
   };
 
   const deleteSelectedImage = async () => {
-
-    const res = await deleteImage(selectedPage, imageToBeDeleted.newFilename)
+    const res = await deleteImage(selectedPage, imageToBeDeleted.newFilename);
     if (res.type === 'success') {
       message.success('image deleted successfully.');
-      removeFromBLock()
+      removeFromBlock();
     } else {
       message.error('image deletion failed.');
-      setImageToBeDeleted({})
+      setImageToBeDeleted({});
     }
-  }
+  };
 
-  const removeFromBLock = () => {
-    onChangeImage('', '', '')
-    setImageToBeDeleted({})
-    setFileList([])
-    setModalDisplayed(false)
-  }
+  const removeFromBlock = () => {
+    if (multiple === false) {
+      onChangeImage('', '', '');
+      setFileList([]);
+    } else {
+      setFileList((prevState) => {
+        const newState = prevState.filter(img => img.newFilename !== imageToBeDeleted.newFilename);
+
+        return newState;
+      });
+    }
+    setImageToBeDeleted({});
+    setModalDisplayed(false);
+  };
 
 
   const props = {
     onRemove: (file) => {
       const index = fileList.indexOf(file);
-      console.log("file to be deleted", fileList[index])
+      console.log('file to be deleted', fileList[index]);
 
-      setModalDisplayed(true)
-      setImageToBeDeleted(fileList[index])
+      setModalDisplayed(true);
+      setImageToBeDeleted(fileList[index]);
     },
     beforeUpload: (file) => {
-      console.log("file to be uploaded", file)
-      setFileList([{
-        uid:1,
-        status:'done',
-        file:file,
-        name:file.name,
-        thumbUrl:'',
-      }]);
+      console.log('single file to be uploaded', file);
+      console.log(multiple);
+      if (multiple === false) {
+        setFileList([{
+          uid: file.uid,
+          status: 'done',
+          file: file,
+          name: file.name,
+          thumbUrl: '',
+        }]);
+      } else {
+        setFileList((prevState) => {
+            console.log('beforeUpload', prevState);
+            return [...prevState, {
+              uid: file.uid,
+              status: 'done',
+              file: file,
+              name: file.name,
+              thumbUrl: '',
+            }];
+          },
+        );
+      }
       return false;
     },
     fileList,
+  };
+
+  const onStartUploadButtonClicked = async () => {
+    if (multiple === true) {
+      // todo check to upload only new images
+      setUploading(true);
+      const imagesForForm = []
+      let filteredList = []
+      for(let img of fileList){
+        if(img.status === 'success') {
+          filteredList.push(img);
+        }
+      }
+
+      for (const file of fileList) {
+        if (!defaultFilelist.find(img => img.originalFilename === file.name)) {
+          const formData = new FormData();
+          console.log('is going to be uploaded', file);
+          formData.append('filename', file.file);
+          const newImg = await handleUpload(formData);
+
+          filteredList.push({
+                uid: newImg.newFilename,
+                status: 'success',
+                url: newImg.src,
+                name: newImg.originalFilename,
+                newFilename: newImg.newFilename,
+                thumbUrl: newImg.src,
+              });
+          imagesForForm.push(newImg)
+        }
+      }
+
+      setFileList(filteredList)
+      console.log("imagesForForm",imagesForForm)
+      onChangeImage(imagesForForm)
+      setUploading(false);
+    } else {
+      const formData = new FormData();
+      fileList.forEach((file) => {
+        formData.append('filename', file.file);
+      });
+      setUploading(true);
+      await handleUpload(formData);
+      setUploading(false);
+    }
   };
 
 
@@ -115,14 +207,14 @@ const DragAndDropImage = ({onChangeImage,defaultSrc,originalFilename,newFilename
       <Dragger
         {...props}
         defaultFileList={[...fileList]}
-        listType="picture"
+        listType='picture'
         className={classes.uploadListInline}
       >
         <p>Click or drop images</p>
       </Dragger>
       <Button
-        type="primary"
-        onClick={handleUpload}
+        type='primary'
+        onClick={onStartUploadButtonClicked}
         disabled={fileList.length === 0}
         loading={uploading}
         style={{

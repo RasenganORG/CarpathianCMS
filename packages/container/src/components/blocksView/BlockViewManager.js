@@ -7,6 +7,7 @@ import BlockViewFrame from './BlockViewFrame';
 import { Spin } from 'antd';
 import ImageBlock from '../widgetsLocally/Image/ImageBlock';
 import ListBlock from '../widgetsLocally/List/ListBlock';
+import ImagesBlock from '../widgetsLocally/Images/ImagesBlock';
 
 const BlockViewManager = () => {
 
@@ -52,6 +53,12 @@ const BlockViewManager = () => {
                       id={field.id} /> : null}
                   {field.metadata.type === 'list' ?
                     <ListBlock
+                      content={field.data}
+                      isEdit={false}
+                      key={field.id}
+                      id={field.id} /> : null}
+                  {field.metadata.type === 'images' ?
+                    <ImagesBlock
                       content={field.data}
                       isEdit={false}
                       key={field.id}

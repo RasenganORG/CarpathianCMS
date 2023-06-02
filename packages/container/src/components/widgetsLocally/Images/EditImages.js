@@ -3,11 +3,22 @@ import React, { useEffect, useState } from 'react';
 import { Space, Switch } from 'antd';
 import DragAndDropImage from '../../upload/DragAndDropImage';
 
-export default function EditImage({ value, onChange }) {
-  const [file, setFile] = useState([])
+export default function EditImages({ value, onChange }) {
+  const [defaultFilelist, setDefaultFilelist] = useState([])
 
-  const onChangeImage = (src, originalFilename,newFilename) => {
-    onChange({ ...value, src: src, originalFilename:originalFilename, newFilename:newFilename });
+  const onChangeImage = (list) => {
+    let newListImages = [];
+    for (let file of value.listImages) {
+      newListImages.push(file);
+    }
+
+    for(let img of list) {
+      const newImg = { src: img.src, originalFilename: img.originalFilename, newFilename: img.newFilename };
+      newListImages.push(newImg);
+      console.log('newObj', { ...value, listImages: newListImages });
+    }
+
+    onChange({ ...value, listImages: newListImages });
   };
 
   const onChangeSwitch = (val) => {
@@ -15,14 +26,8 @@ export default function EditImage({ value, onChange }) {
   }
 
   useEffect(() => {
-    setFile([{
-      src:value.src,
-      originalFilename:value.originalFilename,
-      newFilename:value.newFilename,
-    }])
+    setDefaultFilelist(value.listImages)
   },[value])
-
-  console.log("file", file)
 
   return (
     <Space
@@ -31,8 +36,8 @@ export default function EditImage({ value, onChange }) {
     >
       <DragAndDropImage
         onChangeImage={onChangeImage}
-        defaultFilelist={file}
-        multiple={false}
+        defaultFilelist={defaultFilelist}
+        multiple={true}
       />
       <Switch
         defaultChecked={value.enablePreview}

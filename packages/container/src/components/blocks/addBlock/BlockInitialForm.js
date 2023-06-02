@@ -69,6 +69,12 @@ export default function BlockInitialForm({ form }) {
           borderIsVisible: true,
         };
       }
+      if(block.metadata.type === 'images') {
+        block.data = {
+          listImages:[],
+          borderIsVisible: false,
+        };
+      }
       dispatch(pagesActions.addBlockToPage({
         block: block,
         pageId: selectedPage,
