@@ -8,7 +8,8 @@ import classes from './DragAndDropImage.module.css';
 import { deleteImage } from '../../services/pages/PagesService';
 
 const DragAndDropImage = ({
-                            onChangeImage,
+                            onAdd,
+                            onRemove,
                             defaultFilelist,
                             multiple,
                           }) => {
@@ -19,11 +20,10 @@ const DragAndDropImage = ({
   const [imageToBeDeleted, setImageToBeDeleted] = useState({});
 
 
-  console.log('fileList', fileList);
+
 
   useEffect(() => {
     if (defaultFilelist.length > 0) {
-      console.log('defaultFilelist', defaultFilelist);
       if (multiple === false) {
         if (defaultFilelist[0].src) {
           setFileList([{
@@ -38,7 +38,6 @@ const DragAndDropImage = ({
       } else {
         const arr = [];
         for (let img of defaultFilelist) {
-          console.log(img);
           arr.push({
               uid: img.newFilename,
               status: 'success',
@@ -64,7 +63,7 @@ const DragAndDropImage = ({
       .then((res) => res.json())
       .catch(() => {
         message.error('upload failed.');
-      })
+      });
 
     message.success('upload successfully.');
 
@@ -78,7 +77,7 @@ const DragAndDropImage = ({
         thumbUrl: res.imageUrl,
       }]);
 
-      onChangeImage(res.imageUrl, res.originalFilename, res.newFilename);
+      onAdd(res.imageUrl, res.originalFilename, res.newFilename);
     } else {
 
       const newImg = {
@@ -86,32 +85,48 @@ const DragAndDropImage = ({
         originalFilename: res.originalFilename,
         newFilename: res.newFilename,
       };
-      return newImg
+      return newImg;
     }
 
   };
 
   const deleteSelectedImage = async () => {
-    const res = await deleteImage(selectedPage, imageToBeDeleted.newFilename);
-    if (res.type === 'success') {
-      message.success('image deleted successfully.');
+    if(imageToBeDeleted.thumbUrl.length > 0) {
+      const res = await deleteImage(selectedPage, imageToBeDeleted.newFilename);
+      if (res.type === 'success') {
+        message.success('image deleted successfully.');
+        removeFromBlock();
+      } else {
+        message.error('image deletion failed.');
+        setImageToBeDeleted({});
+      }
+    }
+    else{
       removeFromBlock();
-    } else {
-      message.error('image deletion failed.');
-      setImageToBeDeleted({});
     }
   };
 
   const removeFromBlock = () => {
     if (multiple === false) {
-      onChangeImage('', '', '');
+      onAdd('', '', '');
       setFileList([]);
     } else {
-      setFileList((prevState) => {
-        const newState = prevState.filter(img => img.newFilename !== imageToBeDeleted.newFilename);
 
+      setFileList((prevState) => {
+        const newState = prevState.filter(img =>  img.status !== 'removed');
         return newState;
       });
+      let filteredList = [];
+      for (let img of fileList) {
+        if (img.newFilename !== imageToBeDeleted.newFilename) {
+          filteredList.push({
+            src: img.url,
+            originalFilename: img.name,
+            newFilename: img.newFilename,
+          });
+        }
+      }
+      onRemove(filteredList);
     }
     setImageToBeDeleted({});
     setModalDisplayed(false);
@@ -121,28 +136,24 @@ const DragAndDropImage = ({
   const props = {
     onRemove: (file) => {
       const index = fileList.indexOf(file);
-      console.log('file to be deleted', fileList[index]);
 
       setModalDisplayed(true);
       setImageToBeDeleted(fileList[index]);
     },
     beforeUpload: (file) => {
-      console.log('single file to be uploaded', file);
-      console.log(multiple);
       if (multiple === false) {
         setFileList([{
           uid: file.uid,
-          status: 'done',
+          status: 'new',
           file: file,
           name: file.name,
           thumbUrl: '',
         }]);
       } else {
         setFileList((prevState) => {
-            console.log('beforeUpload', prevState);
             return [...prevState, {
               uid: file.uid,
-              status: 'done',
+              status: 'new',
               file: file,
               name: file.name,
               thumbUrl: '',
@@ -159,36 +170,34 @@ const DragAndDropImage = ({
     if (multiple === true) {
       // todo check to upload only new images
       setUploading(true);
-      const imagesForForm = []
-      let filteredList = []
-      for(let img of fileList){
-        if(img.status === 'success') {
+      const imagesForForm = [];
+      let filteredList = [];
+      for (let img of fileList) {
+        if (img.status === 'success') {
           filteredList.push(img);
         }
       }
 
       for (const file of fileList) {
-        if (!defaultFilelist.find(img => img.originalFilename === file.name)) {
+        if (file.status === 'new') {
           const formData = new FormData();
-          console.log('is going to be uploaded', file);
           formData.append('filename', file.file);
           const newImg = await handleUpload(formData);
 
           filteredList.push({
-                uid: newImg.newFilename,
-                status: 'success',
-                url: newImg.src,
-                name: newImg.originalFilename,
-                newFilename: newImg.newFilename,
-                thumbUrl: newImg.src,
-              });
-          imagesForForm.push(newImg)
+            uid: newImg.newFilename,
+            status: 'success',
+            url: newImg.src,
+            name: newImg.originalFilename,
+            newFilename: newImg.newFilename,
+            thumbUrl: newImg.src,
+          });
+          imagesForForm.push(newImg);
         }
       }
 
-      setFileList(filteredList)
-      console.log("imagesForForm",imagesForForm)
-      onChangeImage(imagesForForm)
+      setFileList(filteredList);
+      onAdd(imagesForForm);
       setUploading(false);
     } else {
       const formData = new FormData();
@@ -226,10 +235,27 @@ const DragAndDropImage = ({
       <Modal
         visible={modalDisplayed}
         title={''}
-        onOk={() => deleteSelectedImage()}
-        onCancel={() => removeFromBLock()}
+        onCancel={() => {
+          setModalDisplayed(false);
+          setImageToBeDeleted({})
+        }}
         cancelText={'Keep in Contents'}
-        okText={'Permanently Delete'}
+        okText={''}
+        footer={[
+          <Button
+            onClick={removeFromBlock}
+            key={'keep'}
+          >
+            Keep in Contents
+          </Button>,
+          <Button
+            key={'delete'}
+            onClick={deleteSelectedImage}
+            type={'primary'}
+          >
+            Permanently Delete
+          </Button>
+        ]}
       >
         <Typography.Title level={5}>
           Do you want to permanently remove this image or would you like to keep it in the contents folder.

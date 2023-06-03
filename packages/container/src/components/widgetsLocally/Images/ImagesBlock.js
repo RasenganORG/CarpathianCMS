@@ -3,7 +3,6 @@ import { Image } from 'antd';
 
 
 export default function ImagesBlock({ content, isEdit, id }) {
-  console.log(content);
   return (
     <div
       style={{
@@ -18,6 +17,7 @@ export default function ImagesBlock({ content, isEdit, id }) {
         {content.listImages.length > 0 ?
           content.listImages.map((img) => {
             return <Image
+              key={img.src}
               width={200}
               height={200}
               src={img.src}

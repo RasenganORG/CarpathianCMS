@@ -113,7 +113,6 @@ export const uploadImage = async (pageId,data) => {
   try {
     const siteId = 123
     let form = new FormData();
-    console.log("data",data)
     form.append("filename", data);
 
     const config = {
@@ -155,7 +154,6 @@ export const deleteImage = async (pageId,imageName) => {
 export const getImagesByPage = async (pageId) => {
   try {
     const siteId = 123
-    console.log(`http://localhost:5000/pages/getImagesByPage/${siteId}/${pageId}`)
 
     const config = {
       url: `http://localhost:5000/pages/getImagesByPage/${siteId}/${pageId}`,
@@ -164,8 +162,6 @@ export const getImagesByPage = async (pageId) => {
     };
 
     const res = await asyncCallWithTimeout(axios(config), 5000)
-
-    console.log(res)
 
     return res.data
   } catch (error) {

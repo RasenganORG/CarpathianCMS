@@ -3,7 +3,6 @@ import { Avatar, List } from 'antd';
 
 
 export default function ListBlock({ content, isEdit, id }) {
-  console.log("content", content)
   return (
     <div>
       <List

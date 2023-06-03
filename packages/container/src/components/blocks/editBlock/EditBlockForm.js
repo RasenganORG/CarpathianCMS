@@ -32,7 +32,6 @@ const formSwitchLayout = {
 
 export default function EditBlockForm({ block, blockForm, onFinishForm }) {
   const [titleDisplayed, setTitleDisplayed] = useState(true);
-  console.log('form', blockForm.getFieldValue('data'));
 
 
   return (
@@ -40,7 +39,9 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
       <Form
         form={blockForm}
         {...formItemLayout}
-        onFinish={onFinishForm}
+        onFinish={(data) => {
+          onFinishForm(data);
+        }}
         style={{
           width: '100%',
         }}
@@ -155,7 +156,7 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
               {block.metadata.type === 'images' &&
                 <EditImages
                   value={blockForm.getFieldValue('data')}
-                  onChange={(data) => blockForm.setFieldValue('data', data)}
+                  onChange={(data) =>blockForm.setFieldValue('data', data)}
                 />}
             </div>
           </Form.Item>

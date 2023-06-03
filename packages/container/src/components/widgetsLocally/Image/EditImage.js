@@ -22,7 +22,6 @@ export default function EditImage({ value, onChange }) {
     }])
   },[value])
 
-  console.log("file", file)
 
   return (
     <Space
@@ -30,7 +29,7 @@ export default function EditImage({ value, onChange }) {
       size={18}
     >
       <DragAndDropImage
-        onChangeImage={onChangeImage}
+        onAdd={onChangeImage}
         defaultFilelist={file}
         multiple={false}
       />

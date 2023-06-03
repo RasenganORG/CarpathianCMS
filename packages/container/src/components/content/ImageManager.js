@@ -118,7 +118,6 @@ export const ImageManager = () => {
               onClick={() => {
                 setModalDisplayed(true);
                 setImageToBeDeleted(img.fullName);
-                console.log(img);
               }}
             >
               Delete
@@ -151,7 +150,6 @@ export const ImageManager = () => {
         newData.push(img);
       }
     }
-    console.log(newData);
     setData(newData);
     setLoading(false);
   };
@@ -192,7 +190,6 @@ export const ImageManager = () => {
               url: img.url,
               key: img.url,
             };
-            console.log(obj);
             dataTable.push({ ...obj, action: obj });
           });
         }

@@ -6,7 +6,7 @@ import DragAndDropImage from '../../upload/DragAndDropImage';
 export default function EditImages({ value, onChange }) {
   const [defaultFilelist, setDefaultFilelist] = useState([])
 
-  const onChangeImage = (list) => {
+  const onAddImages = (list) => {
     let newListImages = [];
     for (let file of value.listImages) {
       newListImages.push(file);
@@ -15,10 +15,12 @@ export default function EditImages({ value, onChange }) {
     for(let img of list) {
       const newImg = { src: img.src, originalFilename: img.originalFilename, newFilename: img.newFilename };
       newListImages.push(newImg);
-      console.log('newObj', { ...value, listImages: newListImages });
     }
 
     onChange({ ...value, listImages: newListImages });
+  };
+  const onRemoveImages = (list) => {
+    onChange({ ...value, listImages: list });
   };
 
   const onChangeSwitch = (val) => {
@@ -35,7 +37,8 @@ export default function EditImages({ value, onChange }) {
       size={18}
     >
       <DragAndDropImage
-        onChangeImage={onChangeImage}
+        onAdd={onAddImages}
+        onRemove={onRemoveImages}
         defaultFilelist={defaultFilelist}
         multiple={true}
       />

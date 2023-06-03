@@ -7,7 +7,6 @@ export default function EditList({ value, onChange }) {
   for(let item of value.listData){
     listData.push(item)
   }
-  console.log("listData", listData)
 
   const onChangeList = (newData) => {
     onChange({ ...value, listData: newData });
