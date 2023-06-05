@@ -66,7 +66,7 @@ export default function BlockInitialForm({ form }) {
       if(block.metadata.type === 'list') {
         block.data = {
           listData:[],
-          borderIsVisible: true,
+          isDisplayingAvatars: true,
         };
       }
       if(block.metadata.type === 'images') {

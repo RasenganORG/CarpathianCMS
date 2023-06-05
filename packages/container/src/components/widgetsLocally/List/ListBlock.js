@@ -3,17 +3,18 @@ import { Avatar, List } from 'antd';
 
 
 export default function ListBlock({ content, isEdit, id }) {
+  console.log("content", content)
   return (
     <div>
       <List
         itemLayout="horizontal"
-        dataSource={content.data}
+        dataSource={content.listData}
         renderItem={(item, index) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`} />}
+              avatar={<Avatar src={item.avatar.imageUrl} />}
               title={item.title}
-              description={item.description}
+              description={item.text}
             />
           </List.Item>
         )}

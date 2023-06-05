@@ -151,7 +151,10 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
               {block.metadata.type === 'list' &&
                 <EditList
                   value={blockForm.getFieldValue('data')}
-                  onChange={(data) => blockForm.setFieldValue('data', data)}
+                  onChange={(data) => {
+                    console.log("data: ", data)
+                    blockForm.setFieldValue('data', data);
+                  }}
                 />}
               {block.metadata.type === 'images' &&
                 <EditImages
