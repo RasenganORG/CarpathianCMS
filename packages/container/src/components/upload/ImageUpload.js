@@ -19,8 +19,6 @@ const ImageUpload = ({
   const [modalDisplayed, setModalDisplayed] = useState(false);
   const [imageToBeDeleted, setImageToBeDeleted] = useState({});
 
-  console.log("defaultFilelist", defaultFilelist)
-
 
   useEffect(() => {
     if (defaultFilelist.length > 0) {

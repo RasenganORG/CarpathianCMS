@@ -8,8 +8,8 @@ export default function EditList({ value, onChange }) {
   const [listData, setListData] = useState([]);
   const [editingItem, setEditingItem] = useState({});
   const [isDisplayingAvatars, setIsDisplayingAvatars] = useState(Boolean(value.isDisplayingAvatars));
-
-  console.log('listData', listData);
+  const [isDisplayingContent, setIsDisplayingContent] = useState(Boolean(value.isDisplayingContent));
+  const [isDisplayingTitle, setIsDisplayingTitle] = useState(Boolean(value.isDisplayingTitle));
 
   useEffect(() => {
     let arr = [];
@@ -21,16 +21,28 @@ export default function EditList({ value, onChange }) {
 
 
   const onChangeList = (newData) => {
-    onChange({ ...value, listData: newData });
+    onChange({ ...value,
+      listData: newData,
+      isDisplayingAvatars: isDisplayingAvatars,
+      isDisplayingTitle: isDisplayingTitle,
+      isDisplayingContent: isDisplayingContent
+    });
   };
 
   useEffect(() => {
     onChangeList(listData);
-  }, [listData]);
+  }, [listData, isDisplayingAvatars, isDisplayingTitle, isDisplayingContent]);
 
-  const onChangeSwitch = (val) => {
-    onChange({ ...value, isDisplayingAvatars: val });
+  const onChangeSwitchAvatar = (val) => {
     setIsDisplayingAvatars(val);
+  };
+
+  const onChangeSwitchTitle = (val) => {
+    setIsDisplayingTitle(val);
+  };
+
+  const onChangeSwitchContent = (val) => {
+    setIsDisplayingContent(val);
   };
 
   const onAddListItem = () => {
@@ -51,9 +63,9 @@ export default function EditList({ value, onChange }) {
     onChangeList(listData);
   };
 
-  const addToListData = (itemToBeAdded= undefined) => {
-    if(itemToBeAdded === undefined){
-      itemToBeAdded = editingItem
+  const addToListData = (itemToBeAdded = undefined) => {
+    if (itemToBeAdded === undefined) {
+      itemToBeAdded = editingItem;
     }
 
     setListData((prevState) => {
@@ -69,22 +81,35 @@ export default function EditList({ value, onChange }) {
     });
 
     setEditingItem({});
-  }
+  };
 
   const editButtonClicked = (item) => {
     if (item.id !== editingItem.id || JSON.stringify(editingItem) === '{}') {
-      console.log('aaaa')
       setEditingItem(item);
     } else {
-      addToListData()
+      addToListData();
     }
   };
 
   const onAvatarAdded = (item, photo) => {
-    const newItem = JSON.parse(JSON.stringify(item))
-    console.log('photo added', item, photo);
+    if( JSON.stringify(editingItem) !== '{}'){
+      item = editingItem
+    }
+    const newItem = JSON.parse(JSON.stringify(item));
     newItem.avatar = photo;
-    addToListData(newItem)
+    addToListData(newItem);
+  };
+
+  const onDeleteItem = itemToBeDeleted => {
+    setListData((prevState) => {
+      const arr = [];
+      for (let item of prevState) {
+        if (item.id !== itemToBeDeleted.id) {
+          arr.push(item);
+        }
+      }
+      return arr;
+    });
   };
 
   return (
@@ -92,12 +117,26 @@ export default function EditList({ value, onChange }) {
       direction={'vertical'}
       size={18}
     >
-      <Switch
-        defaultChecked={value.isDisplayingAvatars}
-        onChange={onChangeSwitch}
-        checkedChildren={'Displaying Avatars'}
-        unCheckedChildren={'Not Displaying Avatars'}
-      />
+      <Space direction={'horizontal'}>
+        <Switch
+          defaultChecked={isDisplayingAvatars}
+          onChange={onChangeSwitchAvatar}
+          checkedChildren={'Displaying Avatars'}
+          unCheckedChildren={'Not Displaying Avatars'}
+        />
+        <Switch
+          defaultChecked={isDisplayingTitle}
+          onChange={onChangeSwitchTitle}
+          checkedChildren={'Displaying Title'}
+          unCheckedChildren={'Not Displaying Title'}
+        />
+        <Switch
+          defaultChecked={isDisplayingContent}
+          onChange={onChangeSwitchContent}
+          checkedChildren={'Displaying Content'}
+          unCheckedChildren={'Not Displaying Content'}
+        />
+      </Space>
       <List
         className='demo-loadmore-list'
         itemLayout='vertical'
@@ -109,15 +148,16 @@ export default function EditList({ value, onChange }) {
                 key='list-loadmore-edit'
                 onClick={() => editButtonClicked(item)}>
                 {(item.id !== editingItem.id || JSON.stringify(editingItem) === '{}') ?
-                  <Typography> Edit  </Typography>
+                  <Typography> Edit </Typography>
                   :
-                  <Typography> Save  </Typography>}
+                  <Typography> Save </Typography>}
               </Button>,
               <Button
                 onClick={() => setEditingItem({})}
                 hidden={item.id !== editingItem.id || JSON.stringify(editingItem) === '{}'}>Cancel</Button>,
               <div style={{
                 display: isDisplayingAvatars ? 'block' : 'none',
+                minWidth:'15rem'
               }}>
                 <ImageUpload onAdd={(imageUrl, originalFilename, newFilename) => onAvatarAdded(item, {
                   imageUrl,
@@ -127,6 +167,11 @@ export default function EditList({ value, onChange }) {
                              defaultFilelist={[item.avatar]}
                              multiple={false} />
               </div>,
+              <Button
+                onClick={() => onDeleteItem(item)}
+              >
+                Delete item
+              </Button>
             ]}
           >
             <Skeleton avatar title={false} loading={item.loading} active>
@@ -136,8 +181,8 @@ export default function EditList({ value, onChange }) {
                     display: isDisplayingAvatars ? 'block' : 'none',
                   }}>
                     <Avatar src={item.avatar.imageUrl} /></div>}
-                title={item.title}
-                description={item.text}
+                title={isDisplayingTitle ? item.title : null}
+                description={isDisplayingContent? item.text : null}
               />
               {item.id !== editingItem.id ?
                 <></>
@@ -145,24 +190,36 @@ export default function EditList({ value, onChange }) {
                 <Space
                   size={'large'}
                 >
-                  <Input
-                    style={{ minWidth: '15rem' }}
-                    placeholder='Title of the List Item'
-                    addonBefore={'Title: '}
-                    value={editingItem?.title}
-                    onChange={(value) => setEditingItem((prevState) => {
-                      return { ...prevState, title: value.target.value };
-                    })}
-                  />
-                  <Input
-                    style={{ minWidth: '15rem' }}
-                    placeholder='Content of the List Item'
-                    addonBefore={'Content: '}
-                    value={editingItem?.text}
-                    onChange={(value) => setEditingItem((prevState) => {
-                      return { ...prevState, text: value.target.value };
-                    })}
-                  />
+                  <div
+                    style={{
+                      display: isDisplayingTitle ? 'block' : 'none',
+                    }}>
+
+                    <Input
+                      style={{ minWidth: '15rem' }}
+                      placeholder='Title of the List Item'
+                      addonBefore={'Title: '}
+                      value={editingItem?.title}
+                      onChange={(value) => setEditingItem((prevState) => {
+                        return { ...prevState, title: value.target.value };
+                      })}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: isDisplayingContent ? 'block' : 'none',
+                    }}>
+
+                    <Input
+                      style={{ minWidth: '15rem' }}
+                      placeholder='Content of the List Item'
+                      addonBefore={'Content: '}
+                      value={editingItem?.text}
+                      onChange={(value) => setEditingItem((prevState) => {
+                        return { ...prevState, text: value.target.value };
+                      })}
+                    />
+                  </div>
                 </Space>
               }
             </Skeleton>

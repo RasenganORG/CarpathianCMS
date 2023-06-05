@@ -152,7 +152,6 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
                 <EditList
                   value={blockForm.getFieldValue('data')}
                   onChange={(data) => {
-                    console.log("data: ", data)
                     blockForm.setFieldValue('data', data);
                   }}
                 />}

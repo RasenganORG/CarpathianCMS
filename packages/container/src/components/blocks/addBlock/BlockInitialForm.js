@@ -67,6 +67,8 @@ export default function BlockInitialForm({ form }) {
         block.data = {
           listData:[],
           isDisplayingAvatars: true,
+          isDisplayingTitle:true,
+          isDisplayingContent:true
         };
       }
       if(block.metadata.type === 'images') {

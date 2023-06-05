@@ -3,7 +3,6 @@ import { Avatar, List } from 'antd';
 
 
 export default function ListBlock({ content, isEdit, id }) {
-  console.log("content", content)
   return (
     <div>
       <List
@@ -12,9 +11,9 @@ export default function ListBlock({ content, isEdit, id }) {
         renderItem={(item, index) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src={item.avatar.imageUrl} />}
-              title={item.title}
-              description={item.text}
+              avatar={<Avatar src={content.isDisplayingAvatars ? item.avatar.imageUrl: null } />}
+              title={content.isDisplayingTitle ? item.title : null }
+              description={content.isDisplayingContent ? item.text : null }
             />
           </List.Item>
         )}
