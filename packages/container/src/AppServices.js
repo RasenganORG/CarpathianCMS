@@ -10,6 +10,7 @@ import { createNavBar } from './utils/createNavBar';
 import { notificationActions } from './redux/notificationSlice';
 import { PATHS } from './routes/paths';
 import { useCurrentRole } from './components/guards/RoleBasedGuard';
+import { getUser } from './services/user/UsersService';
 
 
 const navBarBasicSettings = [
@@ -39,7 +40,7 @@ export const getIdByHrefFromPages = (href, pages) => {
 const AppServices = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const timer = useRef(null);
   const hasPermission = useSelector(state => state.pages.hasPermissionToSettings);
   const [navBar, setNavBar] = useState([]);
@@ -154,6 +155,7 @@ const AppServices = ({ children }) => {
 
 
   }, [hasPermission, refreshNavBar, user]);
+
 
   useEffect(() => {
     async function update() {

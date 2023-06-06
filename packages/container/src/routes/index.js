@@ -13,6 +13,7 @@ import ContentManager from '../components/content/ContentManager';
 import RoleWithSpecialPermissionsGuard from '../components/guards/RoleWithSpecialPermissionsGuard';
 import Page404 from '../components/pages/Page404';
 import PageEmptySite from '../components/pages/PageEmptySite';
+import Account from '../components/account/Account';
 
 
 const Loadable = (Component) => (props) => {
@@ -49,7 +50,7 @@ const Router = ({ navBar, setNavBar }) => {
         },
         {
           path: 'account',
-          element: <Home />,
+          element: <Account/>,
         },
         {
           path: '404',
