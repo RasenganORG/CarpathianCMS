@@ -2,7 +2,7 @@ import { Drawer } from 'antd';
 import React from 'react';
 import BlockInitialForm from '../BlockInitialForm';
 
-const InitialFormDrawer = ({ form }) => {
+const InitialFormDrawer = ({ form,blockManagerForm }) => {
 
 
   return (
@@ -40,7 +40,7 @@ const InitialFormDrawer = ({ form }) => {
           height: '450px',
         }}
       >
-        <BlockInitialForm form={form} />
+        <BlockInitialForm form={form} blockManagerForm={blockManagerForm} />
       </Drawer>
     </div>
   );

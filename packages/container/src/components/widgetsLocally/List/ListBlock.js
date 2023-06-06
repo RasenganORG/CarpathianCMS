@@ -11,7 +11,7 @@ export default function ListBlock({ content, isEdit, id }) {
         renderItem={(item, index) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src={content.isDisplayingAvatars ? item.avatar.imageUrl: null } />}
+              avatar={content.isDisplayingAvatars ? <Avatar src={item.avatar.imageUrl } /> : null}
               title={content.isDisplayingTitle ? item.title : null }
               description={content.isDisplayingContent ? item.text : null }
             />

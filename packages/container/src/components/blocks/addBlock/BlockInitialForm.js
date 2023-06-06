@@ -32,7 +32,7 @@ BlockInitialForm.propTypes = {
   form: PropTypes.any,
 }
 
-export default function BlockInitialForm({ form }) {
+export default function BlockInitialForm({ form,blockManagerForm }) {
   const [titleDisplayed, setTitleDisplayed] = useState(true);
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const numberOfBlocks =  useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks.length)

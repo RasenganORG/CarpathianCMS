@@ -9,10 +9,15 @@ import EditBlock from './editBlock/EditBlock';
 
 const setFieldValuesFromBlocks = (blocks) => {
   let fields = [];
-  blocks?.map(block => fields.push({
-    name: [block.id],
-    value: block,
-  }));
+  blocks?.map(block =>
+  {
+    if( block !== null) {
+      fields.push({
+        name: [block.id],
+        value: block,
+      });
+    };
+  });
   return fields;
 };
 
@@ -52,7 +57,9 @@ const BlocksManager = () => {
       //data contains the fields from form. This contains the latest version of the blocks
       let newBlockArray = [];
       for (let block of Object.entries(data)) {
-        newBlockArray.push(block[1]);
+        if(block[1] !== null) {
+          newBlockArray.push(block[1]);
+        }
       }
       setFormIsUpdated(0);                  // resets the value to 0 for hiding revert changes as now there aren't any changes to revert to
 
@@ -99,7 +106,8 @@ const BlocksManager = () => {
 
     const onDeleteBlock = (blockId) => {
       blockManagerForm.setFieldValue(blockId, null);
-      setFormIsUpdated(prevState => prevState + 1);
+      //setFormIsUpdated(prevState => prevState + 1);
+      blockManagerForm.submit()
     };
 
     const updateFieldsFromRedux = () => {
@@ -185,6 +193,7 @@ const BlocksManager = () => {
 
               {wizardVisible &&
                 <WizardAddBlock
+                  blockManagerForm={blockManagerForm}
                   setWizardVisible={setWizardVisible}
                 />
               }

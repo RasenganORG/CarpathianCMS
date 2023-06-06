@@ -168,7 +168,6 @@ const DragAndDropImage = ({
 
   const onStartUploadButtonClicked = async () => {
     if (multiple === true) {
-      // todo check to upload only new images
       setUploading(true);
       const imagesForForm = [];
       let filteredList = [];
@@ -197,7 +196,7 @@ const DragAndDropImage = ({
       }
 
       setFileList(filteredList);
-      onAdd(imagesForForm);
+      onAdd(filteredList);
       setUploading(false);
     } else {
       const formData = new FormData();
