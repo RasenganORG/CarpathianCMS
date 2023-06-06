@@ -32,7 +32,7 @@ BlockInitialForm.propTypes = {
   form: PropTypes.any,
 }
 
-export default function BlockInitialForm({ form }) {
+export default function BlockInitialForm({ form,blockManagerForm }) {
   const [titleDisplayed, setTitleDisplayed] = useState(true);
   const selectedPage = useSelector(state => state.pages.selectedPage);
   const numberOfBlocks =  useSelector(state => state.pages.pagesList.find(page => page.id === selectedPage)?.data?.blocks.length)
@@ -48,9 +48,34 @@ export default function BlockInitialForm({ form }) {
       block.metadata.type = form.getFieldValue('type');
       block.metadata.place = numberOfBlocks + 1
       block.id = form.getFieldValue('id');
-      block.data = {
-        text:'',
-        borderIsVisible: true
+      if(block.metadata.type === 'paragraph') {
+        block.data = {
+          text: '',
+          borderIsVisible: true,
+        };
+      }
+      if(block.metadata.type === 'image') {
+        block.data = {
+          alt: '',
+          src:'',
+          originalFilename:'',
+          newFilename:'',
+          enablePreview: false,
+        };
+      }
+      if(block.metadata.type === 'list') {
+        block.data = {
+          listData:[],
+          isDisplayingAvatars: true,
+          isDisplayingTitle:true,
+          isDisplayingContent:true
+        };
+      }
+      if(block.metadata.type === 'images') {
+        block.data = {
+          listImages:[],
+          borderIsVisible: false,
+        };
       }
       dispatch(pagesActions.addBlockToPage({
         block: block,

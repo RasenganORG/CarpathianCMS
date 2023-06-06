@@ -1,10 +1,16 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row, Space } from 'antd';
+import { Col,  Row} from 'antd';
 import React from 'react';
+import ImageManager from './ImageManager';
 
 export const ContentManager = () => {
 
-  return(<div>Content</div>)
-}
+  return (
+    <Row gutter={[30, 50]}>
+      <Col offset={5} span={15}>
+        <ImageManager/>
+      </Col>
+    </Row>
+  );
+};
 
 export default ContentManager;

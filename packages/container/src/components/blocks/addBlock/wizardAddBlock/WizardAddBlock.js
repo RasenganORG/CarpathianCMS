@@ -6,7 +6,7 @@ import classes from './WizardAddBlock.module.css'
 import InitialFormDrawer from '../initialFormDrawer/InitialFormDrawer';
 
 
-const WizardAddBlock = ({setWizardVisible}) => {
+const WizardAddBlock = ({setWizardVisible,blockManagerForm}) => {
   const [current, setCurrent] = useState(0);
   const [initialBlockForm] = Form.useForm();
 
@@ -33,7 +33,7 @@ const WizardAddBlock = ({setWizardVisible}) => {
     },
     {
       title: 'Complete initial metadata',
-      content: <InitialFormDrawer form={initialBlockForm}/>,
+      content: <InitialFormDrawer form={initialBlockForm} blockManagerForm={blockManagerForm}/>,
     },
   ];
 

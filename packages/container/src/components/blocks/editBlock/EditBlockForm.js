@@ -4,6 +4,9 @@ import TextArea from 'antd/es/input/TextArea';
 import TextEditor from '../../editor/TextEditor';
 import React, { useState } from 'react';
 import EditParagraph from '../../widgetsLocally/Paragraph/EditParagraph';
+import EditImage from '../../widgetsLocally/Image/EditImage';
+import EditList from '../../widgetsLocally/List/EditList';
+import EditImages from '../../widgetsLocally/Images/EditImages';
 
 const formItemLayout = {
   labelCol: {
@@ -36,7 +39,9 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
       <Form
         form={blockForm}
         {...formItemLayout}
-        onFinish={onFinishForm}
+        onFinish={(data) => {
+          onFinishForm(data);
+        }}
         style={{
           width: '100%',
         }}
@@ -48,7 +53,7 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
         }}
       >
         <Form.Item
-          name='title'
+          name={'title'}
           label={'Title'}
           labelAlign={'left'}
           tooltip={{
@@ -98,7 +103,7 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
         </Form.Item>
 
         <Form.Item
-          name='description'
+          name={'description'}
           labelAlign={'left'}
           label={'Description'}
           hasFeedback
@@ -120,24 +125,45 @@ export default function EditBlockForm({ block, blockForm, onFinishForm }) {
           />
         </Form.Item>
 
-        <Form.Item
-          name='data'
-          labelAlign={'left'}
-          label={'Data'}
-          hasFeedback
-          tooltip={{
-            icon: <InfoCircleOutlined />,
-            title: 'This is the data of the paragraph',
-            placement: 'right',
-          }}
 
-        >
-          {block.metadata.type === 'paragraph' &&
-            <EditParagraph
-              value={blockForm.getFieldValue('data')}
-              onChange={(data) => blockForm.setFieldValue('data', data)}
-            />}
-        </Form.Item>
+          <Form.Item
+            name={'data'}
+            labelAlign={'left'}
+            label={'Data'}
+            hasFeedback
+            tooltip={{
+              icon: <InfoCircleOutlined />,
+              title: 'This is the data of the paragraph',
+              placement: 'right',
+            }}
+          >
+            <div>
+              {block.metadata.type === 'paragraph' &&
+                <EditParagraph
+                  value={blockForm.getFieldValue('data')}
+                  onChange={(data) => blockForm.setFieldValue('data', data)}
+                />}
+              {block.metadata.type === 'image' &&
+                <EditImage
+                  value={blockForm.getFieldValue('data')}
+                  onChange={(data) => blockForm.setFieldValue('data', data)}
+                />}
+              {block.metadata.type === 'list' &&
+                <EditList
+                  value={blockForm.getFieldValue('data')}
+                  onChange={(data) => {
+                    blockForm.setFieldValue('data', data);
+                  }}
+                />}
+              {block.metadata.type === 'images' &&
+                <EditImages
+                  blockForm={blockForm}
+                  value={blockForm.getFieldValue('data')}
+                  onChange={(data) =>blockForm.setFieldValue('data', data)}
+                />}
+            </div>
+          </Form.Item>
+
       </Form>
 
     </div>
