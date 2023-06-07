@@ -40,19 +40,15 @@ const Account = () => {
     setImagesToBeDeleted([])
   }
 
-  console.log("imagesToBeDeleted", imagesToBeDeleted)
-
   async function onFinishForm(data) {
     setLoading(true)
     let newData = {}
-    console.log("data", data)
     const formData = new FormData();
 
     if(typeof data.profilePicture === 'object') {
       formData.append('filename', data.profilePicture);
       await deletingImages()
       const resImage = await addUserImage(localId, formData);
-      console.log(resImage)
       setFileList([{
         name:resImage.originalFilename,
         thumbUrl: resImage.imageUrl,
@@ -69,7 +65,6 @@ const Account = () => {
       }
     }else{
       if(imagesToBeDeleted.length > 0) {
-        console.log('a')
         await deletingImages();
         newData = {
           email: data.email,
@@ -79,7 +74,6 @@ const Account = () => {
           profilePictureName: '',
         };
       }else{
-        console.log('b')
         newData = {
           email: data.email,
           firstName: data.firstName,
@@ -136,11 +130,8 @@ const Account = () => {
     }
   },[profilePictureUrl,profilePictureName])
 
-  console.log(fileList)
-
   const onRemoveImage = (file) =>{
     setImagesToBeDeleted((prevState) => [...prevState, file.name])
-    console.log("get", form.getFieldValue('profilePicture'))
     if(form.getFieldValue('profilePicture')){
       form.setFieldValue('profilePicture', undefined);
     }

@@ -24,7 +24,6 @@ const ProfilePictureUpload = ({onAdd, defaultFilelist, onRemoveImage}) => {
 
   const onChange = ({ fileList: newFileList }) => {
     if(newFileList.length > 0) {
-      console.log('newFileList', newFileList);
       onAdd(newFileList[0].originFileObj);
       setFileList(newFileList);
     }
@@ -38,7 +37,6 @@ const ProfilePictureUpload = ({onAdd, defaultFilelist, onRemoveImage}) => {
       setFileList([])
     },
     beforeUpload: (file) => {
-      console.log("file", file)
       return false;
     },
     fileList,
@@ -48,7 +46,6 @@ const ProfilePictureUpload = ({onAdd, defaultFilelist, onRemoveImage}) => {
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
-      console.log(file);
     }
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);

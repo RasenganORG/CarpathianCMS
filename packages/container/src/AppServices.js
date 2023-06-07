@@ -113,8 +113,10 @@ const AppServices = ({ children }) => {
           const navBarLayout = await createNavBar(navbar, dispatch, navigate, user);
           //console.log('CREATED NAVBAR1', navBarLayout)
           navBarLayout.push(navBar);
+          if (isAuthenticated)
+            navBarLayout.push(navBarBasicSettings[1])
           if (hasPermission)
-            navBarLayout.push(...navBarBasicSettings);
+            navBarLayout.push(navBarBasicSettings[0]);
           setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
           const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
           if(pages.length > 0) {
@@ -126,8 +128,10 @@ const AppServices = ({ children }) => {
         }
         else{
           let navBarLayout = []
+          if (isAuthenticated)
+            navBarLayout.push(navBarBasicSettings[1])
           if (hasPermission)
-            navBarLayout.push(...navBarBasicSettings);
+            navBarLayout.push(navBarBasicSettings[0]);
           setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
           dispatch(pagesActions.setIsPagesListEmpty(true));
         }

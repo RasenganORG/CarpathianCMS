@@ -50,7 +50,10 @@ const Router = ({ navBar, setNavBar }) => {
         },
         {
           path: 'account',
-          element: <Account/>,
+          element:
+            <AuthGuard>
+              <Account />
+            </AuthGuard>,
         },
         {
           path: '404',
