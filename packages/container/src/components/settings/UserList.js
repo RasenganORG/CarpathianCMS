@@ -1,27 +1,31 @@
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
+import { Button, Divider, Form, Input, InputNumber, Modal, Popconfirm, Select, Table, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import DropdownUserOptions from '../dropdowns/DropdownUserOptions';
 import React from 'react';
-import { getUsers } from '../../services/user/UsersService';
-
-
+import { deleteUser, getUsers, patchUser } from '../../services/user/UsersService';
+import { userActions } from '../../redux/userSlice';
+import { notificationActions } from '../../redux/notificationSlice';
+import { useDispatch } from 'react-redux';
 
 
 const UserList = () => {
   const [loading, setLoading] = useState(false);
   const isEditing = (record) => record.key === editingKey;
-
+  const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
+  const [deletingKey, setDeletingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const dispatch = useDispatch();
+  const [confirmationValue, setConfirmationValue] = useState('');
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
 
   const edit = (record) => {
     form.setFieldsValue({
       name: '',
-      age: '',
-      address: '',
+      id: '',
       ...record,
     });
     setEditingKey(record.key);
@@ -30,8 +34,26 @@ const UserList = () => {
   const save = async (key) => {
     try {
       const row = await form.validateFields();
-      console.log("row", row)
+      const id = editingKey;
       const newData = [...data];
+
+
+      const res = await patchUser(id, row);
+      if (res.type === 'success') {
+        dispatch(userActions.updateUser(newData));
+        dispatch(notificationActions.openNotification({
+          message: 'User updated successfully',
+          description: '',
+          type: 'success',
+        }));
+      } else {
+        dispatch(notificationActions.openNotification({
+          message: 'Error while updating user',
+          description: '',
+          type: 'error',
+        }));
+      }
+
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const item = newData[index];
@@ -54,6 +76,33 @@ const UserList = () => {
 
   const cancel = () => {
     setEditingKey('');
+  };
+
+  const handleDelete = async (key) => {
+
+    const res = await deleteUser(key);
+
+    if (res.type === 'success') {
+      const newData = data.filter((item) => item.key !== key);
+      setData(newData);
+
+      dispatch(userActions.updateUser(newData));
+      dispatch(notificationActions.openNotification({
+        message: 'User delete successfully',
+        description: '',
+        type: 'success',
+      }));
+    } else {
+      dispatch(notificationActions.openNotification({
+        message: 'Error while deleting user',
+        description: '',
+        type: 'error',
+      }));
+    }
+
+    setConfirmationValue('')
+    setDeletingKey(undefined);
+    setModalVisible(false);
   };
 
 
@@ -110,7 +159,7 @@ const UserList = () => {
 
         console.log('data', data);
 
-        setData(data)
+        setData(data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -123,19 +172,18 @@ const UserList = () => {
   }, []);
 
 
-
   const columns = [
     {
       key: '2',
       title: 'First Name',
       dataIndex: 'firstName',
-      editable:true,
+      editable: true,
     },
     {
       key: '3',
       title: 'Last Name',
       dataIndex: 'lastName',
-      editable:true,
+      editable: true,
     },
     {
       key: '4',
@@ -146,18 +194,18 @@ const UserList = () => {
       key: '5',
       title: 'Phone',
       dataIndex: 'phone',
-      editable:true,
+      editable: true,
     },
     {
       key: '6',
       title: 'Role',
       dataIndex: 'role',
-      editable:true,
+      editable: true,
     },
     {
-      key:8,
-      title: 'operation',
-      dataIndex: 'operation',
+      key: 8,
+      title: 'Edit',
+      dataIndex: 'edit',
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -170,7 +218,7 @@ const UserList = () => {
             >
               Save
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+            <Popconfirm title='Sure to cancel?' onConfirm={cancel}>
               <a>Cancel</a>
             </Popconfirm>
           </span>
@@ -183,22 +231,31 @@ const UserList = () => {
     },
     {
       key: '7',
-      title: 'Actions',
-      render: (payload) => {
-        return <DropdownUserOptions payload={payload} />;
-      },
+      title: 'Delete',
+      dataIndex: 'delete',
+      render: (_, record) =>
+        data.length >= 1 ? (
+          <Button title='Sure to delete?' onClick={() => {
+            setDeletingKey(record.key);
+            setModalVisible(true);
+          }}>
+            <a>Delete</a>
+          </Button>
+        ) : null,
     },
   ];
+
 
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
     }
+
     return {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
+        inputType: col.dataIndex === 'role' ? 'select' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -206,6 +263,17 @@ const UserList = () => {
     };
   });
 
+
+
+
+
+  // enables Delete button only when the input is correct
+  useEffect(() => {
+    if (confirmationValue === `delete/${data.find(item => item.id === deletingKey)?.email}`)
+      setButtonDisabled(false);
+    else
+      setButtonDisabled(true);
+  }, [confirmationValue]);
 
 
   return (
@@ -225,6 +293,53 @@ const UserList = () => {
           bordered
         />
       </Form>
+
+      <Modal
+        open={modalVisible}
+        okText={'Delete User'}
+        cancelText={'Cancel'}
+        title={'Delete User'}
+        onCancel={() => setModalVisible(false)}
+        onOk={() => handleDelete(deletingKey)}
+        okButtonProps={{
+          disabled: buttonDisabled,
+          danger: true,
+        }}
+        destroyOnClose={true}
+      >
+        <Typography>Are you sure you want to delete this page? </Typography>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'row',
+          }}>
+          <Typography style={{ marginRight: '5px' }}>All of it's content will be</Typography>
+          <Typography.Text strong type={'danger'}> permanently deleted.</Typography.Text>
+        </div>
+        <Divider />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'row',
+            marginBottom: '1rem',
+            marginTop: '2rem',
+          }}>
+          <Typography.Text>Please type: </Typography.Text>
+          <Typography.Text
+            strong={true}
+            keyboard={true}
+          > delete/{data.find(item => item.id === deletingKey)?.email}</Typography.Text>
+          <Typography.Text> to confirm.</Typography.Text>
+
+        </div>
+        <Input
+          value={confirmationValue}
+          onChange={(t) => setConfirmationValue(t.target.value)}
+        />
+
+      </Modal>
+
+
     </>
   );
 };
@@ -241,15 +356,34 @@ const EditableCell = ({
                         children,
                         ...restProps
                       }) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  let inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  if (inputType === 'select') {
+    inputNode = (
+      <Form.Item
+        name={dataIndex}
+        rules={[
+          {
+            required: true,
+            message: `Please select a ${title}!`,
+          },
+        ]}
+        style={{ margin: 0 }}
+      >
+        <Select>
+          <Option value='admin'>Admin</Option>
+          <Option value='editor'>Editor</Option>
+          <Option value='user'>User</Option>
+        </Select>
+      </Form.Item>
+    );
+  }
+
   return (
     <td {...restProps}>
       {editing ? (
         <Form.Item
           name={dataIndex}
-          style={{
-            margin: 0,
-          }}
+          style={{ margin: 0 }}
           rules={[
             {
               required: true,

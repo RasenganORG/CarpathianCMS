@@ -78,6 +78,25 @@ export const patchUser = async (id,data) => {
     return  error
   }
 }
+export const deleteUser = async (id) => {
+
+  try{
+    let config = {
+      method: 'delete',
+      url: `http://localhost:5000/users/${id}`,
+      headers: { },
+      data : ''
+    };
+
+    const res = await asyncCallWithTimeout(axios(config),5000)
+    return res.data
+
+  }catch (error){
+    if(error.code === "ERR_NETWORK")
+      return new Error("ERR_NETWORK")
+    return  error
+  }
+}
 export const addUserImage = async (id,data) => {
 
   try {
