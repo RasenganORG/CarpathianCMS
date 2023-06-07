@@ -49,6 +49,7 @@ const UserList = () => {
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
     }
+
   };
 
   const cancel = () => {
