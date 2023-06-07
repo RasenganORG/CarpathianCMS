@@ -17,6 +17,7 @@ const Account = () => {
   const email = useSelector(state => state.user.email)
   const firstName = useSelector(state => state.user.firstName)
   const lastName = useSelector(state => state.user.lastName)
+  const phone = useSelector(state => state.user.phone)
   const profilePictureUrl = useSelector(state => state.user.profilePictureUrl)
   const profilePictureName = useSelector(state => state.user.profilePictureName)
   const localId = useSelector(state => state.user.localId)
@@ -60,6 +61,7 @@ const Account = () => {
         email:data.email,
         firstName:data.firstName,
         lastName:data.lastName,
+        phone:data.phone,
         profilePictureUrl:resImage.imageUrl,
         profilePictureName:resImage.originalFilename
       }
@@ -70,6 +72,7 @@ const Account = () => {
           email: data.email,
           firstName: data.firstName,
           lastName: data.lastName,
+          phone: data.phone,
           profilePictureUrl: '',
           profilePictureName: '',
         };
@@ -78,6 +81,7 @@ const Account = () => {
           email: data.email,
           firstName: data.firstName,
           lastName: data.lastName,
+          phone: data.phone,
           profilePictureUrl: profilePictureUrl,
           profilePictureName: profilePictureName,
         };
@@ -115,8 +119,11 @@ const Account = () => {
     if(lastName){
       form.setFieldValue('lastName', lastName)
     }
+    if(phone){
+      form.setFieldValue('phone', phone)
+    }
 
-  },[email, firstName, lastName])
+  },[email, firstName, lastName,phone])
 
   useEffect(() => {
     if(profilePictureName && profilePictureUrl) {
@@ -189,6 +196,20 @@ const Account = () => {
         <Form.Item name={'lastName'}>
           <Input
             placeholder={'Change your Last Name'}
+            required
+            allowClear
+            style={{
+              width: '100%',
+              height: '50px',
+            }}
+          ></Input>
+        </Form.Item>
+        <Typography.Title level={5}>
+          Phone
+        </Typography.Title>
+        <Form.Item name={'phone'}>
+          <Input
+            placeholder={'Update your phone'}
             required
             allowClear
             style={{

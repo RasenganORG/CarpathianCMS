@@ -11,6 +11,7 @@ import {
   UnorderedListOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import UserList from '../settings/UserList';
 
 const menuSettingsConfig = [
   {
@@ -55,7 +56,7 @@ const SettingsLayout = () => {
 
   useEffect(() => {
     if (selectedSetting) {
-      //navigate(selectedSetting.key);
+      navigate(selectedSetting.key);
     }
   }, [selectedSetting]);
 
@@ -106,3 +107,4 @@ const SettingsLayout = () => {
 };
 
 export default SettingsLayout;
+
