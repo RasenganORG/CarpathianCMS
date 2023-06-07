@@ -143,7 +143,7 @@ const AddNewPageForm = ({ setNewPageModalIsOpened, newPageModalIsOpened }) => {
 
   return (
     <Modal
-      visible={newPageModalIsOpened}
+      open={newPageModalIsOpened}
       onCancel={() => setNewPageModalIsOpened(false)}
       destroyOnClose
       width={700}

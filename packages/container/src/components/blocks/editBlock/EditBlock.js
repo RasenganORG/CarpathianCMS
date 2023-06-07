@@ -74,7 +74,7 @@ export default function EditBlock({
 
   return (
     <Modal
-      visible={editBlockModalVisible}
+      open={editBlockModalVisible}
       title={'Edit block'}
       onOk={onEditBlockFinish}
       cancelText={'Back'}

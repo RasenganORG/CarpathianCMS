@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import Dragger from 'antd/es/upload/Dragger';
 import { useSelector } from 'react-redux';
-import classes from './DragAndDropImage.module.css';
 import { deleteImage } from '../../services/pages/PagesService';
 
 const DragAndDropImage = ({
@@ -216,7 +215,6 @@ const DragAndDropImage = ({
         {...props}
         defaultFileList={[...fileList]}
         listType='picture'
-        className={classes.uploadListInline}
       >
         <p>Click or drop images</p>
       </Dragger>
@@ -232,7 +230,7 @@ const DragAndDropImage = ({
         {uploading ? 'Uploading' : 'Start Upload'}
       </Button>
       <Modal
-        visible={modalDisplayed}
+        open={modalDisplayed}
         title={''}
         onCancel={() => {
           setModalDisplayed(false);

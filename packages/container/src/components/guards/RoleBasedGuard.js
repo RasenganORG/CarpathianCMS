@@ -38,7 +38,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
     return (
       <div>
         <Modal
-          visible={true}
+          open={true}
           onCancel={() => navigate(-1)}
           onOk={() => navigate(PATHS.auth.login)}
           cancelText={'Go back'}

@@ -21,6 +21,25 @@ export const searchUser = async (query) => {
   }
 }
 
+export const getUsers = async () => {
+
+  try{
+    let config = {
+      method: 'get',
+      url: `http://localhost:5000/users/`,
+      headers: { },
+      data : ''
+    };
+
+    const res = await asyncCallWithTimeout(axios(config),5000)
+    return res.data
+
+  }catch (error){
+    if(error.code === "ERR_NETWORK")
+      return new Error("ERR_NETWORK")
+    return  error
+  }
+}
 export const getUser = async (id) => {
 
   try{

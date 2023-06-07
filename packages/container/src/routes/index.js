@@ -14,6 +14,10 @@ import RoleWithSpecialPermissionsGuard from '../components/guards/RoleWithSpecia
 import Page404 from '../components/pages/Page404';
 import PageEmptySite from '../components/pages/PageEmptySite';
 import Account from '../components/account/Account';
+import UserList from '../components/settings/UserList';
+import SiteSettings from '../components/settings/SiteSettings';
+import SocialMedia from '../components/settings/SocialMedia';
+import EditRoles from '../components/settings/EditRoles';
 
 
 const Loadable = (Component) => (props) => {
@@ -43,6 +47,24 @@ const Router = ({ navBar, setNavBar }) => {
                 <SettingsLayout />
               </RoleBasedGuard>
             </AuthGuard>,
+          children:[
+            {
+              path:'user-list',
+              element: <UserList/>
+            },
+            {
+              path:'site-settings',
+              element: <SiteSettings/>
+            },
+            {
+              path:'social-media',
+              element: <SocialMedia/>
+            },
+            {
+              path:'editBlock-roles',
+              element: <EditRoles/>
+            }
+          ]
         },
         {
           path: 'home',

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import Dragger from 'antd/es/upload/Dragger';
 import { useSelector } from 'react-redux';
-import classes from './DragAndDropImage.module.css';
 import { deleteImage } from '../../services/pages/PagesService';
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -228,7 +227,7 @@ const ImageUpload = ({
         </Upload>
       </Space>
       <Modal
-        visible={modalDisplayed}
+        open={modalDisplayed}
         title={''}
         onCancel={() => {
           setModalDisplayed(false);

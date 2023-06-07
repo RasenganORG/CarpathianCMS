@@ -214,7 +214,7 @@ export const ImageManager = () => {
         loading={loading}
       />
       <Modal
-        visible={modalDisplayed}
+        open={modalDisplayed}
         title={''}
         onOk={() => deleteSelectedImage()}
         onCancel={() => setModalDisplayed(false)}

@@ -2,7 +2,7 @@ import { Button, Form, message, Steps } from 'antd';
 import React, { useState } from 'react';
 import BlockVariantsDrawer from '../blockVariantsDrawer/BlockVariantsDrawer';
 const { Step } = Steps;
-import classes from './WizardAddBlock.module.css'
+// import classes from './WizardAddBlock.module.css'
 import InitialFormDrawer from '../initialFormDrawer/InitialFormDrawer';
 
 
@@ -67,8 +67,8 @@ const WizardAddBlock = ({setWizardVisible,blockManagerForm}) => {
           />
         ))}
       </Steps>
-      <div className={classes.stepsContent}>{steps[current].content}</div>
-      <div className={classes.stepsAction}>
+      <div>{steps[current].content}</div>
+      <div>
         {current === 0 && (
           <Button
             type="primary"

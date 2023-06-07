@@ -69,7 +69,7 @@ const ProfilePictureUpload = ({onAdd, defaultFilelist, onRemoveImage}) => {
         </Upload>
       </ImgCrop>
       <Modal
-        visible={previewOpen}
+        open={previewOpen}
         title={previewTitle}
         footer={null}
         onCancel={handleCancel}>
