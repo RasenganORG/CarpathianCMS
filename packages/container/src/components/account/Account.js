@@ -9,10 +9,13 @@ import { addUserImage, deleteUserImage, patchUser } from '../../services/user/Us
 import { userActions } from '../../redux/userSlice';
 import { notificationActions } from '../../redux/notificationSlice';
 import ProfilePictureUpload from '../upload/ProfilePictureUpload';
+import ModalChangePassword from './ModalChangePassword';
+import { KeyOutlined } from '@ant-design/icons';
 
 
 const Account = () => {
   const [fileList, setFileList] = useState([])
+  const [modalVisible, setModalVisible] = useState(false)
   const navigate = useNavigate();
   const email = useSelector(state => state.user.email)
   const firstName = useSelector(state => state.user.firstName)
@@ -152,7 +155,7 @@ const Account = () => {
       style={{
         display:'flex',
         justifyContent:'center',
-        marginTop:100
+        marginTop:60
       }}
     >
       <Form
@@ -228,6 +231,26 @@ const Account = () => {
             defaultFilelist={fileList}
           />
         </Form.Item>
+
+        <Button
+          type="primary"
+          icon={<KeyOutlined />}
+          size="large"
+          onClick={() => setModalVisible(true)}
+          style={{
+            backgroundColor: '#1890ff',
+            borderColor: '#1890ff',
+            color: '#fff',
+            fontSize: '16px',
+            padding: '10px 30px',
+            borderRadius: '5px',
+            boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.1)',
+            marginBottom:40,
+            paddingBottom:40,
+          }}
+        >
+          Change Password
+        </Button>
         <Form.Item>
           <Button
             block
@@ -245,6 +268,10 @@ const Account = () => {
           </Button>
         </Form.Item>
       </Form>
+      <ModalChangePassword
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </div>
   );
 };

@@ -74,6 +74,10 @@ const userSlice = createSlice({
       localStorage.setItem("idToken", action.payload.id_token)
       localStorage.setItem("refreshToken", action.payload.refresh_token)
     },
+    idToken(state, action){
+      state.idToken = action.payload.idToken
+      localStorage.setItem("idToken", action.payload.idToken)
+    },
     updateUser(state, action){
       const user = action.payload
       state.email = user.email

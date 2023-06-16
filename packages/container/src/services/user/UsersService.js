@@ -136,3 +136,44 @@ export const deleteUserImage = async (id,imageName) => {
   }
 }
 
+
+export const resetPassword = async (email) => {
+
+  try{
+    let config = {
+      method: 'patch',
+      url: `http://localhost:5000/users/resetPassword/${email}`,
+      headers: { },
+      data : ''
+    };
+
+    const res = await asyncCallWithTimeout(axios(config),5000)
+    return res.data
+
+  }catch (error){
+    if(error.code === "ERR_NETWORK")
+      return new Error("ERR_NETWORK")
+    return  error
+  }
+}
+
+export const changePassword = async (data) => {
+  console.log(data)
+
+  try{
+    let config = {
+      method: 'put',
+      url: `http://localhost:5000/users/changePassword`,
+      headers: { },
+      data : data
+    };
+
+    const res = await asyncCallWithTimeout(axios(config),5000)
+    return res.data
+
+  }catch (error){
+    if(error.code === "ERR_NETWORK")
+      return new Error("ERR_NETWORK")
+    return  error
+  }
+}

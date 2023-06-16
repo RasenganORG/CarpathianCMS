@@ -181,10 +181,6 @@ const Login = () => {
                   required: true,
                   message: 'Please enter a password',
                 },
-                {
-                  min: 8,
-                  message: 'Password is too short - should have a minimum length of 8 characters',
-                },
               ]}
               hasFeedback
             >
@@ -240,6 +236,14 @@ const Login = () => {
                 }}
               >
                 Sign in with Google
+              </Button>
+
+              <Button
+                size="large"
+                variant="contained"
+                onClick={() => navigate(PATHS.auth.reset)}
+              >
+                Forgot your password?
               </Button>
 
 

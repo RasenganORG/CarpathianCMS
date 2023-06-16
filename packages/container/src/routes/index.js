@@ -18,6 +18,7 @@ import UserList from '../components/settings/UserList';
 import SiteSettings from '../components/settings/SiteSettings';
 import SocialMedia from '../components/settings/SocialMedia';
 import EditRoles from '../components/settings/EditRoles';
+import ResetPassword from '../components/auth/ResetPassword';
 
 
 const Loadable = (Component) => (props) => {
@@ -144,6 +145,10 @@ const Router = ({ navBar, setNavBar }) => {
           path: 'register',
           element: <Signup />,
         },
+        {
+          path:'reset-password',
+          element: <ResetPassword/>
+        }
       ],
     },
   ]);
