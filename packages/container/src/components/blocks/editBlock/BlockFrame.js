@@ -61,7 +61,7 @@ const BlockDeleteButton = ({ onClick, id }) => {
   return (
     <div>
       <Modal
-        visible={modalDisplayed}
+        open={modalDisplayed}
         title={''}
         onOk={() => onClick(id)}
         onCancel={() => setModalDisplayed(false)}

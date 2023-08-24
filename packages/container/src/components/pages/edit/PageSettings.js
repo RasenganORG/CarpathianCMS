@@ -134,7 +134,7 @@ const PageSettings = () => {
           </Button>
 
           <Modal
-            visible={permissionModalVisibility}
+            open={permissionModalVisibility}
             onOk={() => setPermissionModalVisibility(false)}
             onCancel={() => setPermissionModalVisibility(false)}
             okText={null}

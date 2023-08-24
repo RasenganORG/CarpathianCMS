@@ -51,7 +51,7 @@ const DeletePageButton = () => {
   return (
     <div>
       <Modal
-        visible={modalIsOpened}
+        open={modalIsOpened}
         okText={'Delete Page'}
         cancelText={'Cancel'}
         title={'Delete page'}

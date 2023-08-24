@@ -10,6 +10,7 @@ import { createNavBar } from './utils/createNavBar';
 import { notificationActions } from './redux/notificationSlice';
 import { PATHS } from './routes/paths';
 import { useCurrentRole } from './components/guards/RoleBasedGuard';
+import { getUser } from './services/user/UsersService';
 
 
 const navBarBasicSettings = [
@@ -39,7 +40,7 @@ export const getIdByHrefFromPages = (href, pages) => {
 const AppServices = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const timer = useRef(null);
   const hasPermission = useSelector(state => state.pages.hasPermissionToSettings);
   const [navBar, setNavBar] = useState([]);
@@ -112,8 +113,10 @@ const AppServices = ({ children }) => {
           const navBarLayout = await createNavBar(navbar, dispatch, navigate, user);
           //console.log('CREATED NAVBAR1', navBarLayout)
           navBarLayout.push(navBar);
+          if (isAuthenticated)
+            navBarLayout.push(navBarBasicSettings[1])
           if (hasPermission)
-            navBarLayout.push(...navBarBasicSettings);
+            navBarLayout.push(navBarBasicSettings[0]);
           setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
           const currentPageId = getIdByHrefFromPages(location.pathname.split('/')[1], pages);
           if(pages.length > 0) {
@@ -125,8 +128,10 @@ const AppServices = ({ children }) => {
         }
         else{
           let navBarLayout = []
+          if (isAuthenticated)
+            navBarLayout.push(navBarBasicSettings[1])
           if (hasPermission)
-            navBarLayout.push(...navBarBasicSettings);
+            navBarLayout.push(navBarBasicSettings[0]);
           setNavBar(navBarLayout.filter(obj => obj.key !== undefined));
           dispatch(pagesActions.setIsPagesListEmpty(true));
         }
@@ -154,6 +159,7 @@ const AppServices = ({ children }) => {
 
 
   }, [hasPermission, refreshNavBar, user]);
+
 
   useEffect(() => {
     async function update() {

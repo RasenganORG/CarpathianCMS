@@ -6,6 +6,7 @@ export const PATHS = {
   auth: {
     login: '/auth/login',
     signup: '/auth/register',
+    reset:'/auth/reset-password'
   },
   settings: {
     root: '/settings',

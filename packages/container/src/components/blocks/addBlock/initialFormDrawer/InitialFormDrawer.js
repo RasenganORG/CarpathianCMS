@@ -32,7 +32,7 @@ const InitialFormDrawer = ({ form,blockManagerForm }) => {
         placement='right'
         closable={false}
         onClose={() => false}
-        visible={true}
+        open={true}
         getContainer={false}
         width={'100%'}
         style={{

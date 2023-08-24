@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import useCheckPermission from '../../hooks/use-check-permission';
 import Sider from 'antd/es/layout/Sider';
 import { DesktopOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PoweroffOutlined } from '@ant-design/icons';
-import classes from './ApplicationLayout.module.css'
 import { pagesActions } from '../../../redux/pagesSlice';
 
 
@@ -182,7 +181,6 @@ const ApplicationLayout = ( {navBar, setNavBar}) => {
           }}
         >
           {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: classes.trigger,
             onClick: () => setCollapsed(!collapsed),
           }) && layoutOrientation === 'vertical'}
         </Header>

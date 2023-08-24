@@ -11,7 +11,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AddNewPageForm from '../pages/AddNewPageForm';
 import Sider from 'antd/es/layout/Sider';
 import MenuButton from '../layouts/toolbarLayouts/MenuButton';
-import classes from './Toolbar.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { pagesActions } from '../../redux/pagesSlice';
 import { checkPermissionByRole } from '../../utils/checkPermissionByRole';
@@ -166,7 +165,7 @@ const Toolbar = () => {
   return (
     <div>
       <Modal
-        visible={leaveModalIsOpened}
+        open={leaveModalIsOpened}
         onOk={onExitEdit}
         onCancel={() => setLeaveModalIsOpened(false)}
         okText={'Leave'}
@@ -199,7 +198,6 @@ const Toolbar = () => {
           onCollapse={value => setCollapsed(value)}
         >
           {React.createElement(collapsed ? DoubleRightOutlined : DoubleLeftOutlined, {
-            className: classes.trigger,
             onClick: () => setCollapsed(!collapsed),
           })}
           <Menu

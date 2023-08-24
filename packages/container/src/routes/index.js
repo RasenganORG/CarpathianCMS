@@ -13,6 +13,12 @@ import ContentManager from '../components/content/ContentManager';
 import RoleWithSpecialPermissionsGuard from '../components/guards/RoleWithSpecialPermissionsGuard';
 import Page404 from '../components/pages/Page404';
 import PageEmptySite from '../components/pages/PageEmptySite';
+import Account from '../components/account/Account';
+import UserList from '../components/settings/UserList';
+import SiteSettings from '../components/settings/SiteSettings';
+import SocialMedia from '../components/settings/SocialMedia';
+import EditRoles from '../components/settings/EditRoles';
+import ResetPassword from '../components/auth/ResetPassword';
 
 
 const Loadable = (Component) => (props) => {
@@ -42,6 +48,24 @@ const Router = ({ navBar, setNavBar }) => {
                 <SettingsLayout />
               </RoleBasedGuard>
             </AuthGuard>,
+          children:[
+            {
+              path:'user-list',
+              element: <UserList/>
+            },
+            {
+              path:'site-settings',
+              element: <SiteSettings/>
+            },
+            {
+              path:'social-media',
+              element: <SocialMedia/>
+            },
+            {
+              path:'editBlock-roles',
+              element: <EditRoles/>
+            }
+          ]
         },
         {
           path: 'home',
@@ -49,7 +73,10 @@ const Router = ({ navBar, setNavBar }) => {
         },
         {
           path: 'account',
-          element: <Home />,
+          element:
+            <AuthGuard>
+              <Account />
+            </AuthGuard>,
         },
         {
           path: '404',
@@ -118,6 +145,10 @@ const Router = ({ navBar, setNavBar }) => {
           path: 'register',
           element: <Signup />,
         },
+        {
+          path:'reset-password',
+          element: <ResetPassword/>
+        }
       ],
     },
   ]);
